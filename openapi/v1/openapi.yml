@@ -1,0 +1,445 @@
+openapi: 3.0.2
+info:
+  title: vtm
+  description: ベルベット勤怠管理
+  version: 1.0.0
+  termsOfService: 'https://code0716.com/'
+  contact:
+    name: Code0716
+servers:
+  - url: 'https://example.com/api/v1'
+paths:
+  /admin:
+    get:
+      security:
+        - security: []
+      operationId: GetAdminList
+      summary: adminUser一覧の取得
+      description: adminを取得します。ページングが可能です。
+      tags:
+        - Admin
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - $ref: '#/components/parameters/StatusParam'
+      responses:
+        '200':
+          description: admin取得が成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AdminUser'
+                  total:
+                    type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /admin/{uuid}:
+    get:
+      security:
+        - security: []
+      operationId: GetAdminInfo
+      summary: adminUser一覧の取得
+      description: adminを取得します。ページングが可能です。
+      tags:
+        - Admin
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: admin user uuid
+          schema:
+            type: string
+      responses:
+        '200':
+          description: admin取得が成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AdminUser'
+                  total:
+                    type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /admin/login:
+    post:
+      operationId: adminLogin
+      summary: admin login
+      description: admin login
+      tags:
+        - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mail_address:
+                  type: string
+                  description: admin name
+                password:
+                  type: string
+                  description: admin password
+              required:
+                - mail_address
+                - password
+      responses:
+        '200':
+          description: admin loginが成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuthenticationResponse'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /admin/regist:
+    post:
+      operationId: registAdmin
+      summary: admin登録
+      description: admin userを登録する
+      tags:
+        - Admin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: admin name
+                password:
+                  type: string
+                  description: admin password
+                mail_address:
+                  type: string
+                  description: admin mail address
+              required:
+                - name
+                - password
+                - mail_address
+      responses:
+        '201':
+          description: admin登録が成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CommonSuccessResponse'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /admin/members:
+    get:
+      security:
+        - security: []
+      operationId: adminGetMemberList
+      summary: member一覧の取得
+      description: メンバを取得します。ページングが可能です。
+      tags:
+        - AdminMembers
+      parameters:
+        - $ref: '#/components/parameters/LimitParam'
+        - $ref: '#/components/parameters/OffsetParam'
+        - $ref: '#/components/parameters/StatusParam'
+      responses:
+        '200':
+          description: member取得が成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Member'
+                  total:
+                    type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      security:
+        - security: []
+      operationId: AdminRegistMember
+      summary: memberの登録
+      description: メンバを登録する。
+      tags:
+        - AdminMembers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: member name
+                phone_number:
+                  type: string
+                  description: member phone number
+              required:
+                - name
+                - phone_number
+      responses:
+        '201':
+          description: member登録が成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CommonSuccessResponse'
+                  total:
+                    type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
+    # put:
+    #   security:
+    #     - security: []
+    #   operationId: updateMember
+    #   summary: member情報更新
+    #   description: メンバを登録する。
+    #   tags:
+    #     - AdminMembers
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema:
+    #           type: object
+    #           properties:
+    #             name:
+    #               type: string
+    #               description: member name
+    #           required:
+    #             - name
+    #   responses:
+    #     '200':
+    #       description: memberの更新が成功した場合
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               members:
+    #                 type: array
+    #                 items:
+    #                   $ref: '#/components/schemas/CommonSuccessResponse'
+    #               total:
+    #                 type: integer
+    #     default:
+    #       $ref: '#/components/responses/InternalServerError'
+tags:
+  - name: AdminMembers
+    description: members api
+components:
+  securitySchemes:
+    security:
+      type: apiKey
+      in: header
+      name: authorization
+  parameters:
+    LimitParam:
+      description: limit params
+      in: query
+      name: limit
+      schema:
+        type: integer
+        default: 50
+      required: false
+    OffsetParam:
+      in: query
+      name: offset
+      description: offset param
+      schema:
+        type: integer
+        default: 0
+      required: false
+    StatusParam:
+      in: query
+      name: status
+      description: status param
+      schema:
+        type: string
+      required: false
+  schemas:
+    AdminUser:
+      description: AdminUser
+      type: object
+      properties:
+        id:
+          description: ID
+          type: integer
+          format: int64
+        admin_id:
+          description: admin_id
+          type: string
+        name:
+          description: name
+          type: string
+        password:
+          description: password
+          type: string
+        mail_address:
+          description: mail address
+          type: string
+        authority:
+          description: 権限
+          type: string
+        status:
+          description: status
+          type: string
+        created_at:
+          description: 登録日
+          type: string
+          format: date-time
+        updated_at:
+          description: 更新日
+          type: string
+          format: date-time
+        deleted_at:
+          description: 削除日
+          type: string
+          format: date-time
+      required:
+        - id
+        - admin_id
+        - name
+        - mail_address
+        - password
+        - authority
+        - status
+        - created_at
+        - updated_at
+    Member:
+      description: Member
+      type: object
+      properties:
+        id:
+          description: ID
+          type: integer
+          format: int64
+        member_id:
+          description: member_id
+          type: string
+        name:
+          description: name
+          type: string
+        phone_number:
+          description: phone
+          type: string
+        password:
+          description: password
+          type: string
+        status:
+          description: status
+          type: string
+        hourly_price:
+          description: 時間単価
+          type: integer
+          format: int64
+        created_at:
+          description: 登録日
+          type: string
+          format: date-time
+        updated_at:
+          description: 更新日
+          type: string
+          format: date-time
+        deleted_at:
+          description: 削除日
+          type: string
+          format: date-time
+      required:
+        - id
+        - member_id
+        - name
+        - phone_number
+        - status
+        - created_at
+        - updated_at
+    Error:
+      description: エラー
+      type: object
+      properties:
+        code:
+          type: string
+          description: エラーコード
+        message:
+          type: string
+          description: エラー内容
+        status:
+          description: status
+          type: integer
+          format: int64
+      required:
+        - code
+        - message
+    ErrorResponse:
+      description: エラーレスポンス
+      type: object
+      properties:
+        errors:
+          type: array
+          description: エラー一覧
+          items:
+            $ref: '#/components/schemas/Error'
+      required:
+        - errors
+    CommonSuccessResponse:
+      description: 更新、登録、削除など成功した際の汎用レスポンス
+      type: object
+      properties:
+        message:
+          type: string
+          description: message
+      required:
+        - message
+    AuthenticationResponse:
+      description: ログイン時のレスポンス
+      type: object
+      properties:
+        message:
+          type: string
+          description: message
+        token:
+          type: string
+          description: token
+      required:
+        - message
+  responses:
+    ErrorResponse:
+      description: エラーレスポンス
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: 予期していないエラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+# security:
+#   - security: []

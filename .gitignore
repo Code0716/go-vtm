@@ -1,0 +1,17 @@
+.DS_Store
+/mysql_data
+images/preupload/*.jpg
+images/preupload/*.png
+images/preupload/*.gif
+images/preupload/*.ico
+images/upload/*.jpg
+images/upload/*.png
+images/upload/*.gif
+images/upload/*.ico
+/.env
+vendor/*
+tmp
+domain/error_string.gen.go
+.vscode
+cover.out
+cover.html

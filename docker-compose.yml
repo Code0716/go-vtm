@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  vtm_db:
+    image: mysql:8.0.13
+    volumes:
+      - db:/var/lib/db
+      - ./_init_sql:/docker-entrypoint-initdb.d
+    container_name: vtm_db
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DBNAME
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      TZ: $MYSQL_TIMEZONE
+
+volumes:
+  db:
