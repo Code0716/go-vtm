@@ -1,4 +1,4 @@
-package interactor_test
+package interactors_test
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interactor"
+	"github.com/Code0716/go-vtm/app/usecase/interactors"
 	"github.com/Code0716/go-vtm/app/util"
 )
 
@@ -67,7 +67,7 @@ func TestMembers_GetAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			memberRepo := mockMemberRepo{}
 			memberRepo.FakeGetAll = tt.fakes.fakeGetAll
-			im := interactor.NewMembers(memberRepo)
+			im := interactors.NewMembers(memberRepo)
 			got, count, err := im.MemberGetAll(ctx, tt.args.params)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Members.GetAll() error = %v, wantErr %v", err, tt.wantErr)

@@ -1,12 +1,12 @@
-package repository_test
+package database_test
 
 import (
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/interfaces/database"
 )
 
 type mockAdminRepo struct {
-	repository.SQLHandlerInterface
+	database.SQLHandlerInterface
 	FakeCreateAdmin       func(newAdmin interface{}) error
 	FakeFirst             func(value interface{}, where ...interface{}) error
 	FakeGetAdminByEmail   func(*domain.AdminUser, string) error
@@ -34,7 +34,7 @@ func (m mockAdminRepo) IsExist(tableName string, query interface{}, args ...inte
 }
 
 type mockMembersRepo struct {
-	repository.SQLHandlerInterface
+	database.SQLHandlerInterface
 	FakeAdminMemberGetAll func(params domain.Pager) ([]*domain.Member, int64, error)
 	FakeCreateMember      func(m interface{}) error
 	FakeIsMemberExist     func(tableName string, query interface{}, args ...interface{}) (bool, error)

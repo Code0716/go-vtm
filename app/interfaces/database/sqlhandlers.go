@@ -1,8 +1,6 @@
-package repository
+package database
 
-import (
-	"github.com/Code0716/go-vtm/app/domain"
-)
+import "github.com/Code0716/go-vtm/app/domain"
 
 // SQLHandlerInterface  SQLHandler
 type SQLHandlerInterface interface {

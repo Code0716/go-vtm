@@ -1,8 +1,8 @@
 package registry
 
 import (
-	"github.com/Code0716/go-vtm/app/interactor"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/usecase/interactors"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
 )
 
 // Getter gets registered instances.
@@ -11,14 +11,14 @@ type Getter interface {
 	InteractorGetter
 }
 
-// RepositoryGetter gets registered repository instances.
+// RepositoryGetter gets registered database instances.
 type RepositoryGetter interface {
-	AdminRepository() repository.AdminInterface
-	MembersRepository() repository.MembersInterface
+	AdminRepository() repositories.AdminRepository
+	MembersRepository() repositories.MembersRepository
 }
 
 // InteractorGetter gets registered interactor instances.
 type InteractorGetter interface {
-	AdminInteractor() *interactor.AdminInteractor
-	MembersInteractor() *interactor.MembersInteractor
+	AdminInteractor() *interactors.AdminInteractor
+	MembersInteractor() *interactors.MembersInteractor
 }

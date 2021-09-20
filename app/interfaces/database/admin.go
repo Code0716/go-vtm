@@ -1,4 +1,4 @@
-package repository
+package database
 
 import (
 	"context"
@@ -6,20 +6,12 @@ import (
 	"github.com/Code0716/go-vtm/app/domain"
 )
 
-// AdminInterface  is data access methods to RegistAdmin.
-type AdminInterface interface {
-	RegistAdmin(ctx context.Context, params domain.AdminUser) error
-	GetAllAdminUser(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error)
-	GetAdminByEmail(ctx context.Context, mail string) (*domain.AdminUser, error)
-	IsAdminExist(ctx context.Context, name, mail string) (bool, error)
-}
-
-// AdminRepository is admin repository.
+// AdminRepository is admin database.
 type AdminRepository struct {
 	SQLHandler SQLHandlerInterface
 }
 
-// NewAdmin initializes admins repository.
+// NewAdmin initializes admins database.
 func NewAdmin(sqlHandler SQLHandlerInterface) *AdminRepository {
 	return &AdminRepository{
 		SQLHandler: sqlHandler,

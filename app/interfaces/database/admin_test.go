@@ -1,4 +1,4 @@
-package repository_test
+package database_test
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/interfaces/database"
 	"github.com/Code0716/go-vtm/app/util"
 )
 
@@ -94,7 +94,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adminRepo := mockAdminRepo{}
 			adminRepo.FakeFirst = tt.fakes.fakeFirst
-			r := repository.NewAdmin(adminRepo)
+			r := database.NewAdmin(adminRepo)
 
 			_, err := r.GetAdminByEmail(testCtx, tt.args.mail)
 			if (err != nil) != tt.wantErr {
@@ -160,7 +160,7 @@ func TestAdmin_RegistAdmin(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adminRepo := mockAdminRepo{}
 			adminRepo.FakeCreateAdmin = tt.fakes.fakeCreateAdmin
-			r := repository.NewAdmin(adminRepo)
+			r := database.NewAdmin(adminRepo)
 			err := r.RegistAdmin(testCtx, tt.args)
 
 			if (err != nil) != tt.wantErr {
@@ -241,7 +241,7 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adminRepo := mockAdminRepo{}
 			adminRepo.FakeIsAdminExist = tt.fakes.fakeIsAdminExist
-			r := repository.NewAdmin(adminRepo)
+			r := database.NewAdmin(adminRepo)
 			got, err := r.IsAdminExist(testCtx, tt.args.name, tt.args.mail)
 
 			if (err != nil) != tt.wantErr {

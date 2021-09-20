@@ -1,23 +1,23 @@
-package interactor
+package interactors
 
 import (
 	"context"
 	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
 	"github.com/Code0716/go-vtm/app/util"
 	uuid "github.com/satori/go.uuid"
 )
 
 // AdminInteractor is admin interactor.
 type AdminInteractor struct {
-	AdminRepository repository.AdminInterface
+	AdminRepository repositories.AdminRepository
 }
 
 // NewAdmin initializes item interactor.
 func NewAdmin(
-	adminsRepo repository.AdminInterface,
+	adminsRepo repositories.AdminRepository,
 ) *AdminInteractor {
 	return &AdminInteractor{
 		AdminRepository: adminsRepo,

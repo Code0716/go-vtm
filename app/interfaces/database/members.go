@@ -1,4 +1,4 @@
-package repository
+package database
 
 import (
 	"context"
@@ -6,19 +6,12 @@ import (
 	"github.com/Code0716/go-vtm/app/domain"
 )
 
-// MembersInterface  is data access methods to Members.
-type MembersInterface interface {
-	AdminMemberGetAll(ctx context.Context, params domain.Pager) ([]*domain.Member, int64, error)
-	AdminRegistMember(ctx context.Context, member domain.Member) error
-	IsMemberExist(ctx context.Context, name, phone string) (bool, error)
-}
-
-// MembersRepository is member repository.
+// MembersRepository is member database.
 type MembersRepository struct {
 	SQLHandler SQLHandlerInterface
 }
 
-// NewMembers initializes members repository.
+// NewMembers initializes members database.
 func NewMembers(sqlHandler SQLHandlerInterface) *MembersRepository {
 	return &MembersRepository{
 		sqlHandler,

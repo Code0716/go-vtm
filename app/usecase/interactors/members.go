@@ -1,22 +1,22 @@
-package interactor
+package interactors
 
 import (
 	"context"
 	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
 	uuid "github.com/satori/go.uuid"
 )
 
 // MembersInteractor is member interactor.
 type MembersInteractor struct {
-	MembersRepository repository.MembersInterface
+	MembersRepository repositories.MembersRepository
 }
 
 // NewMembers initializes item interactor.
 func NewMembers(
-	membersRepo repository.MembersInterface,
+	membersRepo repositories.MembersRepository,
 ) *MembersInteractor {
 	return &MembersInteractor{
 		MembersRepository: membersRepo,

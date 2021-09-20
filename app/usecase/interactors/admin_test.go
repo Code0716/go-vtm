@@ -1,11 +1,11 @@
-package interactor_test
+package interactors_test
 
 import (
 	"context"
 	"testing"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interactor"
+	"github.com/Code0716/go-vtm/app/usecase/interactors"
 )
 
 func TestAdmin_RegistAdmin(t *testing.T) {
@@ -46,7 +46,7 @@ func TestAdmin_RegistAdmin(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adminRepo := mockAdminRepo{}
 			adminRepo.FakeRegistAdmin = tt.fakes.fakeRegistAdmin
-			ia := interactor.NewAdmin(adminRepo)
+			ia := interactors.NewAdmin(adminRepo)
 
 			if err := ia.RegistAdmin(ctx, tt.args.params); (err != nil) != tt.wantErr {
 				t.Errorf("Admin.RegistAdmin() error = %v, wantErr %v", err, tt.wantErr)
@@ -103,7 +103,7 @@ func TestAdmin_IsAdminExist(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			adminRepo := mockAdminRepo{}
 			adminRepo.FakeIsAdminExist = tt.fakes.fakeIsAdminExist
-			ia := interactor.NewAdmin(adminRepo)
+			ia := interactors.NewAdmin(adminRepo)
 
 			got, err := ia.IsAdminExist(ctx, tt.args.name, tt.args.mail)
 			if (err != nil) != tt.wantErr {

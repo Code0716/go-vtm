@@ -1,17 +1,18 @@
 package registry
 
 import (
-	"github.com/Code0716/go-vtm/app/interactor"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/interfaces/database"
+	"github.com/Code0716/go-vtm/app/usecase/interactors"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
 )
 
 // Registry returns initialized repositories and interactores.
 type Registry struct {
-	db repository.SQLHandlerInterface
+	db database.SQLHandlerInterface
 }
 
-// New initializes registry with gorm-repository.
-func New(db repository.SQLHandlerInterface) *Registry {
+// New initializes registry with gorm-database.
+func New(db database.SQLHandlerInterface) *Registry {
 	return &Registry{
 		db: db,
 	}
@@ -21,23 +22,22 @@ func New(db repository.SQLHandlerInterface) *Registry {
 	以下に具体的な依存性を解決する初期化処理を書く
 */
 
-// AdminRepository returns Admin repository.
-func (r *Registry) AdminRepository() repository.AdminInterface {
-	return repository.NewAdmin(r.db)
+// AdminRepository returns Admin database.
+func (r *Registry) AdminRepository() repositories.AdminRepository {
+	return database.NewAdmin(r.db)
 }
 
 // AdminInteractor returns Admin interactor.
-func (r *Registry) AdminInteractor() *interactor.AdminInteractor {
-	return interactor.NewAdmin(r.AdminRepository())
+func (r *Registry) AdminInteractor() *interactors.AdminInteractor {
+	return interactors.NewAdmin(r.AdminRepository())
 }
 
-// MembersRepository returns members repository.
-func (r *Registry) MembersRepository() repository.MembersInterface {
-	return repository.NewMembers(r.db)
+// MembersRepository returns members database.
+func (r *Registry) MembersRepository() repositories.MembersRepository {
+	return database.NewMembers(r.db)
 }
 
 // MembersInteractor returns members interactor.
-func (r *Registry) MembersInteractor() *interactor.MembersInteractor {
-
-	return interactor.NewMembers(r.MembersRepository())
+func (r *Registry) MembersInteractor() *interactors.MembersInteractor {
+	return interactors.NewMembers(r.MembersRepository())
 }

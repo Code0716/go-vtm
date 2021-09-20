@@ -1,4 +1,4 @@
-package repository_test
+package database_test
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/interfaces/database"
 	"github.com/Code0716/go-vtm/app/util"
 )
 
@@ -196,7 +196,7 @@ func TestMembersRepository_AdminMemberGetAll(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			memberRepo := mockMembersRepo{}
 			memberRepo.FakeAdminMemberGetAll = tt.fakes.fakeAdminMemberGetAll
-			r := repository.NewMembers(memberRepo)
+			r := database.NewMembers(memberRepo)
 			got, gotCount, err := r.AdminMemberGetAll(testCtx, tt.args)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Members.GetAll() error = %v, wantErr %v", err, tt.wantErr)
@@ -266,7 +266,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			memberRepo := mockMembersRepo{}
 			memberRepo.FakeCreateMember = tt.fakes.fakeCreateMember
-			r := repository.NewMembers(memberRepo)
+			r := database.NewMembers(memberRepo)
 
 			if err := r.AdminRegistMember(testCtx, tt.args.newMember); (err != nil) != tt.wantErr {
 				t.Errorf("MembersRepository.AdminRegistMember() error = %v, wantErr %v", err, tt.wantErr)
@@ -338,7 +338,7 @@ func TestMembersRepository_IsMemberExist(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			memberRepo := mockMembersRepo{}
 			memberRepo.FakeIsMemberExist = tt.fakes.fakeIsMemberExist
-			r := repository.NewMembers(memberRepo)
+			r := database.NewMembers(memberRepo)
 			got, err := r.IsMemberExist(testCtx, tt.args.name, tt.args.phone)
 
 			if (err != nil) != tt.wantErr {

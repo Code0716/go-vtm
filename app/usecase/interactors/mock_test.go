@@ -1,14 +1,14 @@
-package interactor_test
+package interactors_test
 
 import (
 	"context"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/Code0716/go-vtm/app/interfaces/repository"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
 )
 
 type mockAdminRepo struct {
-	repository.AdminInterface
+	repositories.AdminRepository
 	FakeRegistAdmin  func(ctx context.Context, params domain.AdminUser) error
 	FakeIsAdminExist func(ctx context.Context, name, mail string) (bool, error)
 }
@@ -22,7 +22,7 @@ func (m mockAdminRepo) IsAdminExist(ctx context.Context, name, mail string) (boo
 }
 
 type mockMemberRepo struct {
-	repository.MembersInterface
+	repositories.MembersRepository
 	FakeGetAll func(ctx context.Context, params domain.Pager) ([]*domain.Member, int64, error)
 }
 
