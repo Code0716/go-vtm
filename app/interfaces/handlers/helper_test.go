@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/labstack/echo/v4"
 )
 
@@ -57,11 +58,36 @@ func testJSON(t *testing.T, got []byte, want interface{}) bool {
 		gotBody = reflect.ValueOf(gotBody).Elem().Interface()
 	}
 
-	if !reflect.DeepEqual(gotBody, want) {
-		t.Errorf("got = %v, want = %v", gotBody, want)
+	if !Compare(t, want, gotBody) {
+		t.Errorf("got = %v\n, want = %v\n", gotBody, want)
 		return false
 	}
 
 	return true
 
+}
+func Compare(t *testing.T, want, got interface{}) bool {
+	t.Helper()
+	var isSame bool
+	switch reflect.TypeOf(want).Kind() {
+	case reflect.Struct:
+		isSame = compareStruct(t, want, got)
+	default:
+		if !reflect.DeepEqual(want, got) {
+			t.Errorf("got = %v\n, want = %v\n", got, want)
+			isSame = false
+		}
+	}
+
+	return isSame
+}
+
+func compareStruct(t *testing.T, want, got interface{}) bool {
+	opt := cmp.AllowUnexported(want, got)
+	if !cmp.Equal(want, got, opt) {
+		t.Errorf("%v value is mismatch (-want +got):\n%s", reflect.TypeOf(want), cmp.Diff(want, got, opt))
+		return false
+	}
+
+	return true
 }

@@ -27,6 +27,8 @@ const (
 	ErrorTypePasswordOrEmailValidationFailed
 	// ErrorTypeRegistMemberValidationFailed regist member validete failed
 	ErrorTypeRegistMemberValidationFailed
+	// ErrorTypeUUIDValidationFailed invalid uuid
+	ErrorTypeUUIDValidationFailed // invalid_uuid
 	// ErrorTypeAuthenticationFailed 認証エラー
 	ErrorTypeAuthenticationFailed // authentication_faild
 	// ErrorTypeNotFound not found
@@ -50,6 +52,7 @@ var ErrorMessageMap = map[ErrorType]string{
 	ErrorTypeAuthenticationFailed:            "認証エラー",
 	ErrorTypeInternalError:                   "internal server error",
 	ErrorTypePasswordOrEmailValidationFailed: "invalid passwrod or email",
+	ErrorTypeUUIDValidationFailed:            "invalid uuid",
 }
 
 // Error is Error struct

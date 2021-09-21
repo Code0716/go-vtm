@@ -45,6 +45,17 @@ func (ia *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain
 	return &token, nil
 }
 
+// GetAdminByUUID returns adminUser
+// ia: admin interactor
+func (ia *AdminInteractor) GetAdminByUUID(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+	adminUser, err := ia.AdminRepository.GetAdminByUUID(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	return adminUser, nil
+}
+
 // RegistAdmin returns member list
 // ia: admin interactor
 func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.RegistAdminJSONRequestBody) error {

@@ -29,6 +29,17 @@ func (r *AdminRepository) GetAdminByEmail(ctx context.Context, mail string) (*do
 	return &adminUser, nil
 }
 
+// GetAdminByUUID get admin user by  uuid
+func (r *AdminRepository) GetAdminByUUID(ctx context.Context, mail string) (*domain.AdminUser, error) {
+	var adminUser domain.AdminUser
+	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: mail})
+	if err != nil {
+		return nil, err
+	}
+
+	return &adminUser, nil
+}
+
 // RegistAdmin retuern error
 func (r *AdminRepository) RegistAdmin(ctx context.Context, adminUser domain.AdminUser) error {
 	err := r.SQLHandler.Create(&adminUser)

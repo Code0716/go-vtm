@@ -128,6 +128,27 @@ func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams
 }
 
 func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
+	adminInteractor := h.reg.AdminInteractor()
+	isUUID := util.IsValidUUID(uuid)
+	if !isUUID {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
 
-	return nil
+	adminUser, err := adminInteractor.GetAdminByUUID(c.Request().Context(), uuid)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	res := domain.AdminUserResponse{
+		Id:          adminUser.Id,
+		Name:        adminUser.Name,
+		AdminId:     adminUser.AdminId,
+		MailAddress: adminUser.MailAddress,
+		Status:      adminUser.Status,
+		Authority:   adminUser.Authority,
+		CreatedAt:   adminUser.CreatedAt,
+		UpdatedAt:   adminUser.UpdatedAt,
+		DeletedAt:   adminUser.DeletedAt,
+	}
+	return c.JSON(http.StatusOK, res)
 }

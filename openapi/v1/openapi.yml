@@ -43,7 +43,7 @@ paths:
       security:
         - security: []
       operationId: GetAdminInfo
-      summary: adminUser一覧の取得
+      summary: adminUserの取得
       description: adminを取得します。ページングが可能です。
       tags:
         - Admin
@@ -65,7 +65,7 @@ paths:
                   members:
                     type: array
                     items:
-                      $ref: '#/components/schemas/AdminUser'
+                      $ref: '#/components/schemas/AdminUserResponse'
                   total:
                     type: integer
         default:
@@ -427,6 +427,50 @@ components:
           description: token
       required:
         - message
+    AdminUserResponse:
+      description: AdminUserResponse
+      type: object
+      properties:
+        id:
+          description: ID
+          type: integer
+          format: int64
+        admin_id:
+          description: admin_id
+          type: string
+        name:
+          description: name
+          type: string
+        mail_address:
+          description: mail address
+          type: string
+        authority:
+          description: 権限
+          type: string
+        status:
+          description: status
+          type: string
+        created_at:
+          description: 登録日
+          type: string
+          format: date-time
+        updated_at:
+          description: 更新日
+          type: string
+          format: date-time
+        deleted_at:
+          description: 削除日
+          type: string
+          format: date-time
+      required:
+        - id
+        - admin_id
+        - name
+        - mail_address
+        - authority
+        - status
+        - created_at
+        - updated_at
   responses:
     ErrorResponse:
       description: エラーレスポンス

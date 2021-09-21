@@ -6,7 +6,7 @@ import (
 	"github.com/Code0716/go-vtm/app/domain"
 )
 
-// MembersRepository  is data access methods to RegistMember.
+// MembersRepository  is data access methods member.
 type MembersRepository interface {
 	AdminMemberGetAll(ctx context.Context, params domain.Pager) ([]*domain.Member, int64, error)
 	AdminRegistMember(ctx context.Context, member domain.Member) error

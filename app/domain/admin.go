@@ -20,3 +20,6 @@ type AdminsResponse struct {
 	AdminUsers []*AdminUser `json:"admin_users"`
 	Total      int64        `json:"total"`
 }
+
+// AdminUserResponse defines model for AdminUserResponse.
+type AdminUserResponse api.AdminUserResponse

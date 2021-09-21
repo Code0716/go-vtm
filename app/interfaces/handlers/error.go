@@ -26,6 +26,8 @@ func sendError(c echo.Context, err error) error {
 		fallthrough
 	case domain.ErrorTypeAdminLoginValidationFailed:
 		fallthrough
+	case domain.ErrorTypeUUIDValidationFailed:
+		fallthrough
 	case domain.ErrorTypeNotFound:
 		fallthrough
 	case domain.ErrorTypePasswordOrEmailValidationFailed:
