@@ -29,7 +29,7 @@ func (h SQLHandler) Create(value interface{}) error {
 func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
 	err := h.Conn.Find(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return domain.NewError(domain.ErrorTypeNotFound)
+		return domain.NewError(domain.ErrorTypeContentNotFound)
 	}
 	if err != nil {
 		return err
@@ -41,7 +41,7 @@ func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
 func (h SQLHandler) First(value interface{}, where ...interface{}) error {
 	err := h.Conn.First(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return domain.NewError(domain.ErrorTypeNotFound)
+		return domain.NewError(domain.ErrorTypeContentNotFound)
 	}
 	if err != nil {
 		return err

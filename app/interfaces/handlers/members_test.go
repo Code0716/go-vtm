@@ -87,7 +87,7 @@ func Test_membersHandler_GetMemberList(t *testing.T) {
 			u := req.URL
 			q := u.Query()
 			if tt.args.Offset != nil {
-				q.Add("cursor", fmt.Sprint(*tt.args.Offset))
+				q.Add("offset", fmt.Sprint(*tt.args.Offset))
 			}
 			if tt.args.Limit != nil {
 				q.Add("limit", fmt.Sprint(*tt.args.Limit))
@@ -131,7 +131,7 @@ func Test_membersHandler_GetMemberList(t *testing.T) {
 				}
 			}
 
-			if !reflect.DeepEqual(wantBody.Total, wantBody.Total) {
+			if gotBody.Total != wantBody.Total {
 				t.Errorf("memberHandler.GetMemberList()  Total = %v, want code %v", wantBody.Total, wantBody.Total)
 				return
 			}

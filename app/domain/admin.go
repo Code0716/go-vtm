@@ -15,8 +15,8 @@ func (i AdminUser) TableName() string {
 // RegistAdminJSONRequestBody is request body
 type RegistAdminJSONRequestBody api.RegistAdminJSONRequestBody
 
-// AdminsResponse  response body for GetAdminList
-type AdminsResponse struct {
+// AdminUsersResponse  response body for GetAdminList
+type AdminUsersResponse struct {
 	AdminUsers []*AdminUser `json:"admin_users"`
 	Total      int64        `json:"total"`
 }

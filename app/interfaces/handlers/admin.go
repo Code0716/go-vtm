@@ -119,7 +119,7 @@ func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams
 		}
 		adminUserList = append(adminUserList, &member)
 	}
-	res := domain.AdminsResponse{
+	res := domain.AdminUsersResponse{
 		AdminUsers: adminUserList,
 		Total:      count,
 	}

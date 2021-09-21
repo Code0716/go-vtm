@@ -66,6 +66,7 @@ func testJSON(t *testing.T, got []byte, want interface{}) bool {
 	return true
 
 }
+
 func Compare(t *testing.T, want, got interface{}) bool {
 	t.Helper()
 	var isSame bool

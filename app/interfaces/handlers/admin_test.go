@@ -3,9 +3,11 @@ package handlers_test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"reflect"
 	"testing"
 
 	"github.com/Code0716/go-vtm/app/domain"
@@ -251,15 +253,8 @@ func Test_adminHandler_GetAdminInfo(t *testing.T) {
 			reg.mockAdminRepo.FakeGetAdminByUUID = tt.fakes.fakeGetAdminByUUID
 			h := handlers.New(reg)
 
-			reqS := fmt.Sprintf(
-				`{"uuid":"%s"}`,
-				tt.args.uuid,
-			)
-
-			reqBody := bytes.NewBuffer([]byte(reqS))
-
 			path := fmt.Sprintf("https://test.com/admin/%s", tt.args.uuid)
-			req := httptest.NewRequest(http.MethodPost, path, reqBody)
+			req := httptest.NewRequest(http.MethodPost, path, nil)
 			req.Header.Set("Content-Type", "application/json")
 
 			c, res := newTestEchoContext(t, req)
@@ -275,6 +270,196 @@ func Test_adminHandler_GetAdminInfo(t *testing.T) {
 
 			if !testJSON(t, res.Body.Bytes(), tt.wantRes.body) {
 				t.Errorf("adminHandler.GetAdminInfo() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
+			}
+		})
+	}
+}
+
+func Test_adminHandler_GetAdminList(t *testing.T) {
+	type fakes struct {
+		fakeGetAllAdminUser func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error)
+	}
+
+	adminUser1 := &domain.AdminUser{
+		Id:          1,
+		AdminId:     "hogehoge",
+		Name:        "hogehoge",
+		MailAddress: "test@test.com",
+		Status:      "active",
+		Authority:   "admin",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	adminUser2 := &domain.AdminUser{
+		Id:          2,
+		AdminId:     "fugafuga",
+		Name:        "fuga",
+		MailAddress: "test@test.com",
+		Status:      "active",
+		Authority:   "admin",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	adminUser3 := &domain.AdminUser{
+		Id:          3,
+		AdminId:     "hoge2",
+		Name:        "hoge2",
+		MailAddress: "test@test.com",
+		Status:      "active",
+		Authority:   "admin",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	adminUser4 := &domain.AdminUser{
+		Id:          4,
+		AdminId:     "fuga2",
+		Name:        "fuga2",
+		MailAddress: "test@test.com",
+		Status:      "active",
+		Authority:   "admin",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	adminUsers := []*domain.AdminUser{
+		adminUser1,
+		adminUser2,
+		adminUser3,
+		adminUser4,
+	}
+
+	type args struct {
+		Limit  *int64
+		Offset *int64
+		Status *string
+	}
+
+	tests := []struct {
+		name    string
+		fakes   fakes
+		args    args
+		wantRes wantRes
+		wantErr bool
+	}{
+		{
+			"success",
+			fakes{
+				fakeGetAllAdminUser: func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
+					return adminUsers, 4, nil
+				},
+			},
+			args{},
+			wantRes{
+				code: http.StatusOK,
+				body: domain.AdminUsersResponse{
+					AdminUsers: adminUsers,
+					Total:      4,
+				},
+			},
+			false,
+		},
+		{
+			"success fix limit",
+			fakes{
+				fakeGetAllAdminUser: func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
+					if params.Limit != 50 {
+						panic("not fix limit")
+					}
+					return adminUsers, 4, nil
+				},
+			},
+			args{
+				Limit: util.Int64Ptr(1000000),
+			},
+			wantRes{
+				code: http.StatusOK,
+				body: domain.AdminUsersResponse{
+					AdminUsers: adminUsers,
+					Total:      4,
+				},
+			},
+			false,
+		},
+		{
+			"not found",
+			fakes{
+				fakeGetAllAdminUser: func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
+					return nil, 0, domain.NewError(domain.ErrorTypeContentNotFound)
+				},
+			},
+			args{},
+			wantRes{
+				code: http.StatusNoContent,
+				body: domain.AdminUsersResponse{
+					AdminUsers: adminUsers,
+					Total:      0,
+				},
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			reg := &registryMock{}
+			reg.mockAdminRepo.FakeGetAllAdminUser = tt.fakes.fakeGetAllAdminUser
+			h := handlers.New(reg)
+
+			path := fmt.Sprintf("https://test.com/admin")
+			req := httptest.NewRequest(http.MethodGet, path, nil)
+
+			u := req.URL
+			q := u.Query()
+			if tt.args.Offset != nil {
+				q.Add("offset", fmt.Sprint(*tt.args.Offset))
+			}
+			if tt.args.Limit != nil {
+				q.Add("limit", fmt.Sprint(*tt.args.Limit))
+			}
+
+			u.RawQuery = q.Encode()
+
+			c, res := newTestEchoContext(t, req)
+
+			si := api.ServerInterfaceWrapper{Handler: h}
+
+			if err := si.GetAdminList(c); (err != nil) != tt.wantErr {
+				t.Errorf("adminHandler.GetAdminList() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if res.Code != tt.wantRes.code {
+				t.Errorf("adminHandler.GetAdminList() http status got = %v want = %v", res.Code, tt.wantRes.code)
+			}
+
+			var gotBody domain.AdminUsersResponse
+			var wantBody domain.AdminUsersResponse
+
+			err := json.Unmarshal(res.Body.Bytes(), &gotBody)
+			if err != nil {
+				t.Errorf("adminHandler.GetAdminList()  response Body = %v, want code %v", res.Body, tt.wantRes.body)
+			}
+
+			tmpWant, err := json.Marshal(tt.wantRes.body)
+			if err != nil {
+				t.Error("adminHandler.GetAdminList()  Marshal error")
+			}
+
+			err = json.Unmarshal(tmpWant, &wantBody)
+			if err != nil {
+				t.Errorf("adminHandler.GetAdminList()  response Body = %v, want code %v", gotBody, wantBody)
+			}
+
+			for index, admin := range gotBody.AdminUsers {
+				if !reflect.DeepEqual(wantBody, gotBody) {
+					t.Errorf("adminHandler.GetAdminList()  AdminUsers = %v\n, want %v\n", admin, wantBody.AdminUsers[index])
+					return
+				}
+			}
+
+			if gotBody.Total != wantBody.Total {
+				t.Errorf("adminHandler.GetAdminList()  Total = %v, want code %v", wantBody.Total, wantBody.Total)
+				return
 			}
 		})
 	}

@@ -33,6 +33,8 @@ const (
 	ErrorTypeAuthenticationFailed // authentication_faild
 	// ErrorTypeNotFound not found
 	ErrorTypeNotFound // not_found
+	// ErrorTypeContentNotFound content not found
+	ErrorTypeContentNotFound // content_not_found
 	// ErrorTypeInternalError 内部エラー
 	ErrorTypeInternalError // internal_error
 )

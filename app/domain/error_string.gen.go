@@ -18,12 +18,13 @@ func _() {
 	_ = x[ErrorTypeUUIDValidationFailed-8]
 	_ = x[ErrorTypeAuthenticationFailed-9]
 	_ = x[ErrorTypeNotFound-10]
-	_ = x[ErrorTypeInternalError-11]
+	_ = x[ErrorTypeContentNotFound-11]
+	_ = x[ErrorTypeInternalError-12]
 }
 
-const _ErrorType_name = "validation_failedregist admin validation_failedErrorTypeAdminEmailValidationFailedErrorTypeAdminLoginValidationFailedregist item validation_failedErrorTypePasswordOrEmailValidationFailedErrorTypeRegistMemberValidationFailedinvalid_uuidauthentication_faildnot_foundinternal_error"
+const _ErrorType_name = "validation_failedregist admin validation_failedErrorTypeAdminEmailValidationFailedErrorTypeAdminLoginValidationFailedregist item validation_failedErrorTypePasswordOrEmailValidationFailedErrorTypeRegistMemberValidationFailedinvalid_uuidauthentication_faildnot_foundcontent_not_foundinternal_error"
 
-var _ErrorType_index = [...]uint16{0, 17, 47, 82, 117, 146, 186, 223, 235, 255, 264, 278}
+var _ErrorType_index = [...]uint16{0, 17, 47, 82, 117, 146, 186, 223, 235, 255, 264, 281, 295}
 
 func (i ErrorType) String() string {
 	i -= 1
