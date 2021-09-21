@@ -147,7 +147,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 
 			si := api.ServerInterfaceWrapper{Handler: h}
 
-			if err := si.Handler.RegistAdmin(c); (err != nil) != tt.wantErr {
+			if err := si.RegistAdmin(c); (err != nil) != tt.wantErr {
 				t.Errorf("adminHandler.RegistAdmin() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if res.Code != tt.wantRes.code {
@@ -253,15 +253,17 @@ func Test_adminHandler_GetAdminInfo(t *testing.T) {
 			reg.mockAdminRepo.FakeGetAdminByUUID = tt.fakes.fakeGetAdminByUUID
 			h := handlers.New(reg)
 
-			path := fmt.Sprintf("https://test.com/admin/%s", tt.args.uuid)
-			req := httptest.NewRequest(http.MethodPost, path, nil)
-			req.Header.Set("Content-Type", "application/json")
+			path := fmt.Sprintf("https://test.com/admin/:uuid")
+			req := httptest.NewRequest(http.MethodGet, path, nil)
 
 			c, res := newTestEchoContext(t, req)
+			c.SetPath(path)
+			c.SetParamNames("uuid")
+			c.SetParamValues(tt.args.uuid)
 
 			si := api.ServerInterfaceWrapper{Handler: h}
 
-			if err := si.Handler.GetAdminInfo(c, tt.args.uuid); (err != nil) != tt.wantErr {
+			if err := si.GetAdminInfo(c); (err != nil) != tt.wantErr {
 				t.Errorf("adminHandler.GetAdminInfo() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if res.Code != tt.wantRes.code {
