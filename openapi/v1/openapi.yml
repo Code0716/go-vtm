@@ -219,7 +219,7 @@ paths:
     #     - security: []
     #   operationId: updateMember
     #   summary: member情報更新
-    #   description: メンバを登録する。
+    #   description: メンバを更新する。
     #   tags:
     #     - AdminMembers
     #   requestBody:

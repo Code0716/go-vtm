@@ -7,7 +7,6 @@ import (
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/usecase/repositories"
 	"github.com/Code0716/go-vtm/app/util"
-	uuid "github.com/satori/go.uuid"
 )
 
 // AdminInteractor is admin interactor.
@@ -68,7 +67,7 @@ func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.Regist
 	registAdmin := domain.AdminUser{
 		Name:        params.Name,
 		Authority:   "admin",
-		AdminId:     uuid.NewV4().String(),
+		AdminId:     util.UUIDGenerator(),
 		MailAddress: params.MailAddress,
 		Status:      "init",
 		Password:    hash,

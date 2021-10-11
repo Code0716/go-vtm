@@ -150,5 +150,6 @@ func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
 		UpdatedAt:   adminUser.UpdatedAt,
 		DeletedAt:   adminUser.DeletedAt,
 	}
+
 	return c.JSON(http.StatusOK, res)
 }

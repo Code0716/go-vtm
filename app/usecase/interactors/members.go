@@ -6,7 +6,7 @@ import (
 
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/usecase/repositories"
-	uuid "github.com/satori/go.uuid"
+	"github.com/Code0716/go-vtm/app/util"
 )
 
 // MembersInteractor is member interactor.
@@ -40,7 +40,7 @@ func (im *MembersInteractor) RegistMember(ctx context.Context, params domain.Mem
 	currentTime := time.Now()
 	params.CreatedAt = currentTime
 	params.UpdatedAt = currentTime
-	params.MemberId = uuid.NewV4().String()
+	params.MemberId = util.UUIDGenerator()
 
 	params.Status = domain.StatusCodeInit.GetMembeStatus()
 	err := im.MembersRepository.AdminRegistMember(ctx, params)
