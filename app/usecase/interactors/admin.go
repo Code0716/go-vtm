@@ -66,10 +66,10 @@ func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.Regist
 
 	registAdmin := domain.AdminUser{
 		Name:        params.Name,
-		Authority:   "admin",
+		Authority:   domain.AuthorityMap[domain.AuthorityAdmin],
 		AdminId:     util.UUIDGenerator(),
 		MailAddress: params.MailAddress,
-		Status:      "init",
+		Status:      domain.UserStatusMap[domain.UserStatusInit],
 		Password:    hash,
 		CreatedAt:   currentTime,
 		UpdatedAt:   currentTime,
