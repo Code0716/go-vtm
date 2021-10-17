@@ -18,7 +18,7 @@ func TestMembersRepository_AdminMemberGetAll(t *testing.T) {
 
 	member1 := &domain.Member{
 		Id:          1,
-		MemberId:    "hoge", // 本来はuuid
+		MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hoge",
 		PhoneNumber: "09000000000",
 		Status:      "active",
@@ -221,7 +221,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 
 	member := &domain.Member{
 		Id:          1,
-		MemberId:    "hoge", // 本来はuuid
+		MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		PhoneNumber: "09000000000",
 		Password:    util.StrPtr("hoge"),

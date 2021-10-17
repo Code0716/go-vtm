@@ -321,3 +321,93 @@ func TestAdminInteractor_GetAdminList(t *testing.T) {
 		)
 	}
 }
+
+func TestAdminInteractor_DeleteAdmin(t *testing.T) {
+	t.Parallel()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	adminUser := &domain.AdminUser{
+		Id:          1,
+		AdminId:     "be458a2c-b6b7-472b-823b-0a3755a6004b",
+		Name:        "hogehoge",
+		Password:    "password",
+		MailAddress: "test@test.com",
+		Status:      "active",
+		Authority:   "admin",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	type fakes struct {
+		fakeDeleteAdmin func(ctx context.Context, uuid string) (*domain.AdminUser, error)
+	}
+
+	type args struct {
+		uuid string
+	}
+	tests := []struct {
+		name    string
+		fakes   fakes
+		args    args
+		want    *domain.AdminUser
+		wantErr bool
+	}{
+		{
+			"Success",
+			fakes{
+				fakeDeleteAdmin: func(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+					au := &domain.AdminUser{
+						Id:          1,
+						AdminId:     "be458a2c-b6b7-472b-823b-0a3755a6004b",
+						Name:        "hogehoge",
+						Password:    "password",
+						MailAddress: "test@test.com",
+						Status:      "active",
+						Authority:   "admin",
+						CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+						UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+					}
+					return au, nil
+				},
+			},
+			args{
+				uuid: "be458a2c-b6b7-472b-823b-0a3755a6004b",
+			},
+			adminUser,
+			false,
+		},
+		{
+			"faild",
+			fakes{
+				fakeDeleteAdmin: func(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+					return nil, domain.NewError(domain.ErrorTypeContentNotFound)
+				},
+			},
+			args{
+				uuid: "hogehoge",
+			},
+			nil,
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			adminRepo := mockAdminRepo{}
+
+			adminRepo.FakeDeleteAdmin = tt.fakes.fakeDeleteAdmin
+			ia := interactors.NewAdmin(adminRepo)
+
+			got, err := ia.DeleteAdmin(ctx, tt.args.uuid)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("AdminInteractor.DeleteAdmin() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("AdminInteractor.DeleteAdmin() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

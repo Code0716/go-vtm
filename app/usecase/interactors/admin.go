@@ -98,3 +98,13 @@ func (ia *AdminInteractor) IsAdminExist(ctx context.Context, name, mail string) 
 	isExist, err := ia.AdminRepository.IsAdminExist(ctx, name, mail)
 	return isExist, err
 }
+
+// DeleteAdmin check regist admin
+// ia: admin interactor
+func (ia *AdminInteractor) DeleteAdmin(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+	adminUser, err := ia.AdminRepository.DeleteAdminUser(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+	return adminUser, err
+}

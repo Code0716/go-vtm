@@ -28,6 +28,9 @@ type ServerInterface interface {
 	// admin登録
 	// (POST /admin/regist)
 	RegistAdmin(ctx echo.Context) error
+	// adminUserの削除
+	// (DELETE /admin/{uuid})
+	DeleteAdminInfo(ctx echo.Context, uuid string) error
 	// adminUserの取得
 	// (GET /admin/{uuid})
 	GetAdminInfo(ctx echo.Context, uuid string) error
@@ -135,6 +138,24 @@ func (w *ServerInterfaceWrapper) RegistAdmin(ctx echo.Context) error {
 	return err
 }
 
+// DeleteAdminInfo converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteAdminInfo(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "uuid" -------------
+	var uuid string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "uuid", runtime.ParamLocationPath, ctx.Param("uuid"), &uuid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uuid: %s", err))
+	}
+
+	ctx.Set(SecurityScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.DeleteAdminInfo(ctx, uuid)
+	return err
+}
+
 // GetAdminInfo converts echo context to params.
 func (w *ServerInterfaceWrapper) GetAdminInfo(ctx echo.Context) error {
 	var err error
@@ -186,6 +207,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/admin/members", wrapper.AdminGetMemberList)
 	router.POST(baseURL+"/admin/members", wrapper.AdminRegistMember)
 	router.POST(baseURL+"/admin/regist", wrapper.RegistAdmin)
+	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminInfo)
 	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminInfo)
 
 }

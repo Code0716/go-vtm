@@ -49,17 +49,18 @@ var ErrorMessageMap = map[ErrorType]string{
 	// member
 	ErrorTypeRegistMemberValidationFailed: "name,phone_numberは必須です",
 	// other
-	ErrorTypeNotFound:                        "record not found",
+	ErrorTypeNotFound:                        "request uri found",
 	ErrorTypeValidationFailed:                "validate failed",
 	ErrorTypeAuthenticationFailed:            "認証エラー",
 	ErrorTypeInternalError:                   "internal server error",
 	ErrorTypePasswordOrEmailValidationFailed: "invalid passwrod or email",
 	ErrorTypeUUIDValidationFailed:            "invalid uuid",
+	ErrorTypeContentNotFound:                 "content not found",
 }
 
 // Error is Error struct
 type Error struct {
-	Type       ErrorType // responseに含める必要がない？
+	Type       ErrorType
 	Status     int
 	Message    string
 	InnerError error

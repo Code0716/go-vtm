@@ -13,4 +13,5 @@ type AdminRepository interface {
 	GetAdminByEmail(ctx context.Context, mail string) (*domain.AdminUser, error)
 	GetAdminByUUID(ctx context.Context, uuid string) (*domain.AdminUser, error)
 	IsAdminExist(ctx context.Context, name, mail string) (bool, error)
+	DeleteAdminUser(ctx context.Context, uuid string) (*domain.AdminUser, error)
 }

@@ -30,9 +30,9 @@ func (r *AdminRepository) GetAdminByEmail(ctx context.Context, mail string) (*do
 }
 
 // GetAdminByUUID get admin user by  uuid
-func (r *AdminRepository) GetAdminByUUID(ctx context.Context, mail string) (*domain.AdminUser, error) {
+func (r *AdminRepository) GetAdminByUUID(ctx context.Context, uuid string) (*domain.AdminUser, error) {
 	var adminUser domain.AdminUser
-	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: mail})
+	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: uuid})
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (r *AdminRepository) RegistAdmin(ctx context.Context, adminUser domain.Admi
 func (r *AdminRepository) GetAllAdminUser(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
 	adminUsers, count, err := r.SQLHandler.GetAllAdminUsers(params)
 	if err != nil {
-		return nil, 0, domain.WrapInternalError(err)
+		return nil, 0, err
 	}
 	return adminUsers, count, err
 }
@@ -61,9 +61,25 @@ func (r *AdminRepository) GetAllAdminUser(ctx context.Context, params domain.Pag
 // IsAdminExist check admin is already registered
 func (r *AdminRepository) IsAdminExist(ctx context.Context, name, mail string) (bool, error) {
 	var adminU domain.AdminUser
-	bool, err := r.SQLHandler.IsExist(adminU.TableName(), "name = ? OR mail_address = ?", name, mail)
+	isExist, err := r.SQLHandler.IsExist(adminU.TableName(), "name = ? OR mail_address = ?", name, mail)
 	if err != nil {
 		return false, err
 	}
-	return bool, nil
+	return isExist, nil
+}
+
+// DeleteAdminUser delete admin user
+func (r *AdminRepository) DeleteAdminUser(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+	var adminUser domain.AdminUser
+	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: uuid})
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.SQLHandler.Delete(&adminUser, domain.AdminUser{AdminId: uuid})
+	if err != nil {
+		return nil, err
+	}
+
+	return &adminUser, nil
 }

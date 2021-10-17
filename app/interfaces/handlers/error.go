@@ -30,10 +30,10 @@ func sendError(c echo.Context, err error) error {
 		fallthrough
 	case domain.ErrorTypeNotFound:
 		fallthrough
+	case domain.ErrorTypeContentNotFound:
+		fallthrough
 	case domain.ErrorTypePasswordOrEmailValidationFailed:
 		code = http.StatusBadRequest
-	case domain.ErrorTypeContentNotFound:
-		code = http.StatusNoContent
 	case domain.ErrorTypeAuthenticationFailed:
 		code = http.StatusUnauthorized
 	case domain.ErrorTypeInternalError:

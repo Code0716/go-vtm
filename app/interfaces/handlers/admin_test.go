@@ -394,7 +394,7 @@ func Test_adminHandler_GetAdminList(t *testing.T) {
 			},
 			args{},
 			wantRes{
-				code: http.StatusNoContent,
+				code: http.StatusBadRequest,
 				body: domain.AdminUsersResponse{
 					AdminUsers: adminUsers,
 					Total:      0,
@@ -462,6 +462,133 @@ func Test_adminHandler_GetAdminList(t *testing.T) {
 			if gotBody.Total != wantBody.Total {
 				t.Errorf("adminHandler.GetAdminList()  Total = %v, want code %v", wantBody.Total, wantBody.Total)
 				return
+			}
+		})
+	}
+}
+
+func Test_adminHandler_DeleteAdminInfo(t *testing.T) {
+	t.Parallel()
+
+	type fakes struct {
+		fakeDeleteAdminUser func(ctx context.Context, uuid string) (*domain.AdminUser, error)
+	}
+
+	type args struct {
+		uuid string
+	}
+
+	tests := []struct {
+		name    string
+		fakes   fakes
+		args    args
+		wantRes wantRes
+		wantErr bool
+	}{
+		{
+			"Success",
+			fakes{fakeDeleteAdminUser: func(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+				adminUser := &domain.AdminUser{
+					Id:          1,
+					AdminId:     "be458a2c-b6b7-472b-823b-0a3755a6004b",
+					Name:        "hogehoge",
+					Password:    "password",
+					MailAddress: "test@test.com",
+					Status:      "active",
+					Authority:   "admin",
+					CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+					UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+				}
+
+				return adminUser, nil
+			},
+			},
+			args{uuid: "be458a2c-b6b7-472b-823b-0a3755a6004b"},
+			wantRes{
+				code: http.StatusOK,
+				body: domain.DeleteAdminUserResponse{
+					Id:      1,
+					Name:    "hogehoge",
+					AdminId: "be458a2c-b6b7-472b-823b-0a3755a6004b",
+				},
+			},
+			false,
+		},
+		{
+			"faild uuid validate",
+			fakes{fakeDeleteAdminUser: func(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+				adminUser := &domain.AdminUser{
+					Id:          1,
+					AdminId:     "be458a2c-b6b7-472b-823b-0a3755a6004b",
+					Name:        "hogehoge",
+					Password:    "password",
+					MailAddress: "test@test.com",
+					Status:      "active",
+					Authority:   "admin",
+					CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+					UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+				}
+
+				return adminUser, nil
+			},
+			},
+			args{uuid: "hogehoge"},
+			wantRes{
+				code: http.StatusBadRequest,
+				body: domain.ErrorResponse{
+					Error: domain.Error{
+						Type:    domain.ErrorTypeUUIDValidationFailed,
+						Status:  http.StatusBadRequest,
+						Message: domain.ErrorMessageMap[domain.ErrorTypeUUIDValidationFailed],
+					},
+				},
+			},
+			false,
+		},
+		{
+			"faild not found",
+			fakes{fakeDeleteAdminUser: func(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+
+				return nil, domain.NewError(domain.ErrorTypeContentNotFound)
+			},
+			},
+			args{uuid: "be458a2c-b6b7-472b-823b-0a3755a6004b"},
+			wantRes{
+				code: http.StatusBadRequest,
+				body: domain.ErrorResponse{
+					Error: domain.Error{
+						Type:    domain.ErrorTypeContentNotFound,
+						Status:  http.StatusBadRequest,
+						Message: domain.ErrorMessageMap[domain.ErrorTypeContentNotFound],
+					},
+				},
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			reg := &registryMock{}
+			reg.mockAdminRepo.FakeDeleteAdminUser = tt.fakes.fakeDeleteAdminUser
+			h := handlers.New(reg)
+
+			path := fmt.Sprintf("https://test.com/admin/:uuid")
+			req := httptest.NewRequest(http.MethodDelete, path, nil)
+
+			c, res := newTestEchoContext(t, req)
+			c.SetPath(path)
+			c.SetParamNames("uuid")
+			c.SetParamValues(tt.args.uuid)
+			si := api.ServerInterfaceWrapper{Handler: h}
+
+			if err := si.DeleteAdminInfo(c); (err != nil) != tt.wantErr {
+				t.Errorf("adminHandler.DeleteAdminInfo() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if res.Code != tt.wantRes.code {
+				t.Errorf("adminHandler.DeleteAdminInfo() http status got = %v want = %v", res.Code, tt.wantRes.code)
+			}
+			if !testJSON(t, res.Body.Bytes(), tt.wantRes.body) {
+				t.Errorf("adminHandler.DeleteAdminInfo() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
 			}
 		})
 	}

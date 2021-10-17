@@ -19,7 +19,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 
 	adminUser := &domain.AdminUser{
 		Id:          1,
-		AdminId:     "hoge", // 本来はuuid
+		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		MailAddress: "hoge@test.com",
 		Password:    "hoge",
@@ -31,7 +31,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 
 	fakeUser := &domain.AdminUser{
 		Id:          1,
-		AdminId:     "hoge", // 本来はuuid
+		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		MailAddress: "hoge@test.com",
 		Password:    "hoge",
@@ -57,7 +57,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 				fakeFirst: func(value interface{}, where ...interface{}) error {
 					value = &domain.AdminUser{
 						Id:          1,
-						AdminId:     "hoge", // 本来はuuid
+						AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
 						Name:        "hogehoge",
 						MailAddress: "hoge@test.com",
 						Password:    "hoge",
@@ -116,7 +116,7 @@ func TestAdmin_RegistAdmin(t *testing.T) {
 
 	adminUser := &domain.AdminUser{
 		Id:          1,
-		AdminId:     "hoge", // 本来はuuid
+		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		MailAddress: "test@test.com",
 		Password:    "password",

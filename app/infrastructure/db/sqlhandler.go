@@ -43,10 +43,7 @@ func (h SQLHandler) First(value interface{}, where ...interface{}) error {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return domain.NewError(domain.ErrorTypeContentNotFound)
 	}
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 // Save is gorm save
@@ -84,9 +81,11 @@ func (h *SQLHandler) Raw(sql string, values ...interface{}) *gorm.DB {
 }
 
 // Delete is gorm delete
-// TODO 実装未
 func (h *SQLHandler) Delete(value interface{}, where ...interface{}) error {
 	err := h.Conn.Delete(value, where...).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return domain.NewError(domain.ErrorTypeContentNotFound)
+	}
 	return err
 }
 

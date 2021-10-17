@@ -14,7 +14,7 @@ func TestSQLHandler_CreateAdmin(t *testing.T) {
 
 	adminUser := &domain.AdminUser{
 		Id:          1,
-		AdminId:     "hoge", // 本来はuuid
+		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		MailAddress: "test@test.com",
 		Password:    "password",
@@ -25,7 +25,7 @@ func TestSQLHandler_CreateAdmin(t *testing.T) {
 	}
 	adminUser2 := &domain.AdminUser{
 		Id:          1,
-		AdminId:     "hoge", // 本来はuuid
+		AdminId:     "be458a2c-b6b7-472b-823b-0a3755a6004b",
 		Name:        "hogehoge",
 		MailAddress: "test@test.com",
 		Password:    "password",
@@ -80,7 +80,7 @@ func TestSQLHandler_CreateMember(t *testing.T) {
 
 	Member := &domain.Member{
 		Id:          1,
-		MemberId:    "hoge", // 本来はuuid
+		MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		PhoneNumber: "090000000000",
 		HourlyPrice: util.Int64Ptr(1200),
@@ -89,8 +89,8 @@ func TestSQLHandler_CreateMember(t *testing.T) {
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
 	Member2 := &domain.Member{
-		Id:          1,
-		MemberId:    "hoge", // 本来はuuid
+		Id:          2,
+		MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		PhoneNumber: "090000000000",
 		HourlyPrice: util.Int64Ptr(1200),
@@ -144,7 +144,7 @@ func TestSQLHandler_AdminMemberGetAll(t *testing.T) {
 
 	member1 := &domain.Member{
 		Id:          1,
-		MemberId:    "hoge", // 本来はuuid
+		MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hoge",
 		PhoneNumber: "09000000000",
 		Status:      "active",
@@ -303,7 +303,7 @@ func TestSQLHandler_First(t *testing.T) {
 
 	adminUser := &domain.AdminUser{
 		Id:          1,
-		AdminId:     "hoge", // 本来はuuid
+		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hogehoge",
 		MailAddress: "hoge@test.com",
 		Password:    "hoge",
@@ -375,6 +375,81 @@ func TestSQLHandler_First(t *testing.T) {
 			}
 			if !reflect.DeepEqual(admin, tt.want) {
 				t.Errorf("Admin.GetAdminByEmail() got = %v, want %v", admin, tt.want)
+			}
+		})
+	}
+}
+
+func TestSQLHandler_Delete(t *testing.T) {
+	t.Parallel()
+
+	adminUser1 := &domain.AdminUser{
+		Id:          1,
+		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
+		Name:        "hogehoge",
+		MailAddress: "hoge@test.com",
+		Password:    "hoge",
+		Authority:   "admin",
+		Status:      "init",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	adminUser2 := &domain.AdminUser{
+		Id:          2,
+		AdminId:     "fugafuga",
+		Name:        "fugafuga",
+		MailAddress: "fuga@test.com",
+		Password:    "fuga",
+		Authority:   "admin",
+		Status:      "init",
+		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+	}
+
+	seeds := []interface{}{
+		adminUser1,
+		adminUser2,
+	}
+
+	testDB, close, err := getTestDB(t, seeds)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer close()
+
+	type args struct {
+		value *domain.AdminUser
+		where domain.AdminUser
+	}
+
+	var adminUser domain.AdminUser
+
+	tests := []struct {
+		name    string
+		want    domain.AdminUser
+		args    args
+		wantErr bool
+	}{
+		{
+			"Success",
+			*adminUser1,
+			args{value: &adminUser, where: domain.AdminUser{AdminId: adminUser1.AdminId}},
+			false,
+		},
+		{
+			"faild",
+			*adminUser2,
+			args{value: &adminUser, where: domain.AdminUser{AdminId: "testest"}},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := db.SQLHandler(*testDB)
+			err := d.Delete(tt.args.value, tt.args.where)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SQLHandler.Delete() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

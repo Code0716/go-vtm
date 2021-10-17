@@ -13,6 +13,7 @@ type mockAdminRepo struct {
 	FakeIsAdminExist    func(ctx context.Context, name, mail string) (bool, error)
 	FakeGetAdminByUUID  func(ctx context.Context, uuid string) (*domain.AdminUser, error)
 	FakeGetAllAdminUser func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error)
+	FakeDeleteAdmin     func(ctx context.Context, uuid string) (*domain.AdminUser, error)
 }
 
 func (m mockAdminRepo) RegistAdmin(ctx context.Context, params domain.AdminUser) error {
@@ -29,6 +30,10 @@ func (m mockAdminRepo) GetAdminByUUID(ctx context.Context, uuid string) (*domain
 
 func (m mockAdminRepo) GetAllAdminUser(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
 	return m.FakeGetAllAdminUser(ctx, params)
+}
+
+func (m mockAdminRepo) DeleteAdminUser(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+	return m.FakeDeleteAdmin(ctx, uuid)
 }
 
 type mockMemberRepo struct {

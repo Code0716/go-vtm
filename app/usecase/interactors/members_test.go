@@ -19,7 +19,7 @@ func TestMembers_GetAll(t *testing.T) {
 	successData := []*domain.Member{
 		{
 			Id:        1,
-			MemberId:  "hoge", // 本来はuuid
+			MemberId:  "873a2824-8006-4e67-aed7-ec427df5fce8",
 			Name:      "hoge",
 			Status:    "active",
 			CreatedAt: util.TimeFromStr("2021-09-14 15:08:54"),

@@ -23,3 +23,6 @@ type AdminUsersResponse struct {
 
 // AdminUserResponse defines model for AdminUserResponse.
 type AdminUserResponse api.AdminUserResponse
+
+// DeleteAdminUserResponse type
+type DeleteAdminUserResponse api.DeleteAdminUserResponse

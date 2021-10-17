@@ -128,12 +128,12 @@ func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams
 }
 
 func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
-	adminInteractor := h.reg.AdminInteractor()
 	isUUID := util.IsValidUUID(uuid)
 	if !isUUID {
 		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
 	}
 
+	adminInteractor := h.reg.AdminInteractor()
 	adminUser, err := adminInteractor.GetAdminByUUID(c.Request().Context(), uuid)
 	if err != nil {
 		return sendError(c, err)
@@ -152,4 +152,27 @@ func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+// DeleteAdminInfo delete admin info
+func (h adminHandler) DeleteAdminInfo(c echo.Context, uuid string) error {
+
+	isUUID := util.IsValidUUID(uuid)
+	if !isUUID {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
+	adminInteractor := h.reg.AdminInteractor()
+
+	adminUser, err := adminInteractor.DeleteAdmin(c.Request().Context(), uuid)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	response := domain.DeleteAdminUserResponse{
+		Id:      adminUser.Id,
+		AdminId: adminUser.AdminId,
+		Name:    adminUser.Name,
+	}
+
+	return c.JSON(http.StatusOK, response)
 }

@@ -70,6 +70,37 @@ paths:
                     type: integer
         default:
           $ref: '#/components/responses/InternalServerError'
+    delete:
+      security:
+        - security: []
+      operationId: deleteAdminInfo
+      summary: adminUserの削除
+      description: adminを削除します。
+      tags:
+        - Admin
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: admin user uuid
+          schema:
+            type: string
+      responses:
+        '200':
+          description: admin削除が成功した場合。
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeleteAdminUserResponse'
+                  total:
+                    type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
   /admin/login:
     post:
       operationId: adminLogin
@@ -471,6 +502,24 @@ components:
         - status
         - created_at
         - updated_at
+    DeleteAdminUserResponse:
+      description: DeleteAdminUserResponse
+      type: object
+      properties:
+        id:
+          description: ID
+          type: integer
+          format: int64
+        admin_id:
+          description: admin_id
+          type: string
+        name:
+          description: name
+          type: string
+      required:
+        - id
+        - admin_id
+        - name
   responses:
     ErrorResponse:
       description: エラーレスポンス

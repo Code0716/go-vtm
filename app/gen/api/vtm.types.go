@@ -89,6 +89,18 @@ type CommonSuccessResponse struct {
 	Message string `json:"message"`
 }
 
+// DeleteAdminUserResponse
+type DeleteAdminUserResponse struct {
+	// admin_id
+	AdminId string `json:"admin_id"`
+
+	// ID
+	Id int64 `json:"id"`
+
+	// name
+	Name string `json:"name"`
+}
+
 // エラー
 type Error struct {
 	// エラーコード
