@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
 	"github.com/Code0716/go-vtm/app/infrastructure/db"
 	"github.com/Code0716/go-vtm/app/interfaces/handlers"
@@ -57,11 +58,11 @@ func start() int {
 	router := e.Group("/api/v1")
 
 	// JWT認証。開発の都合上一旦コメントアウト
-	// router.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-	// 	SigningKey:  []byte(env.Signingkey),
-	// 	TokenLookup: "header:authorization",
-	// 	Claims:      &domain.JwtCustomClaims{},
-	// }))
+	router.Use(middleware.JWTWithConfig(middleware.JWTConfig{
+		SigningKey:  []byte(env.Signingkey),
+		TokenLookup: "header:authorization",
+		Claims:      &domain.JwtCustomClaims{},
+	}))
 
 	api.RegisterHandlersWithBaseURL(router, newHandlers, "")
 

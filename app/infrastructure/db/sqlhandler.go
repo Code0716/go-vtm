@@ -32,7 +32,7 @@ func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
 		return domain.NewError(domain.ErrorTypeContentNotFound)
 	}
 	if err != nil {
-		return err
+		return domain.NewError(domain.ErrorTypeInternalError)
 	}
 	return nil
 }
@@ -43,14 +43,22 @@ func (h SQLHandler) First(value interface{}, where ...interface{}) error {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return domain.NewError(domain.ErrorTypeContentNotFound)
 	}
-	return err
+	if err != nil {
+		return domain.NewError(domain.ErrorTypeInternalError)
+	}
+	return nil
 }
 
 // Save is gorm save
-// TODO:未実装
 func (h *SQLHandler) Save(value interface{}) error {
 	err := h.Conn.Save(value).Error
-	return err
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return domain.NewError(domain.ErrorTypeContentNotFound)
+	}
+	if err != nil {
+		return domain.NewError(domain.ErrorTypeInternalError)
+	}
+	return nil
 }
 
 // Update is gorm Update

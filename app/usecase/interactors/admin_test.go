@@ -65,7 +65,7 @@ func TestAdmin_IsAdminExist(t *testing.T) {
 	defer cancel()
 
 	type fakes struct {
-		fakeIsAdminExist func(ctx context.Context, name, mail string) (bool, error)
+		fakeIsAdminExist func(ctx context.Context, mail string) (bool, error)
 	}
 
 	type args struct {
@@ -82,18 +82,18 @@ func TestAdmin_IsAdminExist(t *testing.T) {
 		{
 			"Success",
 			fakes{
-				fakeIsAdminExist: func(ctx context.Context, name, mail string) (bool, error) {
+				fakeIsAdminExist: func(ctx context.Context, mail string) (bool, error) {
 					return false, nil
 				},
 			},
-			args{name: "name", mail: "mail"},
+			args{mail: "mail"},
 			false,
 			false,
 		},
 		{
 			"failed",
 			fakes{
-				fakeIsAdminExist: func(ctx context.Context, name, mail string) (bool, error) {
+				fakeIsAdminExist: func(ctx context.Context, mail string) (bool, error) {
 					return true, nil
 				},
 			},
@@ -108,7 +108,7 @@ func TestAdmin_IsAdminExist(t *testing.T) {
 			adminRepo.FakeIsAdminExist = tt.fakes.fakeIsAdminExist
 			ia := interactors.NewAdmin(adminRepo)
 
-			got, err := ia.IsAdminExist(ctx, tt.args.name, tt.args.mail)
+			got, err := ia.IsAdminExist(ctx, tt.args.mail)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Admin.IsAdminExist() error = %v, wantErr %v", err, tt.wantErr)
 				return

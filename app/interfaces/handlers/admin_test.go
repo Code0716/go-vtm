@@ -20,7 +20,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 	t.Parallel()
 
 	type fakes struct {
-		fakeIsAdminExist func(ctx context.Context, name, mail string) (bool, error)
+		fakeIsAdminExist func(ctx context.Context, mail string) (bool, error)
 		fakeRegistAdmin  func(ctx context.Context, params domain.AdminUser) error
 	}
 	type args struct {
@@ -36,7 +36,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 		{
 			"Success",
 			fakes{
-				fakeIsAdminExist: func(ctx context.Context, name, mail string) (bool, error) {
+				fakeIsAdminExist: func(ctx context.Context, mail string) (bool, error) {
 					return false, nil
 				},
 				fakeRegistAdmin: func(ctx context.Context, params domain.AdminUser) error {
@@ -64,7 +64,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 		{
 			"no name error",
 			fakes{
-				fakeIsAdminExist: func(ctx context.Context, name, mail string) (bool, error) {
+				fakeIsAdminExist: func(ctx context.Context, mail string) (bool, error) {
 					return false, nil
 				},
 				fakeRegistAdmin: func(ctx context.Context, params domain.AdminUser) error {
@@ -94,7 +94,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 		{
 			"admin user already exest",
 			fakes{
-				fakeIsAdminExist: func(ctx context.Context, name, mail string) (bool, error) {
+				fakeIsAdminExist: func(ctx context.Context, mail string) (bool, error) {
 					return true, nil
 				},
 				fakeRegistAdmin: func(ctx context.Context, params domain.AdminUser) error {

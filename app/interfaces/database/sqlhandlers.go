@@ -10,5 +10,6 @@ type SQLHandlerInterface interface {
 	IsExist(tableName string, query interface{}, args ...interface{}) (bool, error)
 	GetAllAdminUsers(params domain.Pager) ([]*domain.AdminUser, int64, error)
 	AdminMemberGetAll(params domain.Pager) ([]*domain.Member, int64, error)
+	Save(value interface{}) error
 	Delete(value interface{}, where ...interface{}) error
 }

@@ -46,6 +46,7 @@ func (r *AdminRepository) RegistAdmin(ctx context.Context, adminUser domain.Admi
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -55,16 +56,28 @@ func (r *AdminRepository) GetAllAdminUser(ctx context.Context, params domain.Pag
 	if err != nil {
 		return nil, 0, err
 	}
+
 	return adminUsers, count, err
 }
 
+// PutAdminUser put admin user
+func (r *AdminRepository) PutAdminUser(ctx context.Context, params domain.AdminUser) (*domain.AdminUser, error) {
+	err := r.SQLHandler.Save(&params)
+	if err != nil {
+		return nil, err
+	}
+
+	return &params, err
+}
+
 // IsAdminExist check admin is already registered
-func (r *AdminRepository) IsAdminExist(ctx context.Context, name, mail string) (bool, error) {
+func (r *AdminRepository) IsAdminExist(ctx context.Context, mail string) (bool, error) {
 	var adminU domain.AdminUser
-	isExist, err := r.SQLHandler.IsExist(adminU.TableName(), "name = ? OR mail_address = ?", name, mail)
+	isExist, err := r.SQLHandler.IsExist(adminU.TableName(), "mail_address = ?", mail)
 	if err != nil {
 		return false, err
 	}
+
 	return isExist, nil
 }
 

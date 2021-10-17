@@ -70,6 +70,60 @@ paths:
                     type: integer
         default:
           $ref: '#/components/responses/InternalServerError'
+    put:
+      security:
+        - security: []
+      operationId: updateAdminInfo
+      summary: adminUser情報更新
+      description: adminUserを更新する。
+      tags:
+        - Admin
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: admin user uuid
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: admin name
+                mail_address:
+                  type: string
+                  description: admin mail
+                status:
+                  type: string
+                  description: admin status
+                authority:
+                  type: string
+                  description: admin authority
+              required:
+                - mail_address
+                - name
+                - status
+                - authority
+      responses:
+        '200':
+          description: adminUserの更新が成功した場合
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  adminUser:
+                    type: object
+                    items:
+                      $ref: '#/components/schemas/AdminUserResponse'
+                  total:
+                    type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
     delete:
       security:
         - security: []

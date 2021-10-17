@@ -94,9 +94,16 @@ func (ia *AdminInteractor) GetAdminList(ctx context.Context, params domain.Pager
 
 // IsAdminExist check regist admin
 // ia: admin interactor
-func (ia *AdminInteractor) IsAdminExist(ctx context.Context, name, mail string) (bool, error) {
-	isExist, err := ia.AdminRepository.IsAdminExist(ctx, name, mail)
+func (ia *AdminInteractor) IsAdminExist(ctx context.Context, mail string) (bool, error) {
+	isExist, err := ia.AdminRepository.IsAdminExist(ctx, mail)
 	return isExist, err
+}
+
+// PutAdminUser update AdminUser
+// ia: admin interactor
+func (ia *AdminInteractor) PutAdminUser(ctx context.Context, params domain.AdminUser) (*domain.AdminUser, error) {
+	adminUser, err := ia.AdminRepository.PutAdminUser(ctx, params)
+	return adminUser, err
 }
 
 // DeleteAdmin check regist admin

@@ -57,7 +57,7 @@ func (h adminHandler) RegistAdmin(c echo.Context) error {
 	}
 
 	adminInteractor := h.reg.AdminInteractor()
-	if isRegested, err := adminInteractor.IsAdminExist(c.Request().Context(), newAdmin.Name, newAdmin.MailAddress); isRegested {
+	if isRegested, err := adminInteractor.IsAdminExist(c.Request().Context(), newAdmin.MailAddress); isRegested {
 		if err != nil {
 			return sendError(c, domain.NewError(domain.ErrorTypeInternalError))
 		}
@@ -152,6 +152,41 @@ func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+// UpdateAdminInfo is update adminUser
+func (h adminHandler) UpdateAdminInfo(c echo.Context, uuid string) error {
+	isUUID := util.IsValidUUID(uuid)
+	if !isUUID {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
+
+	adminInteractor := h.reg.AdminInteractor()
+	adminUser, err := adminInteractor.GetAdminByUUID(c.Request().Context(), uuid)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	var updateAdmin domain.UpdateAdminInfoJSONRequestBody
+	err = c.Bind(&updateAdmin)
+	if err != nil {
+		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
+	}
+
+	adminUser.Name = updateAdmin.Name
+	if !util.ValidEmailAddress(updateAdmin.MailAddress) {
+		return sendError(c, domain.NewError(domain.ErrorTypeAdminEmailValidationFailed))
+	}
+	adminUser.MailAddress = updateAdmin.MailAddress
+	adminUser.Authority = updateAdmin.Authority
+	adminUser.Status = updateAdmin.Status
+
+	response, err := adminInteractor.PutAdminUser(c.Request().Context(), *adminUser)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	return c.JSON(http.StatusOK, response)
 }
 
 // DeleteAdminInfo delete admin info

@@ -218,6 +218,21 @@ type RegistAdminJSONBody struct {
 	Password string `json:"password"`
 }
 
+// UpdateAdminInfoJSONBody defines parameters for UpdateAdminInfo.
+type UpdateAdminInfoJSONBody struct {
+	// admin authority
+	Authority string `json:"authority"`
+
+	// admin mail
+	MailAddress string `json:"mail_address"`
+
+	// admin name
+	Name string `json:"name"`
+
+	// admin status
+	Status string `json:"status"`
+}
+
 // AdminLoginJSONRequestBody defines body for AdminLogin for application/json ContentType.
 type AdminLoginJSONRequestBody AdminLoginJSONBody
 
@@ -226,4 +241,7 @@ type AdminRegistMemberJSONRequestBody AdminRegistMemberJSONBody
 
 // RegistAdminJSONRequestBody defines body for RegistAdmin for application/json ContentType.
 type RegistAdminJSONRequestBody RegistAdminJSONBody
+
+// UpdateAdminInfoJSONRequestBody defines body for UpdateAdminInfo for application/json ContentType.
+type UpdateAdminInfoJSONRequestBody UpdateAdminInfoJSONBody
 

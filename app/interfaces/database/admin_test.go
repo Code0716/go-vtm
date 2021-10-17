@@ -181,7 +181,6 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 	}
 
 	type args struct {
-		name string
 		mail string
 	}
 
@@ -197,13 +196,13 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 			fakes{
 				fakeIsAdminExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
 
-					if args[0] == "" || args[1] == "" {
+					if args[0] == "" {
 						return false, errors.New("faild")
 					}
 					return false, nil
 				},
 			},
-			args{name: "hogehoge", mail: "test@test.com"},
+			args{mail: "test@test.com"},
 			false,
 			false,
 		},
@@ -212,13 +211,13 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 			fakes{
 				fakeIsAdminExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
 
-					if args[0] == "" || args[1] == "" {
+					if args[0] == "" {
 						return false, errors.New("faild")
 					}
 					return true, nil
 				},
 			},
-			args{name: "hogehoge", mail: "test@test.com"},
+			args{mail: "test@test.com"},
 			true,
 			false,
 		},
@@ -226,7 +225,7 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 			"validate error",
 			fakes{
 				fakeIsAdminExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
-					if args[0] == "" || args[1] == "" {
+					if args[0] == "" {
 						return false, errors.New("faild")
 					}
 					return false, nil
@@ -242,7 +241,7 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 			adminRepo := mockAdminRepo{}
 			adminRepo.FakeIsAdminExist = tt.fakes.fakeIsAdminExist
 			r := database.NewAdmin(adminRepo)
-			got, err := r.IsAdminExist(testCtx, tt.args.name, tt.args.mail)
+			got, err := r.IsAdminExist(testCtx, tt.args.mail)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("AdminRepository.IsAdminExist() error = %v, wantErr %v", err, tt.wantErr)

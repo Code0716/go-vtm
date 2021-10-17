@@ -24,5 +24,8 @@ type AdminUsersResponse struct {
 // AdminUserResponse defines model for AdminUserResponse.
 type AdminUserResponse api.AdminUserResponse
 
+// UpdateAdminInfoJSONRequestBody defines model for UpdateAdminInfoJSONRequestBody.
+type UpdateAdminInfoJSONRequestBody api.UpdateAdminInfoJSONRequestBody
+
 // DeleteAdminUserResponse type
 type DeleteAdminUserResponse api.DeleteAdminUserResponse

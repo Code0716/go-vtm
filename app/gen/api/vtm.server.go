@@ -34,6 +34,9 @@ type ServerInterface interface {
 	// adminUserの取得
 	// (GET /admin/{uuid})
 	GetAdminInfo(ctx echo.Context, uuid string) error
+	// adminUser情報更新
+	// (PUT /admin/{uuid})
+	UpdateAdminInfo(ctx echo.Context, uuid string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -174,6 +177,24 @@ func (w *ServerInterfaceWrapper) GetAdminInfo(ctx echo.Context) error {
 	return err
 }
 
+// UpdateAdminInfo converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateAdminInfo(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "uuid" -------------
+	var uuid string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "uuid", runtime.ParamLocationPath, ctx.Param("uuid"), &uuid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uuid: %s", err))
+	}
+
+	ctx.Set(SecurityScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.UpdateAdminInfo(ctx, uuid)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -209,6 +230,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/admin/regist", wrapper.RegistAdmin)
 	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminInfo)
 	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminInfo)
+	router.PUT(baseURL+"/admin/:uuid", wrapper.UpdateAdminInfo)
 
 }
 
