@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
 )
@@ -89,7 +90,10 @@ func (r *AdminRepository) DeleteAdminUser(ctx context.Context, uuid string) (*do
 		return nil, err
 	}
 
-	err = r.SQLHandler.Delete(&adminUser, domain.AdminUser{AdminId: uuid})
+	currentTime := time.Now()
+	adminUser.DeletedAt = &currentTime
+	adminUser.Status = domain.StatusCodeOther.GetWorkStatus()
+	err = r.SQLHandler.Save(&adminUser)
 	if err != nil {
 		return nil, err
 	}

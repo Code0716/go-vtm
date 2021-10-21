@@ -42,7 +42,7 @@ func (im *MembersInteractor) RegistMember(ctx context.Context, params domain.Mem
 	params.UpdatedAt = currentTime
 	params.MemberId = util.UUIDGenerator()
 
-	params.Status = domain.StatusCodeInit.GetMembeStatus()
+	params.Status = domain.StatusCodeInit.GetWorkStatus()
 	err := im.MembersRepository.AdminRegistMember(ctx, params)
 	if err != nil {
 		return err

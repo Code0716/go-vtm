@@ -10,6 +10,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/Code0716/go-vtm/app/constants"
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
 	"github.com/Code0716/go-vtm/app/interfaces/handlers"
@@ -56,7 +57,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 			wantRes{
 				code: http.StatusCreated,
 				body: domain.CommonSuccessResponse{
-					Message: "Success",
+					Message: constants.REGIST_SUCCESS,
 				},
 			},
 			false,
