@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/Code0716/go-vtm/app/constants"
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
 	"github.com/Code0716/go-vtm/app/registry"
@@ -71,7 +72,7 @@ func (h adminHandler) RegistAdmin(c echo.Context) error {
 		return sendError(c, err)
 	}
 
-	return c.JSON(http.StatusCreated, domain.CommonSuccessResponse{Message: "Success"})
+	return c.JSON(http.StatusCreated, domain.CommonSuccessResponse{Message: constants.REGIST_SUCCESS})
 
 }
 
