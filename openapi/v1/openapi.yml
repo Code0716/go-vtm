@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: vtm
-  description: ベルベット勤怠管理
+  description: vtm勤怠管理
   version: 1.0.0
   termsOfService: 'https://code0716.com/'
   contact:
