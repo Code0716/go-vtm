@@ -72,7 +72,7 @@ func (h adminHandler) RegistAdmin(c echo.Context) error {
 		return sendError(c, err)
 	}
 
-	return c.JSON(http.StatusCreated, domain.CommonSuccessResponse{Message: constants.REGIST_SUCCESS})
+	return c.JSON(http.StatusCreated, domain.CommonSuccessResponse{Message: constants.RegistSuccess})
 
 }
 

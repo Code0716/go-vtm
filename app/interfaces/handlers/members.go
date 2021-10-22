@@ -99,7 +99,7 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 	}
 
 	res := domain.CommonSuccessResponse{
-		Message: constants.REGIST_SUCCESS,
+		Message: constants.RegistSuccess,
 	}
 
 	return c.JSON(http.StatusCreated, res)

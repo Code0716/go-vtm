@@ -76,7 +76,7 @@ const (
 	StatusOther = "other"
 )
 
-// GetMembeStatus get member status
+// GetWorkStatus get member status
 func (m StatusCode) GetWorkStatus() string {
 	switch m {
 	case StatusCodeInit:

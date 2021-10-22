@@ -57,7 +57,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 			wantRes{
 				code: http.StatusCreated,
 				body: domain.CommonSuccessResponse{
-					Message: constants.REGIST_SUCCESS,
+					Message: constants.RegistSuccess,
 				},
 			},
 			false,

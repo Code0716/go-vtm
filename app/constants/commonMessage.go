@@ -1,7 +1,6 @@
 package constants
 
-type CommonMessage string
-
 const (
-	REGIST_SUCCESS = "登録完了"
+	// RegistSuccess regist success message
+	RegistSuccess = "登録完了"
 )
