@@ -57,7 +57,6 @@ func start() int {
 	// v1
 	router := e.Group("/api/v1")
 
-	// JWT認証。開発の都合上一旦コメントアウト
 	router.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey:  []byte(env.Signingkey),
 		TokenLookup: "header:authorization",
@@ -66,12 +65,13 @@ func start() int {
 
 	api.RegisterHandlersWithBaseURL(router, newHandlers, "")
 
-	// TODO:developのときに表出するようにする。
-	for _, r := range e.Routes() {
-		if r.Path == "" || r.Path == "/api/v1" || r.Path == "/api/v1/*" {
-			continue
+	if env.EnvCode == "local" {
+		for _, r := range e.Routes() {
+			if r.Path == "" || r.Path == "/api/v1" || r.Path == "/api/v1/*" {
+				continue
+			}
+			fmt.Printf("[%v] %+v\n", r.Method, r.Path)
 		}
-		fmt.Printf("[%v] %+v\n", r.Method, r.Path)
 	}
 	addr := util.GetAPIPath(env)
 

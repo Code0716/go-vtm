@@ -5,10 +5,9 @@ import (
 	"net/http"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	"github.com/labstack/echo/v4"
 )
 
-func sendError(c echo.Context, err error) error {
+func sendError(c Context, err error) error {
 	var e domain.Error
 	if !errors.As(err, &e) {
 		return c.JSON(http.StatusInternalServerError, buildInternalServerErrorResponse())

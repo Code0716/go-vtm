@@ -7,6 +7,7 @@ import (
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
 	"github.com/Code0716/go-vtm/app/registry"
+	"github.com/Code0716/go-vtm/app/util"
 	"github.com/labstack/echo/v4"
 )
 
@@ -103,5 +104,26 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, res)
+
+}
+
+func (h membersHandler) UpdateMemberUser(c echo.Context, uuid string) error {
+	var updateMember domain.UpdateMemberUserJSONBody
+	err := c.Bind(&updateMember)
+	if err != nil {
+		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
+	}
+
+	if !util.IsValidUUID(uuid) {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
+
+	membersInteractor := h.reg.MembersInteractor()
+	oldMember, err := membersInteractor.GetMemberByUUID(c.Request().Context(), uuid)
+	if err != nil && oldMember.DeletedAt != nil {
+		return sendError(c, err)
+	}
+
+	return nil // c.JSON(http.StatusCreated, res)
 
 }

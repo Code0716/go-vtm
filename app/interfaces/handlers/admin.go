@@ -128,7 +128,7 @@ func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams
 	return c.JSON(http.StatusOK, res)
 }
 
-func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
+func (h adminHandler) GetAdminUser(c echo.Context, uuid string) error {
 	isUUID := util.IsValidUUID(uuid)
 	if !isUUID {
 		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
@@ -155,8 +155,8 @@ func (h adminHandler) GetAdminInfo(c echo.Context, uuid string) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-// UpdateAdminInfo is update adminUser
-func (h adminHandler) UpdateAdminInfo(c echo.Context, uuid string) error {
+// UpdateAdminUser is update adminUser
+func (h adminHandler) UpdateAdminUser(c echo.Context, uuid string) error {
 	isUUID := util.IsValidUUID(uuid)
 	if !isUUID {
 		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
@@ -168,7 +168,7 @@ func (h adminHandler) UpdateAdminInfo(c echo.Context, uuid string) error {
 		return sendError(c, err)
 	}
 
-	var updateAdmin domain.UpdateAdminInfoJSONRequestBody
+	var updateAdmin domain.UpdateAdminUserJSONRequestBody
 	err = c.Bind(&updateAdmin)
 	if err != nil {
 		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
@@ -190,8 +190,8 @@ func (h adminHandler) UpdateAdminInfo(c echo.Context, uuid string) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// DeleteAdminInfo delete admin info
-func (h adminHandler) DeleteAdminInfo(c echo.Context, uuid string) error {
+// DeleteAdminUser delete admin info
+func (h adminHandler) DeleteAdminUser(c echo.Context, uuid string) error {
 
 	isUUID := util.IsValidUUID(uuid)
 	if !isUUID {

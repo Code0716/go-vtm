@@ -48,3 +48,13 @@ func (r *MembersRepository) AdminMemberGetAll(ctx context.Context, params domain
 
 	return members, count, nil
 }
+
+// GetMemberByUUID  get member by uuid
+func (r *MembersRepository) GetMemberByUUID(ctx context.Context, uuid string) (*domain.Member, error) {
+	var member domain.Member
+	err := r.SQLHandler.First(&member, domain.Member{MemberId: uuid})
+	if err != nil {
+		return nil, err
+	}
+	return &member, nil
+}

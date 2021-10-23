@@ -152,6 +152,36 @@ type Member struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// Member
+type MemberResponse struct {
+	// 登録日
+	CreatedAt time.Time `json:"created_at"`
+
+	// 削除日
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+
+	// 時間単価
+	HourlyPrice *int64 `json:"hourly_price,omitempty"`
+
+	// ID
+	Id int64 `json:"id"`
+
+	// member_id
+	MemberId string `json:"member_id"`
+
+	// name
+	Name string `json:"name"`
+
+	// phone
+	PhoneNumber *string `json:"phone_number,omitempty"`
+
+	// status
+	Status string `json:"status"`
+
+	// 更新日
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 // LimitParam defines model for LimitParam.
 type LimitParam int
 
@@ -206,6 +236,21 @@ type AdminRegistMemberJSONBody struct {
 	PhoneNumber string `json:"phone_number"`
 }
 
+// UpdateMemberUserJSONBody defines parameters for UpdateMemberUser.
+type UpdateMemberUserJSONBody struct {
+	// hourly price
+	HourlyPrice string `json:"hourly_price"`
+
+	// name
+	Name string `json:"name"`
+
+	// phone number
+	PhoneNumber string `json:"phone_number"`
+
+	// status
+	Status string `json:"status"`
+}
+
 // RegistAdminJSONBody defines parameters for RegistAdmin.
 type RegistAdminJSONBody struct {
 	// admin mail address
@@ -218,8 +263,8 @@ type RegistAdminJSONBody struct {
 	Password string `json:"password"`
 }
 
-// UpdateAdminInfoJSONBody defines parameters for UpdateAdminInfo.
-type UpdateAdminInfoJSONBody struct {
+// UpdateAdminUserJSONBody defines parameters for UpdateAdminUser.
+type UpdateAdminUserJSONBody struct {
 	// admin authority
 	Authority string `json:"authority"`
 
@@ -239,9 +284,12 @@ type AdminLoginJSONRequestBody AdminLoginJSONBody
 // AdminRegistMemberJSONRequestBody defines body for AdminRegistMember for application/json ContentType.
 type AdminRegistMemberJSONRequestBody AdminRegistMemberJSONBody
 
+// UpdateMemberUserJSONRequestBody defines body for UpdateMemberUser for application/json ContentType.
+type UpdateMemberUserJSONRequestBody UpdateMemberUserJSONBody
+
 // RegistAdminJSONRequestBody defines body for RegistAdmin for application/json ContentType.
 type RegistAdminJSONRequestBody RegistAdminJSONBody
 
-// UpdateAdminInfoJSONRequestBody defines body for UpdateAdminInfo for application/json ContentType.
-type UpdateAdminInfoJSONRequestBody UpdateAdminInfoJSONBody
+// UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
+type UpdateAdminUserJSONRequestBody UpdateAdminUserJSONBody
 

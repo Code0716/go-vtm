@@ -11,6 +11,7 @@ import (
 
 // Environment has application env variables.
 type Environment struct {
+	EnvCode     string
 	AppPort     string
 	AppHost     string
 	AppEnv      string
@@ -81,6 +82,7 @@ func loadEnv() Environment {
 	e.DBCharset = os.Getenv("MYSQL_CHARSET")
 	e.DBTimezone = os.Getenv("MYSQL_TIMEZONE")
 	e.Signingkey = os.Getenv("SIGNINGKEY")
+	e.EnvCode = os.Getenv("ENV_CODE")
 	return e
 }
 

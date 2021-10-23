@@ -56,3 +56,10 @@ func (im *MembersInteractor) IsMemberExist(ctx context.Context, name, phone stri
 	isExist, err := im.MembersRepository.IsMemberExist(ctx, name, phone)
 	return isExist, err
 }
+
+//  GetMemberByUUID get regist member by uuid
+// im: members interactor
+func (im *MembersInteractor) GetMemberByUUID(ctx context.Context, uuid string) (*domain.Member, error) {
+	member, err := im.MembersRepository.GetMemberByUUID(ctx, uuid)
+	return member, err
+}

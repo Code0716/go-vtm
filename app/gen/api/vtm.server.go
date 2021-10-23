@@ -25,18 +25,21 @@ type ServerInterface interface {
 	// memberの登録
 	// (POST /admin/members)
 	AdminRegistMember(ctx echo.Context) error
+	// member情報更新
+	// (PUT /admin/members/{uuid})
+	UpdateMemberUser(ctx echo.Context, uuid string) error
 	// admin登録
 	// (POST /admin/regist)
 	RegistAdmin(ctx echo.Context) error
 	// adminUserの削除
 	// (DELETE /admin/{uuid})
-	DeleteAdminInfo(ctx echo.Context, uuid string) error
+	DeleteAdminUser(ctx echo.Context, uuid string) error
 	// adminUserの取得
 	// (GET /admin/{uuid})
-	GetAdminInfo(ctx echo.Context, uuid string) error
+	GetAdminUser(ctx echo.Context, uuid string) error
 	// adminUser情報更新
 	// (PUT /admin/{uuid})
-	UpdateAdminInfo(ctx echo.Context, uuid string) error
+	UpdateAdminUser(ctx echo.Context, uuid string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -132,6 +135,24 @@ func (w *ServerInterfaceWrapper) AdminRegistMember(ctx echo.Context) error {
 	return err
 }
 
+// UpdateMemberUser converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateMemberUser(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "uuid" -------------
+	var uuid string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "uuid", runtime.ParamLocationPath, ctx.Param("uuid"), &uuid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uuid: %s", err))
+	}
+
+	ctx.Set(SecurityScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.UpdateMemberUser(ctx, uuid)
+	return err
+}
+
 // RegistAdmin converts echo context to params.
 func (w *ServerInterfaceWrapper) RegistAdmin(ctx echo.Context) error {
 	var err error
@@ -141,8 +162,8 @@ func (w *ServerInterfaceWrapper) RegistAdmin(ctx echo.Context) error {
 	return err
 }
 
-// DeleteAdminInfo converts echo context to params.
-func (w *ServerInterfaceWrapper) DeleteAdminInfo(ctx echo.Context) error {
+// DeleteAdminUser converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteAdminUser(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "uuid" -------------
 	var uuid string
@@ -155,12 +176,12 @@ func (w *ServerInterfaceWrapper) DeleteAdminInfo(ctx echo.Context) error {
 	ctx.Set(SecurityScopes, []string{""})
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.DeleteAdminInfo(ctx, uuid)
+	err = w.Handler.DeleteAdminUser(ctx, uuid)
 	return err
 }
 
-// GetAdminInfo converts echo context to params.
-func (w *ServerInterfaceWrapper) GetAdminInfo(ctx echo.Context) error {
+// GetAdminUser converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAdminUser(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "uuid" -------------
 	var uuid string
@@ -173,12 +194,12 @@ func (w *ServerInterfaceWrapper) GetAdminInfo(ctx echo.Context) error {
 	ctx.Set(SecurityScopes, []string{""})
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.GetAdminInfo(ctx, uuid)
+	err = w.Handler.GetAdminUser(ctx, uuid)
 	return err
 }
 
-// UpdateAdminInfo converts echo context to params.
-func (w *ServerInterfaceWrapper) UpdateAdminInfo(ctx echo.Context) error {
+// UpdateAdminUser converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateAdminUser(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "uuid" -------------
 	var uuid string
@@ -191,7 +212,7 @@ func (w *ServerInterfaceWrapper) UpdateAdminInfo(ctx echo.Context) error {
 	ctx.Set(SecurityScopes, []string{""})
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.UpdateAdminInfo(ctx, uuid)
+	err = w.Handler.UpdateAdminUser(ctx, uuid)
 	return err
 }
 
@@ -227,10 +248,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/admin/login", wrapper.AdminLogin)
 	router.GET(baseURL+"/admin/members", wrapper.AdminGetMemberList)
 	router.POST(baseURL+"/admin/members", wrapper.AdminRegistMember)
+	router.PUT(baseURL+"/admin/members/:uuid", wrapper.UpdateMemberUser)
 	router.POST(baseURL+"/admin/regist", wrapper.RegistAdmin)
-	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminInfo)
-	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminInfo)
-	router.PUT(baseURL+"/admin/:uuid", wrapper.UpdateAdminInfo)
+	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminUser)
+	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminUser)
+	router.PUT(baseURL+"/admin/:uuid", wrapper.UpdateAdminUser)
 
 }
 
