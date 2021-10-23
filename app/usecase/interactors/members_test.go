@@ -282,6 +282,37 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 			nil,
 			true,
 		},
+		{
+			"faild internal server error",
+			fakes{
+				fakeGetMemberByUUID: func(ctx context.Context, uuid string) (*domain.Member, error) {
+					return &domain.Member{
+						CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+						DeletedAt:   nil,
+						HourlyPrice: util.Int64Ptr(1000),
+						Id:          1,
+						MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
+						Name:        "hoge",
+						PhoneNumber: "09000000000",
+						Status:      "active",
+						UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+					}, nil
+				},
+				fakeUpdateMember: func(ctx context.Context, oldMember domain.Member) (*domain.Member, error) {
+
+					return nil, domain.NewError(domain.ErrorTypeInternalError)
+				},
+			},
+			args{
+				uuid: "873a2824-8006-4e67-aed7-ec427df5fce8",
+				params: domain.UpdateMemberJSONBody{
+					HourlyPrice: util.Int64Ptr(1200),
+					PhoneNumber: "08000000000",
+				},
+			},
+			nil,
+			true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
