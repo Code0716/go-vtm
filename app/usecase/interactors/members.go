@@ -50,9 +50,9 @@ func (im *MembersInteractor) RegistMember(ctx context.Context, params domain.Mem
 	return nil
 }
 
-// PutMember update member
+// UpdateMember update member
 // im: members interactor
-func (im *MembersInteractor) PutMember(ctx context.Context, params domain.PutMemberJSONBody, uuid string) (*domain.Member, error) {
+func (im *MembersInteractor) UpdateMember(ctx context.Context, params domain.UpdateMemberJSONBody, uuid string) (*domain.Member, error) {
 
 	oldMember, err := im.GetMemberByUUID(ctx, uuid)
 	if err != nil {
@@ -76,7 +76,7 @@ func (im *MembersInteractor) PutMember(ctx context.Context, params domain.PutMem
 
 	oldMember.UpdatedAt = time.Now()
 
-	newMember, err := im.MembersRepository.PutMember(ctx, *oldMember)
+	newMember, err := im.MembersRepository.UpdateMember(ctx, *oldMember)
 	if err != nil {
 		return nil, err
 	}

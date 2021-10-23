@@ -263,8 +263,8 @@ type UpdateAdminUserJSONBody struct {
 	Status string `json:"status"`
 }
 
-// PutMemberJSONBody defines parameters for PutMember.
-type PutMemberJSONBody struct {
+// UpdateMemberJSONBody defines parameters for UpdateMember.
+type UpdateMemberJSONBody struct {
 	// hourly price
 	HourlyPrice string `json:"hourly_price"`
 
@@ -290,6 +290,6 @@ type RegistAdminJSONRequestBody RegistAdminJSONBody
 // UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
 type UpdateAdminUserJSONRequestBody UpdateAdminUserJSONBody
 
-// PutMemberJSONRequestBody defines body for PutMember for application/json ContentType.
-type PutMemberJSONRequestBody PutMemberJSONBody
+// UpdateMemberJSONRequestBody defines body for UpdateMember for application/json ContentType.
+type UpdateMemberJSONRequestBody UpdateMemberJSONBody
 

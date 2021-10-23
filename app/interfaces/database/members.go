@@ -27,8 +27,8 @@ func (r *MembersRepository) AdminRegistMember(ctx context.Context, member domain
 	return nil
 }
 
-// PutMemberMember update member
-func (r *MembersRepository) PutMember(ctx context.Context, member domain.Member) (*domain.Member, error) {
+// UpdateMember update member
+func (r *MembersRepository) UpdateMember(ctx context.Context, member domain.Member) (*domain.Member, error) {
 	err := r.SQLHandler.Save(&member)
 	if err != nil {
 		return nil, err

@@ -30,7 +30,7 @@ const (
 	// ErrorTypeUUIDValidationFailed invalid uuid
 	ErrorTypeUUIDValidationFailed // invalid_uuid
 	// ErrorTypeMemberAlreadyDeleted requested member already deleted
-	ErrorTypeMemberAlreadyDeleted //requested_member_already_deleted
+	ErrorTypeMemberAlreadyDeleted // requested_member_already_deleted
 	// ErrorTypeAuthenticationFailed 認証エラー
 	ErrorTypeAuthenticationFailed // authentication_faild
 	// ErrorTypeNotFound not found

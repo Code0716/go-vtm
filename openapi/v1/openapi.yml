@@ -303,7 +303,7 @@ paths:
     put:
       security:
         - security: []
-      operationId: putMember
+      operationId: updateMember
       summary: member情報更新
       description: memberを更新する。
       tags:

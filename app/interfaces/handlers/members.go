@@ -107,8 +107,8 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 
 }
 
-func (h membersHandler) PutMember(c echo.Context, uuid string) error {
-	var updateMember domain.PutMemberJSONBody
+func (h membersHandler) UpdateMember(c echo.Context, uuid string) error {
+	var updateMember domain.UpdateMemberJSONBody
 	err := c.Bind(&updateMember)
 	if err != nil {
 		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
@@ -119,7 +119,7 @@ func (h membersHandler) PutMember(c echo.Context, uuid string) error {
 	}
 
 	membersInteractor := h.reg.MembersInteractor()
-	newMember, err := membersInteractor.PutMember(c.Request().Context(), updateMember, uuid)
+	newMember, err := membersInteractor.UpdateMember(c.Request().Context(), updateMember, uuid)
 	if err != nil {
 		return sendError(c, err)
 	}

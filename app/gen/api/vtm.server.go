@@ -39,7 +39,7 @@ type ServerInterface interface {
 	UpdateAdminUser(ctx echo.Context, uuid string) error
 	// member情報更新
 	// (PUT /members/{uuid})
-	PutMember(ctx echo.Context, uuid string) error
+	UpdateMember(ctx echo.Context, uuid string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -198,8 +198,8 @@ func (w *ServerInterfaceWrapper) UpdateAdminUser(ctx echo.Context) error {
 	return err
 }
 
-// PutMember converts echo context to params.
-func (w *ServerInterfaceWrapper) PutMember(ctx echo.Context) error {
+// UpdateMember converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateMember(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "uuid" -------------
 	var uuid string
@@ -212,7 +212,7 @@ func (w *ServerInterfaceWrapper) PutMember(ctx echo.Context) error {
 	ctx.Set(SecurityScopes, []string{""})
 
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.PutMember(ctx, uuid)
+	err = w.Handler.UpdateMember(ctx, uuid)
 	return err
 }
 
@@ -252,7 +252,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminUser)
 	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminUser)
 	router.PUT(baseURL+"/admin/:uuid", wrapper.UpdateAdminUser)
-	router.PUT(baseURL+"/members/:uuid", wrapper.PutMember)
+	router.PUT(baseURL+"/members/:uuid", wrapper.UpdateMember)
 
 }
 
