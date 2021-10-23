@@ -25,9 +25,6 @@ type ServerInterface interface {
 	// memberの登録
 	// (POST /admin/members)
 	AdminRegistMember(ctx echo.Context) error
-	// member情報更新
-	// (PUT /admin/members/{uuid})
-	UpdateMemberUser(ctx echo.Context, uuid string) error
 	// admin登録
 	// (POST /admin/regist)
 	RegistAdmin(ctx echo.Context) error
@@ -40,6 +37,9 @@ type ServerInterface interface {
 	// adminUser情報更新
 	// (PUT /admin/{uuid})
 	UpdateAdminUser(ctx echo.Context, uuid string) error
+	// member情報更新
+	// (PUT /members/{uuid})
+	PutMember(ctx echo.Context, uuid string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -135,24 +135,6 @@ func (w *ServerInterfaceWrapper) AdminRegistMember(ctx echo.Context) error {
 	return err
 }
 
-// UpdateMemberUser converts echo context to params.
-func (w *ServerInterfaceWrapper) UpdateMemberUser(ctx echo.Context) error {
-	var err error
-	// ------------- Path parameter "uuid" -------------
-	var uuid string
-
-	err = runtime.BindStyledParameterWithLocation("simple", false, "uuid", runtime.ParamLocationPath, ctx.Param("uuid"), &uuid)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uuid: %s", err))
-	}
-
-	ctx.Set(SecurityScopes, []string{""})
-
-	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.UpdateMemberUser(ctx, uuid)
-	return err
-}
-
 // RegistAdmin converts echo context to params.
 func (w *ServerInterfaceWrapper) RegistAdmin(ctx echo.Context) error {
 	var err error
@@ -216,6 +198,24 @@ func (w *ServerInterfaceWrapper) UpdateAdminUser(ctx echo.Context) error {
 	return err
 }
 
+// PutMember converts echo context to params.
+func (w *ServerInterfaceWrapper) PutMember(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "uuid" -------------
+	var uuid string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "uuid", runtime.ParamLocationPath, ctx.Param("uuid"), &uuid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uuid: %s", err))
+	}
+
+	ctx.Set(SecurityScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.PutMember(ctx, uuid)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -248,11 +248,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/admin/login", wrapper.AdminLogin)
 	router.GET(baseURL+"/admin/members", wrapper.AdminGetMemberList)
 	router.POST(baseURL+"/admin/members", wrapper.AdminRegistMember)
-	router.PUT(baseURL+"/admin/members/:uuid", wrapper.UpdateMemberUser)
 	router.POST(baseURL+"/admin/regist", wrapper.RegistAdmin)
 	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminUser)
 	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminUser)
 	router.PUT(baseURL+"/admin/:uuid", wrapper.UpdateAdminUser)
+	router.PUT(baseURL+"/members/:uuid", wrapper.PutMember)
 
 }
 

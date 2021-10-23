@@ -12,4 +12,5 @@ type MembersRepository interface {
 	AdminRegistMember(ctx context.Context, member domain.Member) error
 	IsMemberExist(ctx context.Context, name, phone string) (bool, error)
 	GetMemberByUUID(ctx context.Context, uuid string) (*domain.Member, error)
+	PutMember(ctx context.Context, oldMember domain.Member) (*domain.Member, error)
 }

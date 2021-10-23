@@ -50,6 +50,40 @@ func (im *MembersInteractor) RegistMember(ctx context.Context, params domain.Mem
 	return nil
 }
 
+// PutMember update member
+// im: members interactor
+func (im *MembersInteractor) PutMember(ctx context.Context, params domain.PutMemberJSONBody, uuid string) (*domain.Member, error) {
+
+	oldMember, err := im.GetMemberByUUID(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	if oldMember.DeletedAt != nil {
+		return nil, domain.NewError(domain.ErrorTypeMemberAlreadyDeleted)
+	}
+
+	if params.Name != "" {
+		oldMember.Name = params.Name
+	}
+
+	if params.PhoneNumber != "" {
+		oldMember.PhoneNumber = params.PhoneNumber
+	}
+	if params.Status != "" {
+		oldMember.Status = params.Status
+	}
+
+	oldMember.UpdatedAt = time.Now()
+
+	newMember, err := im.MembersRepository.PutMember(ctx, *oldMember)
+	if err != nil {
+		return nil, err
+	}
+
+	return newMember, nil
+}
+
 // IsMemberExist check regist member
 // im: members interactor
 func (im *MembersInteractor) IsMemberExist(ctx context.Context, name, phone string) (bool, error) {

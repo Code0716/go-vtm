@@ -87,7 +87,7 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 
 	isExist, err := membersInteractor.IsMemberExist(c.Request().Context(), newMember.Name, newMember.PhoneNumber)
 	if err != nil {
-		return sendError(c, domain.WrapInternalError(err))
+		return sendError(c, domain.NewError(domain.ErrorTypeContentNotFound))
 	}
 
 	if isExist {
@@ -107,8 +107,8 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 
 }
 
-func (h membersHandler) UpdateMemberUser(c echo.Context, uuid string) error {
-	var updateMember domain.UpdateMemberUserJSONBody
+func (h membersHandler) PutMember(c echo.Context, uuid string) error {
+	var updateMember domain.PutMemberJSONBody
 	err := c.Bind(&updateMember)
 	if err != nil {
 		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
@@ -119,11 +119,21 @@ func (h membersHandler) UpdateMemberUser(c echo.Context, uuid string) error {
 	}
 
 	membersInteractor := h.reg.MembersInteractor()
-	oldMember, err := membersInteractor.GetMemberByUUID(c.Request().Context(), uuid)
-	if err != nil && oldMember.DeletedAt != nil {
+	newMember, err := membersInteractor.PutMember(c.Request().Context(), updateMember, uuid)
+	if err != nil {
 		return sendError(c, err)
 	}
 
-	return nil // c.JSON(http.StatusCreated, res)
+	response := domain.MemberResponse{
+		HourlyPrice: newMember.HourlyPrice,
+		Id:          newMember.Id,
+		MemberId:    newMember.MemberId,
+		Name:        newMember.Name,
+		PhoneNumber: newMember.Password,
+		Status:      newMember.Status,
+		UpdatedAt:   newMember.UpdatedAt,
+	}
+
+	return c.JSON(http.StatusOK, response)
 
 }

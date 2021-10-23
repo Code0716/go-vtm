@@ -31,6 +31,8 @@ func sendError(c Context, err error) error {
 		fallthrough
 	case domain.ErrorTypeContentNotFound:
 		fallthrough
+	case domain.ErrorTypeMemberAlreadyDeleted:
+		fallthrough
 	case domain.ErrorTypePasswordOrEmailValidationFailed:
 		code = http.StatusBadRequest
 	case domain.ErrorTypeAuthenticationFailed:

@@ -27,6 +27,15 @@ func (r *MembersRepository) AdminRegistMember(ctx context.Context, member domain
 	return nil
 }
 
+// PutMemberMember update member
+func (r *MembersRepository) PutMember(ctx context.Context, member domain.Member) (*domain.Member, error) {
+	err := r.SQLHandler.Save(&member)
+	if err != nil {
+		return nil, err
+	}
+	return &member, nil
+}
+
 // IsMemberExist check member name
 func (r *MembersRepository) IsMemberExist(ctx context.Context, name, phone string) (bool, error) {
 	var member domain.Member

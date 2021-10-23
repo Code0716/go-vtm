@@ -299,11 +299,11 @@ paths:
                     type: integer
         default:
           $ref: '#/components/responses/InternalServerError'
-  /admin/members/{uuid}:
+  /members/{uuid}:
     put:
       security:
         - security: []
-      operationId: updateMemberUser
+      operationId: putMember
       summary: member情報更新
       description: memberを更新する。
       tags:

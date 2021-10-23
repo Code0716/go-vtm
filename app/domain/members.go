@@ -15,8 +15,8 @@ func (i Member) TableName() string {
 // AdminRegistMemberJSONRequestBody defines body for RegistMember for application/json ContentType.
 type AdminRegistMemberJSONRequestBody api.AdminRegistMemberJSONRequestBody
 
-// UpdateMemberUserJSONBody defines parameters for UpdateMemberUser.
-type UpdateMemberUserJSONBody api.UpdateMemberUserJSONBody
+// PutMemberJSONBody defines parameters for PutMemberUser.
+type PutMemberJSONBody api.PutMemberJSONBody
 
 // MemberResponse defines model for Members.
 type MemberResponse api.MemberResponse

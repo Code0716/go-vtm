@@ -236,21 +236,6 @@ type AdminRegistMemberJSONBody struct {
 	PhoneNumber string `json:"phone_number"`
 }
 
-// UpdateMemberUserJSONBody defines parameters for UpdateMemberUser.
-type UpdateMemberUserJSONBody struct {
-	// hourly price
-	HourlyPrice string `json:"hourly_price"`
-
-	// name
-	Name string `json:"name"`
-
-	// phone number
-	PhoneNumber string `json:"phone_number"`
-
-	// status
-	Status string `json:"status"`
-}
-
 // RegistAdminJSONBody defines parameters for RegistAdmin.
 type RegistAdminJSONBody struct {
 	// admin mail address
@@ -278,18 +263,33 @@ type UpdateAdminUserJSONBody struct {
 	Status string `json:"status"`
 }
 
+// PutMemberJSONBody defines parameters for PutMember.
+type PutMemberJSONBody struct {
+	// hourly price
+	HourlyPrice string `json:"hourly_price"`
+
+	// name
+	Name string `json:"name"`
+
+	// phone number
+	PhoneNumber string `json:"phone_number"`
+
+	// status
+	Status string `json:"status"`
+}
+
 // AdminLoginJSONRequestBody defines body for AdminLogin for application/json ContentType.
 type AdminLoginJSONRequestBody AdminLoginJSONBody
 
 // AdminRegistMemberJSONRequestBody defines body for AdminRegistMember for application/json ContentType.
 type AdminRegistMemberJSONRequestBody AdminRegistMemberJSONBody
 
-// UpdateMemberUserJSONRequestBody defines body for UpdateMemberUser for application/json ContentType.
-type UpdateMemberUserJSONRequestBody UpdateMemberUserJSONBody
-
 // RegistAdminJSONRequestBody defines body for RegistAdmin for application/json ContentType.
 type RegistAdminJSONRequestBody RegistAdminJSONBody
 
 // UpdateAdminUserJSONRequestBody defines body for UpdateAdminUser for application/json ContentType.
 type UpdateAdminUserJSONRequestBody UpdateAdminUserJSONBody
+
+// PutMemberJSONRequestBody defines body for PutMember for application/json ContentType.
+type PutMemberJSONRequestBody PutMemberJSONBody
 
