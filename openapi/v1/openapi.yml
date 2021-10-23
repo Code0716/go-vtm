@@ -331,13 +331,13 @@ paths:
                   type: string
                   description: status
                 hourly_price:
-                  type: string
+                  type: integer
+                  format: int64
                   description: hourly price
               required:
                 - phone_number
                 - name
                 - status
-                - hourly_price
       responses:
         '201':
           description: memberの更新成功

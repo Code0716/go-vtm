@@ -56,7 +56,7 @@ func (im *MembersInteractor) UpdateMember(ctx context.Context, params domain.Upd
 
 	oldMember, err := im.GetMemberByUUID(ctx, uuid)
 	if err != nil {
-		return nil, err
+		return nil, domain.WrapInternalError(err)
 	}
 
 	if oldMember.DeletedAt != nil {
@@ -70,8 +70,13 @@ func (im *MembersInteractor) UpdateMember(ctx context.Context, params domain.Upd
 	if params.PhoneNumber != "" {
 		oldMember.PhoneNumber = params.PhoneNumber
 	}
+
 	if params.Status != "" {
 		oldMember.Status = params.Status
+	}
+
+	if params.HourlyPrice != nil {
+		oldMember.HourlyPrice = params.HourlyPrice
 	}
 
 	oldMember.UpdatedAt = time.Now()

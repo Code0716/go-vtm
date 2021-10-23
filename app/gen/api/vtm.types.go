@@ -266,7 +266,7 @@ type UpdateAdminUserJSONBody struct {
 // UpdateMemberJSONBody defines parameters for UpdateMember.
 type UpdateMemberJSONBody struct {
 	// hourly price
-	HourlyPrice string `json:"hourly_price"`
+	HourlyPrice *int64 `json:"hourly_price,omitempty"`
 
 	// name
 	Name string `json:"name"`
