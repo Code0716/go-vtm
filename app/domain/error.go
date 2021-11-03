@@ -86,7 +86,7 @@ func NewErrorf(errType ErrorType, msg string, args ...interface{}) Error {
 }
 
 // WrapError wrap error
-func WrapError(innerError error, errType ErrorType) Error {
+func WrapError(errType ErrorType, innerError error) Error {
 	return Error{
 		Type:       errType,
 		InnerError: innerError,

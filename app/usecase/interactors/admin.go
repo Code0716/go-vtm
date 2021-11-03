@@ -38,7 +38,7 @@ func (ia *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain
 	}
 	token, err := util.GetAdminNewToken(*adminUser, env.Signingkey)
 	if err != nil {
-		return nil, domain.WrapInternalError(err)
+		return nil, err
 	}
 
 	return &token, nil
@@ -60,7 +60,7 @@ func (ia *AdminInteractor) GetAdminByUUID(ctx context.Context, uuid string) (*do
 func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.RegistAdminJSONRequestBody) error {
 	hash, err := util.GetHush(params.Password)
 	if err != nil {
-		return domain.WrapInternalError(err)
+		return err
 	}
 	currentTime := time.Now()
 

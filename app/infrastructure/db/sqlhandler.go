@@ -19,20 +19,20 @@ type SQLHandler struct {
 func (h SQLHandler) Create(value interface{}) error {
 	err := h.Conn.Create(value).Error
 	if err != nil {
-		return err
+		return domain.WrapInternalError(err)
 	}
 	return nil
 }
 
 // Find gorm find
-// TODO:未実装
+// TODO:TODO
 func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
 	err := h.Conn.Find(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return domain.NewError(domain.ErrorTypeContentNotFound)
+		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
 	}
 	if err != nil {
-		return domain.NewError(domain.ErrorTypeInternalError)
+		return domain.WrapInternalError(err)
 	}
 	return nil
 }
@@ -41,10 +41,10 @@ func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
 func (h SQLHandler) First(value interface{}, where ...interface{}) error {
 	err := h.Conn.First(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return domain.NewError(domain.ErrorTypeContentNotFound)
+		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
 	}
 	if err != nil {
-		return domain.NewError(domain.ErrorTypeInternalError)
+		return domain.WrapInternalError(err)
 	}
 	return nil
 }
@@ -53,16 +53,16 @@ func (h SQLHandler) First(value interface{}, where ...interface{}) error {
 func (h *SQLHandler) Save(value interface{}) error {
 	err := h.Conn.Save(value).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return domain.NewError(domain.ErrorTypeContentNotFound)
+		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
 	}
 	if err != nil {
-		return domain.NewError(domain.ErrorTypeInternalError)
+		return domain.WrapInternalError(err)
 	}
 	return nil
 }
 
 // Update is gorm Update
-// TODO:未実装
+// TODO:TODO
 func (h *SQLHandler) Update(column string, value interface{}) error {
 	err := h.Conn.Update(column, value).Error
 	return err
@@ -92,12 +92,13 @@ func (h *SQLHandler) Raw(sql string, values ...interface{}) *gorm.DB {
 func (h *SQLHandler) Delete(value interface{}, where ...interface{}) error {
 	err := h.Conn.Delete(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return domain.NewError(domain.ErrorTypeContentNotFound)
+		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
 	}
 	return err
 }
 
 // Where gorm Where
+// TODO
 func (h *SQLHandler) Where(query interface{}, args ...interface{}) error {
 	err := h.Conn.Where(query, args...).Error
 	return err
@@ -115,7 +116,7 @@ func (h SQLHandler) IsExist(tableName string, query interface{}, args ...interfa
 		Where(query, args...).
 		Count(&count).Error
 	if err != nil {
-		return false, err
+		return false, domain.WrapInternalError(err)
 	}
 
 	if count > 0 {
@@ -140,7 +141,7 @@ func (h SQLHandler) GetAllAdminUsers(params domain.Pager) ([]*domain.AdminUser, 
 		Count(&count).
 		Error
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, domain.WrapInternalError(err)
 	}
 
 	return adminUsers, count, nil
@@ -166,7 +167,7 @@ func (h SQLHandler) AdminMemberGetAll(params domain.Pager) ([]*domain.Member, in
 		Count(&count).
 		Error
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, domain.WrapInternalError(err)
 	}
 
 	return members, count, nil

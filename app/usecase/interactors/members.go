@@ -56,11 +56,11 @@ func (im *MembersInteractor) UpdateMember(ctx context.Context, params domain.Upd
 
 	oldMember, err := im.GetMemberByUUID(ctx, uuid)
 	if err != nil {
-		return nil, domain.WrapInternalError(err)
+		return nil, err
 	}
 
 	if oldMember.DeletedAt != nil {
-		return nil, domain.NewError(domain.ErrorTypeMemberAlreadyDeleted)
+		return nil, domain.WrapError(domain.ErrorTypeMemberAlreadyDeleted, err)
 	}
 
 	if params.Name != "" {
