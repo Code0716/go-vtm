@@ -60,7 +60,7 @@ func (h adminHandler) RegistAdmin(c echo.Context) error {
 	adminInteractor := h.reg.AdminInteractor()
 	if isRegested, err := adminInteractor.IsAdminExist(c.Request().Context(), newAdmin.MailAddress); isRegested {
 		if err != nil {
-			return sendError(c, domain.NewError(domain.ErrorTypeInternalError))
+			return sendError(c, err)
 		}
 		if isRegested {
 			return sendError(c, domain.NewError(domain.ErrorTypeRegistItemAlreadyRegistered))
