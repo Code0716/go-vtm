@@ -300,6 +300,35 @@ paths:
         default:
           $ref: '#/components/responses/InternalServerError'
   /members/{uuid}:
+    get:
+      security:
+        - security: []
+      operationId: getMember
+      summary: member情報取得
+      description: memberを取得する。
+      tags:
+        - member
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: member uuid
+          schema:
+            type: string
+      responses:
+        '201':
+          description: memberの取得
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MemberResponse'
+        default:
+          $ref: '#/components/responses/InternalServerError'
     put:
       security:
         - security: []

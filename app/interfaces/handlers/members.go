@@ -137,3 +137,18 @@ func (h membersHandler) UpdateMember(c echo.Context, uuid string) error {
 	return c.JSON(http.StatusOK, response)
 
 }
+
+func (h membersHandler) GetMember(c echo.Context, uuid string) error {
+
+	if !util.IsValidUUID(uuid) {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
+	membersInteractor := h.reg.MembersInteractor()
+	member, err := membersInteractor.GetMemberByUUID(c.Request().Context(), uuid)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	return c.JSON(http.StatusOK, member)
+
+}

@@ -63,9 +63,14 @@ func (m mockAdminRepo) DeleteAdminUser(ctx context.Context, uuid string) (*domai
 
 type mockMemberRepo struct {
 	repositories.MembersRepository
-	FakeGetAll func(ctx context.Context, params domain.Pager) ([]*domain.Member, int64, error)
+	FakeGetAll          func(ctx context.Context, params domain.Pager) ([]*domain.Member, int64, error)
+	FakeGetMemberByUUID func(ctx context.Context, uuid string) (*domain.Member, error)
 }
 
 func (m mockMemberRepo) AdminMemberGetAll(ctx context.Context, params domain.Pager) ([]*domain.Member, int64, error) {
 	return m.FakeGetAll(ctx, params)
+}
+
+func (m mockMemberRepo) GetMemberByUUID(ctx context.Context, uuid string) (*domain.Member, error) {
+	return m.FakeGetMemberByUUID(ctx, uuid)
 }

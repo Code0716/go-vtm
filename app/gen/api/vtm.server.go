@@ -37,6 +37,9 @@ type ServerInterface interface {
 	// adminUser情報更新
 	// (PUT /admin/{uuid})
 	UpdateAdminUser(ctx echo.Context, uuid string) error
+	// member情報取得
+	// (GET /members/{uuid})
+	GetMember(ctx echo.Context, uuid string) error
 	// member情報更新
 	// (PUT /members/{uuid})
 	UpdateMember(ctx echo.Context, uuid string) error
@@ -198,6 +201,24 @@ func (w *ServerInterfaceWrapper) UpdateAdminUser(ctx echo.Context) error {
 	return err
 }
 
+// GetMember converts echo context to params.
+func (w *ServerInterfaceWrapper) GetMember(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "uuid" -------------
+	var uuid string
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "uuid", runtime.ParamLocationPath, ctx.Param("uuid"), &uuid)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter uuid: %s", err))
+	}
+
+	ctx.Set(SecurityScopes, []string{""})
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetMember(ctx, uuid)
+	return err
+}
+
 // UpdateMember converts echo context to params.
 func (w *ServerInterfaceWrapper) UpdateMember(ctx echo.Context) error {
 	var err error
@@ -252,6 +273,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/admin/:uuid", wrapper.DeleteAdminUser)
 	router.GET(baseURL+"/admin/:uuid", wrapper.GetAdminUser)
 	router.PUT(baseURL+"/admin/:uuid", wrapper.UpdateAdminUser)
+	router.GET(baseURL+"/members/:uuid", wrapper.GetMember)
 	router.PUT(baseURL+"/members/:uuid", wrapper.UpdateMember)
 
 }
