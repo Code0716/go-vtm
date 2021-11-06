@@ -1,9 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
@@ -75,7 +79,28 @@ func start() int {
 	}
 	addr := util.GetAPIPath(env)
 
-	e.Logger.Fatal(e.Start(addr))
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: e,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Println("unexpected shutting down: %w", err)
+		}
+	}()
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, os.Kill)
+	defer stop()
+
+	<-ctx.Done()
+	log.Printf("server shutting down on %v", ctx.Err())
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		fmt.Println("Server forced to shutdown: %w", err)
+	}
 
 	return 0
 }
