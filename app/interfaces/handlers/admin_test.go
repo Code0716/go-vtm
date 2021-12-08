@@ -162,7 +162,7 @@ func Test_adminHandler_RegistAdmin(t *testing.T) {
 	}
 }
 
-func Test_adminHandler_GetAdminInfo(t *testing.T) {
+func Test_adminHandler_GetAdminUser(t *testing.T) {
 	type fakes struct {
 		fakeGetAdminByUUID func(ctx context.Context, uuid string) (*domain.AdminUser, error)
 	}
@@ -264,15 +264,15 @@ func Test_adminHandler_GetAdminInfo(t *testing.T) {
 
 			si := api.ServerInterfaceWrapper{Handler: h}
 
-			if err := si.GetAdminInfo(c); (err != nil) != tt.wantErr {
-				t.Errorf("adminHandler.GetAdminInfo() error = %v, wantErr %v", err, tt.wantErr)
+			if err := si.GetAdminUser(c); (err != nil) != tt.wantErr {
+				t.Errorf("adminHandler.GetAdminUser() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if res.Code != tt.wantRes.code {
-				t.Errorf("adminHandler.GetAdminInfo() http status got = %v want = %v", res.Code, tt.wantRes.code)
+				t.Errorf("adminHandler.GetAdminUser() http status got = %v want = %v", res.Code, tt.wantRes.code)
 			}
 
 			if !testJSON(t, res.Body.Bytes(), tt.wantRes.body) {
-				t.Errorf("adminHandler.GetAdminInfo() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
+				t.Errorf("adminHandler.GetAdminUser() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
 			}
 		})
 	}
@@ -468,7 +468,7 @@ func Test_adminHandler_GetAdminList(t *testing.T) {
 	}
 }
 
-func Test_adminHandler_DeleteAdminInfo(t *testing.T) {
+func Test_adminHandler_DeleteAdminUser(t *testing.T) {
 	t.Parallel()
 
 	type fakes struct {
@@ -582,14 +582,14 @@ func Test_adminHandler_DeleteAdminInfo(t *testing.T) {
 			c.SetParamValues(tt.args.uuid)
 			si := api.ServerInterfaceWrapper{Handler: h}
 
-			if err := si.DeleteAdminInfo(c); (err != nil) != tt.wantErr {
-				t.Errorf("adminHandler.DeleteAdminInfo() error = %v, wantErr %v", err, tt.wantErr)
+			if err := si.DeleteAdminUser(c); (err != nil) != tt.wantErr {
+				t.Errorf("adminHandler.DeleteAdminUser() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if res.Code != tt.wantRes.code {
-				t.Errorf("adminHandler.DeleteAdminInfo() http status got = %v want = %v", res.Code, tt.wantRes.code)
+				t.Errorf("adminHandler.DeleteAdminUser() http status got = %v want = %v", res.Code, tt.wantRes.code)
 			}
 			if !testJSON(t, res.Body.Bytes(), tt.wantRes.body) {
-				t.Errorf("adminHandler.DeleteAdminInfo() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
+				t.Errorf("adminHandler.DeleteAdminUser() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
 			}
 		})
 	}

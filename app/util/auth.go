@@ -23,7 +23,7 @@ func GetAdminNewToken(member domain.AdminUser, signingKey string) (string, error
 	tokenString, err := token.SignedString([]byte(signingKey))
 
 	if err != nil {
-		return "", err
+		return "", domain.WrapInternalError(err)
 	}
 	return tokenString, nil
 }
@@ -42,7 +42,7 @@ func GetMemberNewToken(member domain.Member, signingKey string) (string, error) 
 
 	tokenString, err := token.SignedString([]byte(signingKey))
 	if err != nil {
-		return "", err
+		return "", domain.WrapInternalError(err)
 	}
 	return tokenString, nil
 }

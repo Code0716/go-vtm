@@ -139,3 +139,132 @@ func Test_membersHandler_GetMemberList(t *testing.T) {
 		})
 	}
 }
+
+func Test_membersHandler_GetMember(t *testing.T) {
+	t.Parallel()
+
+	type fakes struct {
+		fakeGetMemberByUUID func(ctx context.Context, uuid string) (*domain.Member, error)
+	}
+
+	type args struct {
+		uuid string
+	}
+	tests := []struct {
+		name    string
+		fakes   fakes
+		args    args
+		wantRes wantRes
+		wantErr bool
+	}{
+		{
+			"success",
+			fakes{
+				fakeGetMemberByUUID: func(ctx context.Context, uuid string) (*domain.Member, error) {
+					return &domain.Member{
+							Id:          1,
+							MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
+							Name:        "hogehoge",
+							PhoneNumber: "09000000000",
+							Status:      "active",
+							CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+							UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+						},
+						nil
+				},
+			},
+			args{uuid: "ab6ddfb6-ccec-45c2-9269-976c401612da"},
+			wantRes{
+				code: http.StatusOK,
+				body: domain.Member{
+					Id:          1,
+					MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
+					Name:        "hogehoge",
+					PhoneNumber: "09000000000",
+					Status:      "active",
+					CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+					UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+				}},
+			false,
+		},
+		{
+			"feild invalid uuid",
+			fakes{
+				fakeGetMemberByUUID: func(ctx context.Context, uuid string) (*domain.Member, error) {
+					return &domain.Member{
+							Id:          1,
+							MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
+							Name:        "hogehoge",
+							PhoneNumber: "09000000000",
+							Status:      "active",
+							CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+							UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+						},
+						nil
+				},
+			},
+			args{uuid: "hogehoge"},
+			wantRes{
+				code: http.StatusBadRequest,
+				body: domain.ErrorResponse{
+					Error: domain.Error{
+						Type:       domain.ErrorTypeUUIDValidationFailed,
+						Status:     http.StatusBadRequest,
+						Message:    "invalid uuid",
+						InnerError: nil,
+					},
+				},
+			},
+			false,
+		},
+		{"feild none uuid",
+			fakes{
+				fakeGetMemberByUUID: func(ctx context.Context, uuid string) (*domain.Member, error) {
+					return &domain.Member{
+							Id:          1,
+							MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
+							Name:        "hogehoge",
+							PhoneNumber: "09000000000",
+							Status:      "active",
+							CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
+							UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
+						},
+						nil
+				},
+			},
+			args{},
+			wantRes{
+				code: http.StatusOK,
+				body: 0,
+			},
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			reg := &registryMock{}
+			reg.mockMemberRepo.FakeGetMemberByUUID = tt.fakes.fakeGetMemberByUUID
+			h := handlers.New(reg)
+
+			path := fmt.Sprintf("https://test.com/api/v1/members/:uuid")
+			req := httptest.NewRequest(http.MethodGet, path, nil)
+			c, res := newTestEchoContext(t, req)
+			c.SetPath(path)
+			c.SetParamNames("uuid")
+			c.SetParamValues(tt.args.uuid)
+			si := api.ServerInterfaceWrapper{Handler: h}
+
+			if err := si.GetMember(c); (err != nil) != tt.wantErr {
+				t.Errorf("membersHandler.GetMember() error = %v, wantErr %v", err, tt.wantErr)
+			}
+
+			if res.Code != tt.wantRes.code {
+				t.Errorf("membersHandler.GetMember()status code = %v, want code %v", res.Code, tt.wantRes.code)
+				return
+			}
+			if len(res.Body.Bytes()) != 0 && !testJSON(t, res.Body.Bytes(), tt.wantRes.body) {
+				t.Errorf("adminHandler.GetMember() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
+			}
+		})
+	}
+}

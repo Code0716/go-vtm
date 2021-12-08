@@ -50,9 +50,55 @@ func (im *MembersInteractor) RegistMember(ctx context.Context, params domain.Mem
 	return nil
 }
 
+// UpdateMember update member
+// im: members interactor
+func (im *MembersInteractor) UpdateMember(ctx context.Context, params domain.UpdateMemberJSONBody, uuid string) (*domain.Member, error) {
+
+	oldMember, err := im.GetMemberByUUID(ctx, uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	if oldMember.DeletedAt != nil {
+		return nil, domain.WrapError(domain.ErrorTypeMemberAlreadyDeleted, err)
+	}
+
+	if params.Name != "" {
+		oldMember.Name = params.Name
+	}
+
+	if params.PhoneNumber != "" {
+		oldMember.PhoneNumber = params.PhoneNumber
+	}
+
+	if params.Status != "" {
+		oldMember.Status = params.Status
+	}
+
+	if params.HourlyPrice != nil {
+		oldMember.HourlyPrice = params.HourlyPrice
+	}
+
+	oldMember.UpdatedAt = time.Now()
+
+	newMember, err := im.MembersRepository.UpdateMember(ctx, *oldMember)
+	if err != nil {
+		return nil, err
+	}
+
+	return newMember, nil
+}
+
 // IsMemberExist check regist member
 // im: members interactor
 func (im *MembersInteractor) IsMemberExist(ctx context.Context, name, phone string) (bool, error) {
 	isExist, err := im.MembersRepository.IsMemberExist(ctx, name, phone)
 	return isExist, err
+}
+
+//  GetMemberByUUID get regist member by uuid
+// im: members interactor
+func (im *MembersInteractor) GetMemberByUUID(ctx context.Context, uuid string) (*domain.Member, error) {
+	member, err := im.MembersRepository.GetMemberByUUID(ctx, uuid)
+	return member, err
 }

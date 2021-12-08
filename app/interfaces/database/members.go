@@ -27,6 +27,15 @@ func (r *MembersRepository) AdminRegistMember(ctx context.Context, member domain
 	return nil
 }
 
+// UpdateMember update member
+func (r *MembersRepository) UpdateMember(ctx context.Context, member domain.Member) (*domain.Member, error) {
+	err := r.SQLHandler.Save(&member)
+	if err != nil {
+		return nil, err
+	}
+	return &member, nil
+}
+
 // IsMemberExist check member name
 func (r *MembersRepository) IsMemberExist(ctx context.Context, name, phone string) (bool, error) {
 	var member domain.Member
@@ -47,4 +56,14 @@ func (r *MembersRepository) AdminMemberGetAll(ctx context.Context, params domain
 	}
 
 	return members, count, nil
+}
+
+// GetMemberByUUID  get member by uuid
+func (r *MembersRepository) GetMemberByUUID(ctx context.Context, uuid string) (*domain.Member, error) {
+	var member domain.Member
+	err := r.SQLHandler.First(&member, domain.Member{MemberId: uuid})
+	if err != nil {
+		return nil, err
+	}
+	return &member, nil
 }

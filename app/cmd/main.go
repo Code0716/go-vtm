@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
@@ -57,7 +62,6 @@ func start() int {
 	// v1
 	router := e.Group("/api/v1")
 
-	// JWT認証。開発の都合上一旦コメントアウト
 	router.Use(middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey:  []byte(env.Signingkey),
 		TokenLookup: "header:authorization",
@@ -66,16 +70,38 @@ func start() int {
 
 	api.RegisterHandlersWithBaseURL(router, newHandlers, "")
 
-	// TODO:developのときに表出するようにする。
-	for _, r := range e.Routes() {
-		if r.Path == "" || r.Path == "/api/v1" || r.Path == "/api/v1/*" {
-			continue
+	if env.EnvCode == "local" {
+		for _, r := range e.Routes() {
+			if r.Path == "" || r.Path == "/api/v1" || r.Path == "/api/v1/*" {
+				continue
+			}
+			fmt.Printf("[%v] %+v\n", r.Method, r.Path)
 		}
-		fmt.Printf("[%v] %+v\n", r.Method, r.Path)
 	}
 	addr := util.GetAPIPath(env)
 
-	e.Logger.Fatal(e.Start(addr))
+	srv := &http.Server{
+		Addr:    addr,
+		Handler: e,
+	}
+
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			fmt.Println("unexpected shutting down: %w", err)
+		}
+	}()
+
+	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGKILL, os.Interrupt, os.Kill)
+	defer stop()
+
+	<-ctx.Done()
+	log.Printf("server shutting down on %v", ctx.Err())
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		fmt.Println("Server forced to shutdown: %w", err)
+	}
 
 	return 0
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
 	"github.com/Code0716/go-vtm/app/registry"
+	"github.com/Code0716/go-vtm/app/util"
 	"github.com/labstack/echo/v4"
 )
 
@@ -86,7 +87,7 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 
 	isExist, err := membersInteractor.IsMemberExist(c.Request().Context(), newMember.Name, newMember.PhoneNumber)
 	if err != nil {
-		return sendError(c, domain.WrapInternalError(err))
+		return sendError(c, domain.NewError(domain.ErrorTypeContentNotFound))
 	}
 
 	if isExist {
@@ -103,5 +104,51 @@ func (h membersHandler) AdminRegistMember(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, res)
+
+}
+
+func (h membersHandler) UpdateMember(c echo.Context, uuid string) error {
+	var updateMember domain.UpdateMemberJSONBody
+	err := c.Bind(&updateMember)
+	if err != nil {
+		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
+	}
+
+	if !util.IsValidUUID(uuid) {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
+
+	membersInteractor := h.reg.MembersInteractor()
+	newMember, err := membersInteractor.UpdateMember(c.Request().Context(), updateMember, uuid)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	response := domain.MemberResponse{
+		HourlyPrice: newMember.HourlyPrice,
+		Id:          newMember.Id,
+		MemberId:    newMember.MemberId,
+		Name:        newMember.Name,
+		PhoneNumber: newMember.Password,
+		Status:      newMember.Status,
+		UpdatedAt:   newMember.UpdatedAt,
+	}
+
+	return c.JSON(http.StatusOK, response)
+
+}
+
+func (h membersHandler) GetMember(c echo.Context, uuid string) error {
+
+	if !util.IsValidUUID(uuid) {
+		return sendError(c, domain.NewError(domain.ErrorTypeUUIDValidationFailed))
+	}
+	membersInteractor := h.reg.MembersInteractor()
+	member, err := membersInteractor.GetMemberByUUID(c.Request().Context(), uuid)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	return c.JSON(http.StatusOK, member)
 
 }

@@ -15,6 +15,12 @@ func (i Member) TableName() string {
 // AdminRegistMemberJSONRequestBody defines body for RegistMember for application/json ContentType.
 type AdminRegistMemberJSONRequestBody api.AdminRegistMemberJSONRequestBody
 
+// UpdateMemberJSONBody defines parameters for UpdateMemberUser.
+type UpdateMemberJSONBody api.UpdateMemberJSONBody
+
+// MemberResponse defines model for Members.
+type MemberResponse api.MemberResponse
+
 // MembersResponse defines model for Members.
 type MembersResponse struct {
 	Members []*Member `json:"members"`

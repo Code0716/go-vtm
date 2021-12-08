@@ -29,6 +29,8 @@ const (
 	ErrorTypeRegistMemberValidationFailed
 	// ErrorTypeUUIDValidationFailed invalid uuid
 	ErrorTypeUUIDValidationFailed // invalid_uuid
+	// ErrorTypeMemberAlreadyDeleted requested member already deleted
+	ErrorTypeMemberAlreadyDeleted // requested_member_already_deleted
 	// ErrorTypeAuthenticationFailed 認証エラー
 	ErrorTypeAuthenticationFailed // authentication_faild
 	// ErrorTypeNotFound not found
@@ -37,6 +39,7 @@ const (
 	ErrorTypeContentNotFound // content_not_found
 	// ErrorTypeInternalError 内部エラー
 	ErrorTypeInternalError // internal_error
+
 )
 
 // ErrorMessageMap map error　message
@@ -48,6 +51,7 @@ var ErrorMessageMap = map[ErrorType]string{
 	ErrorTypeAdminLoginValidationFailed:  "name,passwordは必須です",
 	// member
 	ErrorTypeRegistMemberValidationFailed: "name,phone_numberは必須です",
+	ErrorTypeMemberAlreadyDeleted:         "リクエストされたmemberは既に削除されています。",
 	// other
 	ErrorTypeNotFound:                        "request uri found",
 	ErrorTypeValidationFailed:                "validate failed",
@@ -82,7 +86,7 @@ func NewErrorf(errType ErrorType, msg string, args ...interface{}) Error {
 }
 
 // WrapError wrap error
-func WrapError(innerError error, errType ErrorType) Error {
+func WrapError(errType ErrorType, innerError error) Error {
 	return Error{
 		Type:       errType,
 		InnerError: innerError,

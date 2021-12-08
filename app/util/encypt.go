@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/Code0716/go-vtm/app/domain"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -8,7 +9,7 @@ import (
 func GetHush(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	if err != nil {
-		return "", err
+		return "", domain.WrapInternalError(err)
 	}
 	return string(hash), nil
 }
