@@ -31,7 +31,6 @@ func newTestEchoContext(t *testing.T, req *http.Request) (echo.Context, *httptes
 	return c, rec
 }
 
-//　TODO:このままでは、member_test.goなど、ネストにポインターがあるものが比較できない。
 func testJSON(t *testing.T, got []byte, want interface{}) bool {
 	t.Helper()
 

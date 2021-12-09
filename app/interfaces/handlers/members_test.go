@@ -262,8 +262,8 @@ func Test_membersHandler_GetMember(t *testing.T) {
 				t.Errorf("membersHandler.GetMember()status code = %v, want code %v", res.Code, tt.wantRes.code)
 				return
 			}
-			if len(res.Body.Bytes()) != 0 && !testJSON(t, res.Body.Bytes(), tt.wantRes.body) {
-				t.Errorf("adminHandler.GetMember() response got = %v\n, want %v\n", res.Body, tt.wantRes.body)
+			if len(res.Body.Bytes()) != 0 {
+				testJSON(t, res.Body.Bytes(), tt.wantRes.body)
 			}
 		})
 	}
