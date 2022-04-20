@@ -11,7 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/Code0716/go-vtm/app/infrastructure/db"
 	database "github.com/Code0716/go-vtm/app/infrastructure/db"
 	"github.com/Code0716/go-vtm/app/util"
 	"github.com/joho/godotenv"
@@ -21,7 +20,7 @@ var (
 	testCtx context.Context
 )
 
-func getTestDB(t *testing.T, seeds []interface{}) (db *db.SQLHandler, close func(), err error) {
+func getTestDB(t *testing.T, seeds []interface{}) (db *database.SQLHandler, close func(), err error) {
 	t.Helper()
 	envPath := os.Getenv("GO_ENV")
 	err = godotenv.Load(fmt.Sprintf("../../../%s.env", envPath))
