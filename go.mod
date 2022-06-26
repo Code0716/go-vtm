@@ -1,6 +1,6 @@
 module github.com/Code0716/go-vtm
 
-go 1.18
+go 1.17
 
 require (
 	github.com/deepmap/oapi-codegen v1.8.3
