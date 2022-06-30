@@ -372,7 +372,7 @@ func Test_adminHandler_GetAdminList(t *testing.T) {
 				},
 			},
 			args{
-				Limit: util.Int64Ptr(1000000),
+				Limit: util.LiteralToPtrGenerics(int64(1000000)),
 			},
 			wantRes{
 				code: http.StatusOK,
