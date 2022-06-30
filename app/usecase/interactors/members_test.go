@@ -92,7 +92,7 @@ func TestMembersInteractor_GetMemberByUUID(t *testing.T) {
 	expectMember := domain.Member{
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		DeletedAt:   nil,
-		HourlyPrice: util.LiteralToPtrGenerics(int64(1000)),
+		HourlyPrice: util.LiteralToPtrGenerics[int64](1000),
 		Id:          1,
 		MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:        "hoge",
@@ -121,7 +121,7 @@ func TestMembersInteractor_GetMemberByUUID(t *testing.T) {
 				return &domain.Member{
 					CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 					DeletedAt:   nil,
-					HourlyPrice: util.LiteralToPtrGenerics(int64(1000)),
+					HourlyPrice: util.LiteralToPtrGenerics[int64](1000),
 					Id:          1,
 					MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 					Name:        "hoge",
@@ -184,7 +184,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 					return &domain.Member{
 						CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 						DeletedAt:   nil,
-						HourlyPrice: util.LiteralToPtrGenerics(int64(1000)),
+						HourlyPrice: util.LiteralToPtrGenerics[int64](1000),
 						Id:          1,
 						MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 						Name:        "hoge",
@@ -201,7 +201,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 			args{
 				uuid: "873a2824-8006-4e67-aed7-ec427df5fce8",
 				params: domain.UpdateMemberJSONBody{
-					HourlyPrice: util.LiteralToPtrGenerics(int64(1200)),
+					HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
 					Name:        "fuga",
 					PhoneNumber: "08000000000",
 					Status:      "other",
@@ -210,7 +210,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 			&domain.Member{
 				CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 				DeletedAt:   nil,
-				HourlyPrice: util.LiteralToPtrGenerics(int64(1200)),
+				HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
 				Id:          1,
 				MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 				Name:        "fuga",
@@ -227,7 +227,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 					return &domain.Member{
 						CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 						DeletedAt:   nil,
-						HourlyPrice: util.LiteralToPtrGenerics(int64(1000)),
+						HourlyPrice: util.LiteralToPtrGenerics[int64](1000),
 						Id:          1,
 						MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 						Name:        "hoge",
@@ -244,14 +244,14 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 			args{
 				uuid: "873a2824-8006-4e67-aed7-ec427df5fce8",
 				params: domain.UpdateMemberJSONBody{
-					HourlyPrice: util.LiteralToPtrGenerics(int64(1200)),
+					HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
 					PhoneNumber: "08000000000",
 				},
 			},
 			&domain.Member{
 				CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 				DeletedAt:   nil,
-				HourlyPrice: util.LiteralToPtrGenerics(int64(1200)),
+				HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
 				Id:          1,
 				MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 				Name:        "hoge",
@@ -275,7 +275,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 			args{
 				uuid: "873a2824-8006-4e67-aed7-ec427df5fce8",
 				params: domain.UpdateMemberJSONBody{
-					HourlyPrice: util.LiteralToPtrGenerics(int64(1200)),
+					HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
 					PhoneNumber: "08000000000",
 				},
 			},
@@ -289,7 +289,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 					return &domain.Member{
 						CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 						DeletedAt:   nil,
-						HourlyPrice: util.LiteralToPtrGenerics(int64(1000)),
+						HourlyPrice: util.LiteralToPtrGenerics[int64](1000),
 						Id:          1,
 						MemberId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
 						Name:        "hoge",
@@ -306,7 +306,7 @@ func TestMembersInteractor_UpdateMember(t *testing.T) {
 			args{
 				uuid: "873a2824-8006-4e67-aed7-ec427df5fce8",
 				params: domain.UpdateMemberJSONBody{
-					HourlyPrice: util.LiteralToPtrGenerics(int64(1200)),
+					HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
 					PhoneNumber: "08000000000",
 				},
 			},
