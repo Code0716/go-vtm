@@ -226,7 +226,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 		PhoneNumber: "09000000000",
 		Password:    util.LiteralToPtrGenerics("hoge"),
 		Status:      "init",
-		HourlyPrice: util.LiteralToPtrGenerics(int64(1500)),
+		HourlyPrice: util.LiteralToPtrGenerics[int64](1500),
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
