@@ -2,23 +2,23 @@ package domain
 
 import "github.com/Code0716/go-vtm/app/gen/api"
 
-// Authority int
-type Authority int
+// Permission int
+type Permission int
 
 const (
-	// AuthorityAdmin admin
-	AuthorityAdmin = iota + 1
-	// AuthorityManager manager
-	AuthorityManager
-	// AuthorityGeneral general
-	AuthorityGeneral
+	// PermissionAdmin admin
+	PermissionAdmin = iota + 1
+	// PermissionManager manager
+	PermissionManager
+	// PermissionGeneral general
+	PermissionGeneral
 )
 
-// AuthorityMap is get authoryity
-var AuthorityMap = map[Authority]string{
-	AuthorityAdmin:   "admin",
-	AuthorityManager: "manager",
-	AuthorityGeneral: "general",
+// PermissionMap is get authoryity
+var PermissionMap = map[Permission]string{
+	PermissionAdmin:   "admin",
+	PermissionManager: "manager",
+	PermissionGeneral: "general",
 }
 
 // UserStatus int

@@ -25,7 +25,7 @@ func NewAdmin(
 
 // GetAdminJwtByEmail returns jwt
 // ia: admin interactor
-func (ia *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain.AdminLoginJSONRequestBody) (*string, error) {
+func (ia *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain.LoginJSONRequestBody) (*string, error) {
 	env := util.Env()
 
 	adminUser, err := ia.AdminRepository.GetAdminByEmail(ctx, params.MailAddress)
@@ -66,7 +66,7 @@ func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.Regist
 
 	registAdmin := domain.AdminUser{
 		Name:        params.Name,
-		Authority:   domain.AuthorityMap[domain.AuthorityAdmin],
+		Permission:  domain.PermissionMap[domain.PermissionAdmin],
 		AdminId:     util.UUIDGenerator(),
 		MailAddress: params.MailAddress,
 		Status:      domain.UserStatusMap[domain.UserStatusInit],

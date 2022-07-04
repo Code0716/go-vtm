@@ -23,7 +23,7 @@ func sendError(c Context, err error) error {
 		fallthrough
 	case domain.ErrorTypeRegistAdminValidationFailed:
 		fallthrough
-	case domain.ErrorTypeAdminLoginValidationFailed:
+	case domain.ErrorTypeLoginValidationFailed:
 		fallthrough
 	case domain.ErrorTypeUUIDValidationFailed:
 		fallthrough

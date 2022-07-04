@@ -1,0 +1,7 @@
+package: api
+generate:
+  echo-server: true
+  embedded-spec: true
+output: app/gen/api/vtm.server.go
+output-options:
+  skip-prune: true

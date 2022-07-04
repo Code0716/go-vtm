@@ -133,7 +133,7 @@ func TestAdminInteractor_GetAdminByUUID(t *testing.T) {
 		Password:    "password",
 		MailAddress: "test@test.com",
 		Status:      "active",
-		Authority:   "admin",
+		Permission:  "admin",
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
@@ -194,7 +194,7 @@ func TestAdminInteractor_GetAdminList(t *testing.T) {
 		Password:    "password",
 		MailAddress: "test@test.com",
 		Status:      "active",
-		Authority:   "admin",
+		Permission:  "admin",
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
@@ -206,7 +206,7 @@ func TestAdminInteractor_GetAdminList(t *testing.T) {
 		Password:    "password",
 		MailAddress: "test@test.com",
 		Status:      "active",
-		Authority:   "admin",
+		Permission:  "admin",
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
@@ -218,7 +218,7 @@ func TestAdminInteractor_GetAdminList(t *testing.T) {
 		Password:    "password",
 		MailAddress: "test@test.com",
 		Status:      "active",
-		Authority:   "admin",
+		Permission:  "admin",
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
@@ -230,7 +230,7 @@ func TestAdminInteractor_GetAdminList(t *testing.T) {
 		Password:    "password",
 		MailAddress: "test@test.com",
 		Status:      "active",
-		Authority:   "admin",
+		Permission:  "admin",
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
@@ -335,7 +335,7 @@ func TestAdminInteractor_DeleteAdmin(t *testing.T) {
 		Password:    "password",
 		MailAddress: "test@test.com",
 		Status:      "active",
-		Authority:   "admin",
+		Permission:  "admin",
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
@@ -365,7 +365,7 @@ func TestAdminInteractor_DeleteAdmin(t *testing.T) {
 						Password:    "password",
 						MailAddress: "test@test.com",
 						Status:      "active",
-						Authority:   "admin",
+						Permission:  "admin",
 						CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 						UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 					}

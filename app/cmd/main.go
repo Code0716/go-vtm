@@ -57,7 +57,7 @@ func start() int {
 	newHandlers := handlers.New(reg)
 
 	e.POST("/admin/regist", newHandlers.RegistAdmin)
-	e.POST("/admin/login", newHandlers.AdminLogin)
+	e.POST("/admin/login", newHandlers.Login)
 
 	// v1
 	router := e.Group("/api/v1")

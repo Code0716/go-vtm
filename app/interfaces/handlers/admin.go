@@ -15,19 +15,19 @@ type adminHandler struct {
 	reg registry.Getter
 }
 
-func (h adminHandler) AdminLogin(c echo.Context) error {
-	var loginAdmin domain.AdminLoginJSONRequestBody
-	err := c.Bind(&loginAdmin)
+func (h adminHandler) Login(c echo.Context) error {
+	var loginRequest domain.LoginJSONRequestBody
+	err := c.Bind(&loginRequest)
 	if err != nil {
 		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
 	}
 
-	if loginAdmin.MailAddress == "" || loginAdmin.Password == "" {
-		return sendError(c, domain.NewError(domain.ErrorTypeAdminLoginValidationFailed))
+	if loginRequest.MailAddress == "" || loginRequest.Password == "" {
+		return sendError(c, domain.NewError(domain.ErrorTypeLoginValidationFailed))
 	}
 
 	adminInteractor := h.reg.AdminInteractor()
-	token, err := adminInteractor.GetAdminJwtByEmail(c.Request().Context(), loginAdmin)
+	token, err := adminInteractor.GetAdminJwtByEmail(c.Request().Context(), loginRequest)
 	if err != nil {
 		return sendError(c, err)
 	}
@@ -112,7 +112,7 @@ func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams
 			AdminId:     item.AdminId,
 			Name:        item.Name,
 			MailAddress: item.MailAddress,
-			Authority:   item.Authority,
+			Permission:  item.Permission,
 			Status:      item.Status,
 			CreatedAt:   item.CreatedAt,
 			UpdatedAt:   item.UpdatedAt,
@@ -146,7 +146,7 @@ func (h adminHandler) GetAdminUser(c echo.Context, uuid string) error {
 		AdminId:     adminUser.AdminId,
 		MailAddress: adminUser.MailAddress,
 		Status:      adminUser.Status,
-		Authority:   adminUser.Authority,
+		Permission:  adminUser.Permission,
 		CreatedAt:   adminUser.CreatedAt,
 		UpdatedAt:   adminUser.UpdatedAt,
 		DeletedAt:   adminUser.DeletedAt,
@@ -179,7 +179,7 @@ func (h adminHandler) UpdateAdminUser(c echo.Context, uuid string) error {
 		return sendError(c, domain.NewError(domain.ErrorTypeAdminEmailValidationFailed))
 	}
 	adminUser.MailAddress = updateAdmin.MailAddress
-	adminUser.Authority = updateAdmin.Authority
+	adminUser.Permission = updateAdmin.Permission
 	adminUser.Status = updateAdmin.Status
 
 	response, err := adminInteractor.PutAdminUser(c.Request().Context(), *adminUser)

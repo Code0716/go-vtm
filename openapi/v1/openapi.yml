@@ -100,14 +100,14 @@ paths:
                 status:
                   type: string
                   description: admin status
-                authority:
+                permission:
                   type: string
-                  description: admin authority
+                  description: admin permission
               required:
                 - mail_address
                 - name
                 - status
-                - authority
+                - permission
       responses:
         '200':
           description: adminUserの更新が成功した場合
@@ -155,13 +155,13 @@ paths:
                     type: integer
         default:
           $ref: '#/components/responses/InternalServerError'
-  /admin/login:
+  /login:
     post:
-      operationId: adminLogin
-      summary: admin login
-      description: admin login
+      operationId: Login
+      summary: login
+      description: login
       tags:
-        - Admin
+        - common
       requestBody:
         content:
           application/json:
@@ -170,16 +170,16 @@ paths:
               properties:
                 mail_address:
                   type: string
-                  description: admin name
+                  description: name
                 password:
                   type: string
-                  description: admin password
+                  description: password
               required:
                 - mail_address
                 - password
       responses:
         '200':
-          description: admin loginが成功した場合
+          description: loginが成功した場合
           content:
             application/json:
               schema:
@@ -384,7 +384,7 @@ paths:
         default:
           $ref: '#/components/responses/InternalServerError'
 tags:
-  - name: AdminMembers
+  - name: Members
     description: members api
 components:
   securitySchemes:
@@ -437,7 +437,7 @@ components:
         mail_address:
           description: mail address
           type: string
-        authority:
+        permission:
           description: 権限
           type: string
         status:
@@ -461,7 +461,7 @@ components:
         - name
         - mail_address
         - password
-        - authority
+        - permission
         - status
         - created_at
         - updated_at
@@ -578,7 +578,7 @@ components:
         mail_address:
           description: mail address
           type: string
-        authority:
+        permission:
           description: 権限
           type: string
         status:
@@ -601,7 +601,7 @@ components:
         - admin_id
         - name
         - mail_address
-        - authority
+        - permission
         - status
         - created_at
         - updated_at

@@ -23,8 +23,8 @@ gen:
 
 gen-oapi:
 	mkdir -p ./app/gen/api
-	oapi-codegen -generate "types" -package api ./openapi/v1/openapi.yml > ./app/gen/api/vtm.types.go
-	oapi-codegen -generate "server" -package api ./openapi/v1/openapi.yml > ./app/gen/api/vtm.server.go
+	oapi-codegen -config templates/types.config.yaml openapi/v1/openapi.yml
+	oapi-codegen -config templates/server.config.yaml openapi/v1/openapi.yml
 
 lint:
 	golangci-lint run

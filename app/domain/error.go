@@ -19,8 +19,8 @@ const (
 	ErrorTypeRegistAdminValidationFailed // regist admin validation_failed
 	// ErrorTypeAdminEmailValidationFailed validate admin email failed
 	ErrorTypeAdminEmailValidationFailed
-	// ErrorTypeAdminLoginValidationFailed admin login validatein_failed
-	ErrorTypeAdminLoginValidationFailed
+	// ErrorTypeLoginValidationFailed admin login validatein_failed
+	ErrorTypeLoginValidationFailed
 	// ErrorTypeRegistItemAlreadyRegistered regest error
 	ErrorTypeRegistItemAlreadyRegistered // regist item validation_failed
 	// ErrorTypePasswordOrEmailValidationFailed admin login validatein_failed
@@ -48,7 +48,7 @@ var ErrorMessageMap = map[ErrorType]string{
 	ErrorTypeRegistAdminValidationFailed: "name,password,mail_addressは必須です",
 	ErrorTypeRegistItemAlreadyRegistered: "既に登録済みです",
 	ErrorTypeAdminEmailValidationFailed:  "メールアドレスの形式が不正です",
-	ErrorTypeAdminLoginValidationFailed:  "name,passwordは必須です",
+	ErrorTypeLoginValidationFailed:       "name,passwordは必須です",
 	// member
 	ErrorTypeRegistMemberValidationFailed: "name,phone_numberは必須です",
 	ErrorTypeMemberAlreadyDeleted:         "リクエストされたmemberは既に削除されています。",
