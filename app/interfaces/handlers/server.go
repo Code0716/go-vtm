@@ -10,6 +10,7 @@ import (
 type Handler struct {
 	membersHandler
 	adminHandler
+	loginHandler
 }
 
 // New initializes and returns handlers collection.
@@ -18,6 +19,7 @@ func New(reg registry.Getter) Handler {
 	// reg のセットを忘れるとnilアクセスで落ちる
 	h.adminHandler.reg = reg
 	h.membersHandler.reg = reg
+	h.loginHandler.reg = reg
 
 	return h
 }

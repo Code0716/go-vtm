@@ -10,7 +10,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/gen/api"
 	"github.com/Code0716/go-vtm/app/infrastructure/db"
 	"github.com/Code0716/go-vtm/app/interfaces/handlers"
@@ -57,16 +56,18 @@ func start() int {
 	newHandlers := handlers.New(reg)
 
 	e.POST("/admin/regist", newHandlers.RegistAdmin)
-	e.POST("/admin/login", newHandlers.Login)
+	e.POST("/login", newHandlers.Login)
 
 	// v1
 	router := e.Group("/api/v1")
 
-	router.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		SigningKey:  []byte(env.Signingkey),
-		TokenLookup: "header:authorization",
-		Claims:      &domain.JwtCustomClaims{},
-	}))
+	// router.Use(middleware.JWTWithConfig(
+	// 	middleware.JWTConfig{
+	// 		SigningKey:  []byte(env.Signingkey),
+	// 		TokenLookup: "header:authorization",
+	// 		Claims:      &domain.JwtCustomClaims{},
+	// 	},
+	// ))
 
 	api.RegisterHandlersWithBaseURL(router, newHandlers, "")
 

@@ -1,30 +1,38 @@
 package handlers
 
-// type loginHandler struct {
-// 	reg registry.Getter
-// }
+import (
+	"net/http"
 
-// func (h loginHandler) Login(c echo.Context) error {
-// 	var loginRequest domain.LoginJSONRequestBody
-// 	err := c.Bind(&loginRequest)
-// 	if err != nil {
-// 		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
-// 	}
+	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/registry"
+	"github.com/labstack/echo/v4"
+)
 
-// 	if loginRequest.MailAddress == "" || loginRequest.Password == "" {
-// 		return sendError(c, domain.NewError(domain.ErrorTypeLoginValidationFailed))
-// 	}
+type loginHandler struct {
+	reg registry.Getter
+}
 
-// 	adminInteractor := h.reg.AdminInteractor()
-// 	token, err := adminInteractor.GetAdminJwtByEmail(c.Request().Context(), loginRequest)
-// 	if err != nil {
-// 		return sendError(c, err)
-// 	}
+func (h loginHandler) Login(c echo.Context) error {
+	var loginRequest domain.LoginJSONRequestBody
+	err := c.Bind(&loginRequest)
+	if err != nil {
+		return sendError(c, domain.NewError(domain.ErrorTypeValidationFailed))
+	}
 
-// 	reseponse := domain.AuthenticationResponse{
-// 		Token:   token,
-// 		Message: "Success",
-// 	}
+	if loginRequest.MailAddress == "" || loginRequest.Password == "" {
+		return sendError(c, domain.NewError(domain.ErrorTypeLoginValidationFailed))
+	}
 
-// 	return c.JSON(http.StatusOK, reseponse)
-// }
+	adminInteractor := h.reg.AdminInteractor()
+	token, err := adminInteractor.GetAdminJwtByEmail(c.Request().Context(), loginRequest)
+	if err != nil {
+		return sendError(c, err)
+	}
+
+	reseponse := domain.AuthenticationResponse{
+		Token:   token,
+		Message: "Success",
+	}
+
+	return c.JSON(http.StatusOK, reseponse)
+}
