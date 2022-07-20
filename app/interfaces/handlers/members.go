@@ -18,7 +18,7 @@ type membersHandler struct {
 func (h membersHandler) AdminGetMemberList(c echo.Context, params api.AdminGetMemberListParams) error {
 	var limit int
 	if params.Limit != nil {
-		limit = int(*params.Limit)
+		limit = *params.Limit
 	}
 
 	if limit <= 0 || 50 < limit {
@@ -27,12 +27,12 @@ func (h membersHandler) AdminGetMemberList(c echo.Context, params api.AdminGetMe
 
 	var offset int
 	if params.Offset != nil {
-		offset = int(*params.Offset)
+		offset = *params.Offset
 	}
 
 	var status string
 	if params.Status != nil {
-		status = string(*params.Status)
+		status = *params.Status
 	}
 
 	memberParams := domain.Pager{

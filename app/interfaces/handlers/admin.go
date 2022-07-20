@@ -79,7 +79,7 @@ func (h adminHandler) RegistAdmin(c echo.Context) error {
 func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams) error {
 	var limit int
 	if params.Limit != nil {
-		limit = int(*params.Limit)
+		limit = *params.Limit
 	}
 
 	if limit <= 0 || 50 < limit {
@@ -87,11 +87,11 @@ func (h adminHandler) GetAdminList(c echo.Context, params api.GetAdminListParams
 	}
 	var offset int
 	if params.Offset != nil {
-		offset = int(*params.Offset)
+		offset = *params.Offset
 	}
 	var status string
 	if params.Status != nil {
-		status = string(*params.Status)
+		status = *params.Status
 	}
 
 	aminListParams := domain.Pager{
