@@ -81,8 +81,9 @@ func start() int {
 	addr := util.GetAPIPath(env)
 
 	srv := &http.Server{
-		Addr:    addr,
-		Handler: e,
+		Addr:              addr,
+		Handler:           e,
+		ReadHeaderTimeout: 20 * time.Second,
 	}
 
 	go func() {
