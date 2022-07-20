@@ -130,7 +130,7 @@ linters-settings:
   misspell:
     locale: US
   goimports:
-    local-prefixes: github.com/moneyforward/onion
+    local-prefixes: github.com/Code0716/go-vtm
   gocritic:
   # https://go-critic.github.io/overview
 #    enabled-tags:
