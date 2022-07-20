@@ -70,6 +70,7 @@ linters:
     - unconvert #Remove unnecessary type conversions
     - unparam #Reports unused function parameters
     - depguard #Go linter that checks if package imports are in a list of acceptable packages
+    - goimports # Goimports does everything that gofmt does. Additionally it checks unused import
 
   # 何を無効にしたか明示
   disable:
@@ -83,7 +84,6 @@ linters:
     - maligned # Tool to detect Go structs that would take less memory if their fields were sorted
     - stylecheck #Stylecheck is a replacement for golint
     #一旦退避
-    - goimports # Goimports does everything that gofmt does. Additionally it checks unused import
 
 linters-settings:
   depguard:
@@ -131,7 +131,7 @@ linters-settings:
   misspell:
     locale: US
   goimports:
-    local-prefixes: github.com/Code0716/go-vtm
+    local-prefixes: github.com/Code0716/go-vtm/app/cmd
   gocritic:
   # https://go-critic.github.io/overview
 #    enabled-tags:
