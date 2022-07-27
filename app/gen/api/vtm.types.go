@@ -74,6 +74,24 @@ type AdminUserResponse struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// 打刻情報
+type Attendance struct {
+	// 打刻時間
+	Date *time.Time `json:"date,omitempty"`
+
+	// 削除日
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+
+	// ID
+	Id *int64 `json:"id,omitempty"`
+
+	// menber_id uuid
+	MemberId *string `json:"member_id,omitempty"`
+
+	// status
+	Status *string `json:"status,omitempty"`
+}
+
 // ログイン時のレスポンス
 type AuthenticationResponse struct {
 	// message
@@ -278,6 +296,16 @@ type UpdateMemberJSONBody struct {
 	Status string `json:"status"`
 }
 
+// TimestampJSONBody defines parameters for Timestamp.
+type TimestampJSONBody struct {
+	// member id
+	MemberId string                  `json:"member_id"`
+	Status   TimestampJSONBodyStatus `json:"status"`
+}
+
+// TimestampJSONBodyStatus defines parameters for Timestamp.
+type TimestampJSONBodyStatus string
+
 // AdminRegistMemberJSONRequestBody defines body for AdminRegistMember for application/json ContentType.
 type AdminRegistMemberJSONRequestBody AdminRegistMemberJSONBody
 
@@ -292,3 +320,6 @@ type LoginJSONRequestBody LoginJSONBody
 
 // UpdateMemberJSONRequestBody defines body for UpdateMember for application/json ContentType.
 type UpdateMemberJSONRequestBody UpdateMemberJSONBody
+
+// TimestampJSONRequestBody defines body for Timestamp for application/json ContentType.
+type TimestampJSONRequestBody TimestampJSONBody

@@ -11,6 +11,7 @@ type Handler struct {
 	membersHandler
 	adminHandler
 	loginHandler
+	attendanceHandler
 }
 
 // New initializes and returns handlers collection.
@@ -20,6 +21,7 @@ func New(reg registry.Getter) Handler {
 	h.adminHandler.reg = reg
 	h.membersHandler.reg = reg
 	h.loginHandler.reg = reg
+	h.adminHandler.reg = reg
 
 	return h
 }

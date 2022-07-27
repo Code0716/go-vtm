@@ -21,7 +21,7 @@ var PermissionMap = map[Permission]string{
 	PermissionGeneral: "general",
 }
 
-// UserStatus int
+//  UserStatus int
 type UserStatus int
 
 const (

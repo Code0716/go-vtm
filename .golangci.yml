@@ -83,7 +83,6 @@ linters:
     - lll # Reports long lines
     - maligned # Tool to detect Go structs that would take less memory if their fields were sorted
     - stylecheck #Stylecheck is a replacement for golint
-    #一旦退避
 
 linters-settings:
   depguard:

@@ -260,6 +260,7 @@ paths:
                     type: integer
         default:
           $ref: '#/components/responses/InternalServerError'
+  /admin/members/regist:
     post:
       security:
         - security: []
@@ -381,6 +382,43 @@ paths:
                       $ref: '#/components/schemas/MemberResponse'
                   total:
                     type: integer
+        default:
+          $ref: '#/components/responses/InternalServerError'
+  /timestamp:
+    post:
+      security:
+        - security: []
+      operationId: Timestamp
+      summary: 打刻
+      description: 打刻する。
+      tags:
+        - member
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                member_id:
+                  type: string
+                  description: member id
+                status:
+                  type: string
+                  enum:
+                    - BEGIN_WORK
+                    - BEGIN_REST
+                    - END_WORK
+                    - END_REST
+              required:
+                - member_id
+                - status
+      responses:
+        '200':
+          description: 打刻成功時
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attendance'
         default:
           $ref: '#/components/responses/InternalServerError'
 tags:
@@ -512,6 +550,28 @@ components:
         - status
         - created_at
         - updated_at
+    Attendance:
+      description: 打刻情報
+      type: object
+      properties:
+        id:
+          description: ID
+          type: integer
+          format: int64
+        date:
+          description: 打刻時間
+          type: string
+          format: date-time
+        member_id:
+          description: menber_id uuid
+          type: string
+        status:
+          description: status
+          type: string
+        deleted_at:
+          description: 削除日
+          type: string
+          format: date-time
     Error:
       description: エラー
       type: object

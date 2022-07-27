@@ -41,3 +41,13 @@ func (r *Registry) MembersRepository() repositories.MembersRepository {
 func (r *Registry) MembersInteractor() *interactors.MembersInteractor {
 	return interactors.NewMembers(r.MembersRepository())
 }
+
+// AttendanceRepository returns attendance database.
+func (r *Registry) AttendanceRepository() repositories.AttendanceRepository {
+	return database.NewAttendance(r.db)
+}
+
+// AttendanceInteractor returns attendance interactor.
+func (r *Registry) AttendanceInteractor() *interactors.AttendanceInteractor {
+	return interactors.NewAttendance(r.AttendanceRepository())
+}

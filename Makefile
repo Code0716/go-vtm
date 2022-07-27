@@ -18,7 +18,7 @@ deps:
 	go mod download
 	go mod tidy
 
-gen:
+gen: gen-oapi
 	go generate ./...
 
 gen-oapi:

@@ -15,10 +15,12 @@ type Getter interface {
 type RepositoryGetter interface {
 	AdminRepository() repositories.AdminRepository
 	MembersRepository() repositories.MembersRepository
+	AttendanceRepository() repositories.AttendanceRepository
 }
 
 // InteractorGetter gets registered interactor instances.
 type InteractorGetter interface {
 	AdminInteractor() *interactors.AdminInteractor
 	MembersInteractor() *interactors.MembersInteractor
+	AttendanceInteractor() *interactors.AttendanceInteractor
 }
