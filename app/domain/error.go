@@ -81,7 +81,7 @@ func NewError(errType ErrorType) Error {
 }
 
 // NewErrorf create error
-func NewErrorf(errType ErrorType, msg string, args ...interface{}) Error {
+func NewErrorf(errType ErrorType, msg string, args ...any) Error {
 	return Error{
 		Type:    errType,
 		Message: fmt.Sprintf(msg, args...),

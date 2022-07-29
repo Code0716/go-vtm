@@ -216,7 +216,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 	t.Parallel()
 
 	type fakes struct {
-		fakeCreateMember func(m interface{}) error
+		fakeCreateMember func(m any) error
 	}
 
 	member := &domain.Member{
@@ -244,7 +244,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 		{
 			"success",
 			fakes{
-				fakeCreateMember: func(m interface{}) error {
+				fakeCreateMember: func(m any) error {
 					return nil
 				},
 			},
@@ -254,7 +254,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 		{
 			"fail",
 			fakes{
-				fakeCreateMember: func(m interface{}) error {
+				fakeCreateMember: func(m any) error {
 					return domain.WrapInternalError(errors.New("create faild"))
 				},
 			},
@@ -277,7 +277,7 @@ func TestMembersRepository_AdminRegistMember(t *testing.T) {
 
 func TestMembersRepository_IsMemberExist(t *testing.T) {
 	type fakes struct {
-		fakeIsMemberExist func(tableName string, query interface{}, args ...interface{}) (bool, error)
+		fakeIsMemberExist func(tableName string, query any, args ...any) (bool, error)
 	}
 
 	type args struct {
@@ -295,7 +295,7 @@ func TestMembersRepository_IsMemberExist(t *testing.T) {
 		{
 			"success",
 			fakes{
-				fakeIsMemberExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
+				fakeIsMemberExist: func(tableName string, query any, args ...any) (bool, error) {
 					if args[0] == "" || args[1] == "" {
 						return false, errors.New("faild")
 					}
@@ -309,7 +309,7 @@ func TestMembersRepository_IsMemberExist(t *testing.T) {
 		{
 			"faild",
 			fakes{
-				fakeIsMemberExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
+				fakeIsMemberExist: func(tableName string, query any, args ...any) (bool, error) {
 					if args[0] == "" || args[1] == "" {
 						return false, errors.New("faild")
 					}
@@ -322,7 +322,7 @@ func TestMembersRepository_IsMemberExist(t *testing.T) {
 		},
 		{
 			"validate error",
-			fakes{fakeIsMemberExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
+			fakes{fakeIsMemberExist: func(tableName string, query any, args ...any) (bool, error) {
 				if args[0] == "" || args[1] == "" {
 					return false, errors.New("faild")
 				}

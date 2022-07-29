@@ -30,7 +30,7 @@ func New(reg registry.Getter) Handler {
 // TODO:これに置き換える
 type Context interface {
 	Param(string) string
-	Bind(interface{}) error
+	Bind(any) error
 	Request() *http.Request
-	JSON(int, interface{}) error
+	JSON(int, any) error
 }

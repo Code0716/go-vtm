@@ -20,7 +20,7 @@ var (
 	testCtx context.Context
 )
 
-func getTestDB(t *testing.T, seeds []interface{}) (db *database.SQLHandler, close func(), err error) {
+func getTestDB(t *testing.T, seeds []any) (db *database.SQLHandler, close func(), err error) {
 	t.Helper()
 	envPath := os.Getenv("GO_ENV")
 	err = godotenv.Load(fmt.Sprintf("../../../%s.env", envPath))

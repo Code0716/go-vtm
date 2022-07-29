@@ -196,7 +196,7 @@ func TestSQLHandler_AdminMemberGetAll(t *testing.T) {
 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
-	seeds := []interface{}{
+	seeds := []any{
 		member1,
 		member2,
 		member3,
@@ -325,7 +325,7 @@ func TestSQLHandler_First(t *testing.T) {
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
 
-	seeds := []interface{}{
+	seeds := []any{
 		adminUser,
 	}
 
@@ -407,7 +407,7 @@ func TestSQLHandler_Delete(t *testing.T) {
 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
 	}
 
-	seeds := []interface{}{
+	seeds := []any{
 		adminUser1,
 		adminUser2,
 	}

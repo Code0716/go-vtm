@@ -14,7 +14,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 	t.Parallel()
 
 	type fakes struct {
-		fakeFirst func(value interface{}, where ...interface{}) error
+		fakeFirst func(value any, where ...any) error
 	}
 
 	adminUser := &domain.AdminUser{
@@ -54,7 +54,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 		{
 			"Success",
 			fakes{
-				fakeFirst: func(value interface{}, where ...interface{}) error {
+				fakeFirst: func(value any, where ...any) error {
 					value = &domain.AdminUser{
 						Id:          1,
 						AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
@@ -79,7 +79,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 		{
 			"faild",
 			fakes{
-				fakeFirst: func(value interface{}, where ...interface{}) error {
+				fakeFirst: func(value any, where ...any) error {
 					return domain.WrapInternalError(errors.New("not found"))
 				},
 			},
@@ -111,7 +111,7 @@ func TestAdmin_GetAdminByEmail(t *testing.T) {
 func TestAdmin_RegistAdmin(t *testing.T) {
 	t.Parallel()
 	type fakes struct {
-		fakeCreateAdmin func(newAdmin interface{}) error
+		fakeCreateAdmin func(newAdmin any) error
 	}
 
 	adminUser := &domain.AdminUser{
@@ -136,7 +136,7 @@ func TestAdmin_RegistAdmin(t *testing.T) {
 		{
 			"success",
 			fakes{
-				fakeCreateAdmin: func(newAdmin interface{}) error {
+				fakeCreateAdmin: func(newAdmin any) error {
 					return nil
 				},
 			},
@@ -147,7 +147,7 @@ func TestAdmin_RegistAdmin(t *testing.T) {
 		{
 			"failed ",
 			fakes{
-				fakeCreateAdmin: func(newAdmin interface{}) error {
+				fakeCreateAdmin: func(newAdmin any) error {
 					return domain.WrapInternalError(errors.New("create faild"))
 				},
 			},
@@ -177,7 +177,7 @@ func TestAdmin_RegistAdmin(t *testing.T) {
 
 func TestAdminRepository_IsAdminExist(t *testing.T) {
 	type fakes struct {
-		fakeIsAdminExist func(tableName string, query interface{}, args ...interface{}) (bool, error)
+		fakeIsAdminExist func(tableName string, query any, args ...any) (bool, error)
 	}
 
 	type args struct {
@@ -194,7 +194,7 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 		{
 			"success",
 			fakes{
-				fakeIsAdminExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
+				fakeIsAdminExist: func(tableName string, query any, args ...any) (bool, error) {
 
 					if args[0] == "" {
 						return false, errors.New("faild")
@@ -209,7 +209,7 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 		{
 			"faild",
 			fakes{
-				fakeIsAdminExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
+				fakeIsAdminExist: func(tableName string, query any, args ...any) (bool, error) {
 
 					if args[0] == "" {
 						return false, errors.New("faild")
@@ -224,7 +224,7 @@ func TestAdminRepository_IsAdminExist(t *testing.T) {
 		{
 			"validate error",
 			fakes{
-				fakeIsAdminExist: func(tableName string, query interface{}, args ...interface{}) (bool, error) {
+				fakeIsAdminExist: func(tableName string, query any, args ...any) (bool, error) {
 					if args[0] == "" {
 						return false, errors.New("faild")
 					}

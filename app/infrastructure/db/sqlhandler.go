@@ -16,7 +16,7 @@ type SQLHandler struct {
 // *gorm.DBで返してやればrepositoryで細かく記述できるが、、、。
 
 // Create retuern error
-func (h SQLHandler) Create(value interface{}) error {
+func (h SQLHandler) Create(value any) error {
 	err := h.Conn.Create(value).Error
 	if err != nil {
 		return domain.WrapInternalError(err)
@@ -26,7 +26,7 @@ func (h SQLHandler) Create(value interface{}) error {
 
 // Find gorm find
 // TODO:TODO
-func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
+func (h SQLHandler) Find(value any, where ...any) error {
 	err := h.Conn.Find(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
@@ -38,7 +38,7 @@ func (h SQLHandler) Find(value interface{}, where ...interface{}) error {
 }
 
 // First gorm find
-func (h SQLHandler) First(value interface{}, where ...interface{}) error {
+func (h SQLHandler) First(value any, where ...any) error {
 	err := h.Conn.First(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
@@ -50,7 +50,7 @@ func (h SQLHandler) First(value interface{}, where ...interface{}) error {
 }
 
 // Save is gorm save
-func (h *SQLHandler) Save(value interface{}) error {
+func (h *SQLHandler) Save(value any) error {
 	err := h.Conn.Save(value).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
@@ -63,33 +63,33 @@ func (h *SQLHandler) Save(value interface{}) error {
 
 // Update is gorm Update
 // TODO:TODO
-func (h *SQLHandler) Update(column string, value interface{}) error {
+func (h *SQLHandler) Update(column string, value any) error {
 	err := h.Conn.Update(column, value).Error
 	return err
 }
 
 // Scan is gorm Scan
 // TODO 実装未
-func (h *SQLHandler) Scan(value interface{}) error {
+func (h *SQLHandler) Scan(value any) error {
 	err := h.Conn.Scan(value).Error
 	return err
 }
 
 // Exec is gorm Exec
 // TODO 実装未
-func (h *SQLHandler) Exec(sql string, value ...interface{}) error {
+func (h *SQLHandler) Exec(sql string, value ...any) error {
 	err := h.Conn.Exec(sql, value).Error
 	return err
 }
 
 // Raw is gorm Raw
 // TODO 実装未
-func (h *SQLHandler) Raw(sql string, values ...interface{}) *gorm.DB {
+func (h *SQLHandler) Raw(sql string, values ...any) *gorm.DB {
 	return h.Conn.Raw(sql, values...)
 }
 
 // Delete is gorm delete
-func (h *SQLHandler) Delete(value interface{}, where ...interface{}) error {
+func (h *SQLHandler) Delete(value any, where ...any) error {
 	err := h.Conn.Delete(value, where...).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return domain.WrapError(domain.ErrorTypeContentNotFound, err)
@@ -99,7 +99,7 @@ func (h *SQLHandler) Delete(value interface{}, where ...interface{}) error {
 
 // Where gorm Where
 // TODO
-func (h *SQLHandler) Where(query interface{}, args ...interface{}) error {
+func (h *SQLHandler) Where(query any, args ...any) error {
 	err := h.Conn.Where(query, args...).Error
 	return err
 }
@@ -109,7 +109,7 @@ func (h *SQLHandler) Where(query interface{}, args ...interface{}) error {
 // admin
 
 // IsExist check data exests
-func (h SQLHandler) IsExist(tableName string, query interface{}, args ...interface{}) (bool, error) {
+func (h SQLHandler) IsExist(tableName string, query any, args ...any) (bool, error) {
 	var count int64
 
 	err := h.Conn.Table(tableName).

@@ -28,7 +28,7 @@ var testEnv = util.Environment{
 	DBTimezone: "Asia/Tokyo",
 }
 
-func getTestDB(t *testing.T, seeds []interface{}) (db *db.SQLHandler, close func(), err error) {
+func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err error) {
 	t.Helper()
 
 	teardownFuncs := []func(){}

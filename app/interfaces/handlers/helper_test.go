@@ -16,7 +16,7 @@ import (
 //   body is expected response body
 type wantRes struct {
 	code int
-	body interface{}
+	body any
 }
 
 func newTestEchoContext(t *testing.T, req *http.Request) (echo.Context, *httptest.ResponseRecorder) {
@@ -31,7 +31,7 @@ func newTestEchoContext(t *testing.T, req *http.Request) (echo.Context, *httptes
 	return c, rec
 }
 
-func testJSON(t *testing.T, got []byte, want interface{}) bool {
+func testJSON(t *testing.T, got []byte, want any) bool {
 	t.Helper()
 
 	if want == nil {
@@ -66,7 +66,7 @@ func testJSON(t *testing.T, got []byte, want interface{}) bool {
 
 }
 
-func Compare(t *testing.T, want, got interface{}) bool {
+func Compare(t *testing.T, want, got any) bool {
 	t.Helper()
 	var isSame bool
 	switch reflect.TypeOf(want).Kind() {
@@ -82,7 +82,7 @@ func Compare(t *testing.T, want, got interface{}) bool {
 	return isSame
 }
 
-func compareStruct(t *testing.T, want, got interface{}) bool {
+func compareStruct(t *testing.T, want, got any) bool {
 	opt := cmp.AllowUnexported(want, got)
 	if !cmp.Equal(want, got, opt) {
 		t.Errorf("%v value is mismatch (-want +got):\n%s", reflect.TypeOf(want), cmp.Diff(want, got, opt))

@@ -7,19 +7,19 @@ import (
 
 type mockAdminRepo struct {
 	database.SQLHandlerInterface
-	FakeCreateAdmin       func(newAdmin interface{}) error
-	FakeFirst             func(value interface{}, where ...interface{}) error
+	FakeCreateAdmin       func(newAdmin any) error
+	FakeFirst             func(value any, where ...any) error
 	FakeGetAdminByEmail   func(*domain.AdminUser, string) error
-	FakeIsAdminExist      func(tableName string, query interface{}, args ...interface{}) (bool, error)
+	FakeIsAdminExist      func(tableName string, query any, args ...any) (bool, error)
 	FakeCreateMember      func(newMember domain.Member) error
 	FakeAdminMemberGetAll func(params domain.Pager)
 }
 
-func (m mockAdminRepo) Create(adminU interface{}) error {
+func (m mockAdminRepo) Create(adminU any) error {
 	err := m.FakeCreateAdmin(&adminU)
 	return err
 }
-func (m mockAdminRepo) First(value interface{}, where ...interface{}) error {
+func (m mockAdminRepo) First(value any, where ...any) error {
 	err := m.FakeFirst(value, where...)
 	return err
 }
@@ -28,7 +28,7 @@ func (m mockAdminRepo) GetAdminBFyEmail(adminU *domain.AdminUser, mail string) e
 	return err
 }
 
-func (m mockAdminRepo) IsExist(tableName string, query interface{}, args ...interface{}) (bool, error) {
+func (m mockAdminRepo) IsExist(tableName string, query any, args ...any) (bool, error) {
 	isExist, err := m.FakeIsAdminExist(tableName, query, args...)
 	return isExist, err
 }
@@ -36,8 +36,8 @@ func (m mockAdminRepo) IsExist(tableName string, query interface{}, args ...inte
 type mockMembersRepo struct {
 	database.SQLHandlerInterface
 	FakeAdminMemberGetAll func(params domain.Pager) ([]*domain.Member, int64, error)
-	FakeCreateMember      func(m interface{}) error
-	FakeIsMemberExist     func(tableName string, query interface{}, args ...interface{}) (bool, error)
+	FakeCreateMember      func(m any) error
+	FakeIsMemberExist     func(tableName string, query any, args ...any) (bool, error)
 }
 
 func (m mockMembersRepo) AdminMemberGetAll(params domain.Pager) ([]*domain.Member, int64, error) {
@@ -45,11 +45,11 @@ func (m mockMembersRepo) AdminMemberGetAll(params domain.Pager) ([]*domain.Membe
 	return members, count, err
 }
 
-func (m mockMembersRepo) Create(member interface{}) error {
+func (m mockMembersRepo) Create(member any) error {
 	err := m.FakeCreateMember(&member)
 	return err
 }
 
-func (m mockMembersRepo) IsExist(tableName string, query interface{}, args ...interface{}) (bool, error) {
+func (m mockMembersRepo) IsExist(tableName string, query any, args ...any) (bool, error) {
 	return m.FakeIsMemberExist(tableName, query, args...)
 }
