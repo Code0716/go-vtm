@@ -21,7 +21,7 @@ func New(reg registry.Getter) Handler {
 	h.adminHandler.reg = reg
 	h.membersHandler.reg = reg
 	h.loginHandler.reg = reg
-	h.adminHandler.reg = reg
+	h.attendanceHandler.reg = reg
 
 	return h
 }

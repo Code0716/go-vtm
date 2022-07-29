@@ -29,6 +29,8 @@ const (
 	ErrorTypeRegistMemberValidationFailed
 	// ErrorTypeUUIDValidationFailed invalid uuid
 	ErrorTypeUUIDValidationFailed // invalid_uuid
+	// ErrorTypeRequestParamsNotSet params not found
+	ErrorTypeRequestParamsNotSet // params_not_found
 	// ErrorTypeMemberAlreadyDeleted requested member already deleted
 	ErrorTypeMemberAlreadyDeleted // requested_member_already_deleted
 	// ErrorTypeAuthenticationFailed 認証エラー
@@ -53,6 +55,7 @@ var ErrorMessageMap = map[ErrorType]string{
 	ErrorTypeRegistMemberValidationFailed: "name,phone_numberは必須です",
 	ErrorTypeMemberAlreadyDeleted:         "リクエストされたmemberは既に削除されています。",
 	// other
+	ErrorTypeRequestParamsNotSet:             "Requestのパラメータが不足しています。",
 	ErrorTypeNotFound:                        "request uri found",
 	ErrorTypeValidationFailed:                "validate failed",
 	ErrorTypeAuthenticationFailed:            "認証エラー",

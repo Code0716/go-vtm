@@ -19,11 +19,12 @@ func (h attendanceHandler) Timestamp(c echo.Context) error {
 	err := c.Bind(&timestamp)
 	if err != nil {
 		log.Print(err)
-		return sendError(c, domain.NewError(domain.ErrorTypeAdminEmailValidationFailed))
+		return sendError(c, domain.WrapInternalError(err))
 	}
 
 	if timestamp.MemberId == "" || timestamp.Status == "" {
-		return sendError(c, domain.NewError(domain.ErrorTypeAdminEmailValidationFailed))
+		log.Print("Timestamp params not set")
+		return sendError(c, domain.NewError(domain.ErrorTypeRequestParamsNotSet))
 	}
 
 	// TODO: 後ほど修正する。
@@ -31,16 +32,15 @@ func (h attendanceHandler) Timestamp(c echo.Context) error {
 		timestamp.Status != "BEGIN_REST" &&
 		timestamp.Status != "END_WORK" &&
 		timestamp.Status != "END_REST" {
-		return sendError(c, domain.NewError(domain.ErrorTypeAdminEmailValidationFailed))
+		return sendError(c, domain.NewError(domain.ErrorTypeRequestParamsNotSet))
 	}
 
 	attendanceInteractor := h.reg.AttendanceInteractor()
-
 	attendance, err := attendanceInteractor.Timestamp(c.Request().Context(), timestamp)
+
 	if err != nil {
 		log.Print(err)
 		return sendError(c, domain.WrapInternalError(err))
 	}
-
 	return c.JSON(http.StatusOK, attendance)
 }

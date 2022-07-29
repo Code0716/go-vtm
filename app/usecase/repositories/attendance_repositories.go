@@ -8,5 +8,5 @@ import (
 
 // AttendanceRepository  is data access methods attendance.
 type AttendanceRepository interface {
-	Timestamp(context.Context, *domain.Attendance) error
+	Timestamp(context.Context, domain.Attendance) error
 }

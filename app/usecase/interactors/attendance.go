@@ -2,6 +2,7 @@ package interactors
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
@@ -26,14 +27,14 @@ func NewAttendance(
 func (im *AttendanceInteractor) Timestamp(ctx context.Context, params domain.TimestampJSONBody) (*domain.Attendance, error) {
 	currentTime := time.Now()
 	attendance := &domain.Attendance{
-		Date:      &currentTime,
-		DeletedAt: nil,
-		MemberId:  &params.MemberId,
-		Status:    (*string)(&params.Status),
+		Date:     &currentTime,
+		MemberId: &params.MemberId,
+		Status:   (*string)(&params.Status),
 	}
 
-	err := im.AttendanceRepository.Timestamp(ctx, attendance)
+	err := im.AttendanceRepository.Timestamp(ctx, *attendance)
 	if err != nil {
+		log.Printf("interactor error %v", err)
 		return nil, err
 	}
 

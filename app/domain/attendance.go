@@ -7,3 +7,8 @@ type Attendance api.Attendance
 
 // TimestampJSONBody model
 type TimestampJSONBody api.TimestampJSONBody
+
+// TableName GORMにテーブル名を教える
+func (i Attendance) TableName() string {
+	return "attendance"
+}
