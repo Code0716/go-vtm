@@ -1,3 +1,4 @@
+// Package database is database Implementation
 package database
 
 import (

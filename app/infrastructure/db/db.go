@@ -1,3 +1,4 @@
+// Package db gorm init
 package db
 
 import (

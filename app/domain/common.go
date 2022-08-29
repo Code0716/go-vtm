@@ -1,3 +1,4 @@
+// Package domain is domain package
 package domain
 
 import "github.com/Code0716/go-vtm/app/gen/api"
@@ -19,25 +20,6 @@ var PermissionMap = map[Permission]string{
 	PermissionAdmin:   "admin",
 	PermissionManager: "manager",
 	PermissionGeneral: "general",
-}
-
-//  UserStatus int
-type UserStatus int
-
-const (
-	// UserStatusInit init
-	UserStatusInit = iota + 1
-	// UserStatusActive active
-	UserStatusActive
-	// UserStatusOther other
-	UserStatusOther
-)
-
-// UserStatusMap is get user status
-var UserStatusMap = map[UserStatus]string{
-	UserStatusInit:   "init",
-	UserStatusActive: "active",
-	UserStatusOther:  "other",
 }
 
 // CommonSuccessResponse has a text message.
@@ -88,4 +70,23 @@ func (m StatusCode) GetWorkStatus() string {
 	default:
 		return StatusOther
 	}
+}
+
+// UserStatus int
+type UserStatus int
+
+const (
+	// UserStatusInit init
+	UserStatusInit UserStatus = iota + 1
+	// UserStatusActive active
+	UserStatusActive
+	// UserStatusOther other
+	UserStatusOther
+)
+
+// UserStatusMap is get user status
+var UserStatusMap = map[UserStatus]string{
+	UserStatusInit:   "init",
+	UserStatusActive: "active",
+	UserStatusOther:  "other",
 }

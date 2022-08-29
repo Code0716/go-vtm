@@ -1,3 +1,4 @@
+// Package registry registry package
 package registry
 
 import (

@@ -1,3 +1,4 @@
+// Package interactors interactor package
 package interactors
 
 import (
