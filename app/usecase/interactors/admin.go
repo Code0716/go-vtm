@@ -15,7 +15,7 @@ type AdminInteractor struct {
 	AdminRepository repositories.AdminRepository
 }
 
-// NewAdmin initializes item interactor.
+// NewAdmin initailizes item interactor.
 func NewAdmin(
 	adminsRepo repositories.AdminRepository,
 ) *AdminInteractor {
@@ -25,11 +25,11 @@ func NewAdmin(
 }
 
 // GetAdminJwtByEmail returns jwt
-// ia: admin interactor
-func (ia *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain.LoginJSONRequestBody) (*string, error) {
+// ai: admin interactor
+func (ai *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain.LoginJSONRequestBody) (*string, error) {
 	env := util.Env()
 
-	adminUser, err := ia.AdminRepository.GetAdminByEmail(ctx, params.MailAddress)
+	adminUser, err := ai.AdminRepository.GetAdminByEmail(ctx, params.MailAddress)
 	if err != nil {
 		return nil, err
 	}
@@ -46,9 +46,9 @@ func (ia *AdminInteractor) GetAdminJwtByEmail(ctx context.Context, params domain
 }
 
 // GetAdminByUUID returns adminUser
-// ia: admin interactor
-func (ia *AdminInteractor) GetAdminByUUID(ctx context.Context, uuid string) (*domain.AdminUser, error) {
-	adminUser, err := ia.AdminRepository.GetAdminByUUID(ctx, uuid)
+// ai: admin interactor
+func (ai *AdminInteractor) GetAdminByUUID(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+	adminUser, err := ai.AdminRepository.GetAdminByUUID(ctx, uuid)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func (ia *AdminInteractor) GetAdminByUUID(ctx context.Context, uuid string) (*do
 }
 
 // RegistAdmin returns member list
-// ia: admin interactor
-func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.RegistAdminJSONRequestBody) error {
+// ai: admin interactor
+func (ai *AdminInteractor) RegistAdmin(ctx context.Context, params domain.RegistAdminJSONRequestBody) error {
 	hash, err := util.GetHush(params.Password)
 	if err != nil {
 		return err
@@ -76,7 +76,7 @@ func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.Regist
 		UpdatedAt:   currentTime,
 	}
 
-	err = ia.AdminRepository.RegistAdmin(ctx, registAdmin)
+	err = ai.AdminRepository.RegistAdmin(ctx, registAdmin)
 	if err != nil {
 		return err
 	}
@@ -85,8 +85,8 @@ func (ia *AdminInteractor) RegistAdmin(ctx context.Context, params domain.Regist
 }
 
 // GetAdminList get admin list
-func (ia *AdminInteractor) GetAdminList(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
-	adminUsers, count, err := ia.AdminRepository.GetAllAdminUser(ctx, params)
+func (ai *AdminInteractor) GetAdminList(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error) {
+	adminUsers, count, err := ai.AdminRepository.GetAllAdminUser(ctx, params)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -94,23 +94,23 @@ func (ia *AdminInteractor) GetAdminList(ctx context.Context, params domain.Pager
 }
 
 // IsAdminExist check regist admin
-// ia: admin interactor
-func (ia *AdminInteractor) IsAdminExist(ctx context.Context, mail string) (bool, error) {
-	isExist, err := ia.AdminRepository.IsAdminExist(ctx, mail)
+// ai: admin interactor
+func (ai *AdminInteractor) IsAdminExist(ctx context.Context, mail string) (bool, error) {
+	isExist, err := ai.AdminRepository.IsAdminExist(ctx, mail)
 	return isExist, err
 }
 
 // PutAdminUser update AdminUser
-// ia: admin interactor
-func (ia *AdminInteractor) PutAdminUser(ctx context.Context, params domain.AdminUser) (*domain.AdminUser, error) {
-	adminUser, err := ia.AdminRepository.PutAdminUser(ctx, params)
+// ai: admin interactor
+func (ai *AdminInteractor) PutAdminUser(ctx context.Context, params domain.AdminUser) (*domain.AdminUser, error) {
+	adminUser, err := ai.AdminRepository.PutAdminUser(ctx, params)
 	return adminUser, err
 }
 
 // DeleteAdmin check regist admin
-// ia: admin interactor
-func (ia *AdminInteractor) DeleteAdmin(ctx context.Context, uuid string) (*domain.AdminUser, error) {
-	adminUser, err := ia.AdminRepository.DeleteAdminUser(ctx, uuid)
+// ai: admin interactor
+func (ai *AdminInteractor) DeleteAdmin(ctx context.Context, uuid string) (*domain.AdminUser, error) {
+	adminUser, err := ai.AdminRepository.DeleteAdminUser(ctx, uuid)
 	if err != nil {
 		return nil, err
 	}
