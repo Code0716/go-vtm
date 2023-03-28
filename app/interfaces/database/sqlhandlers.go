@@ -1,6 +1,9 @@
 package database
 
-import "github.com/Code0716/go-vtm/app/domain"
+import (
+	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/infrastructure/db"
+)
 
 // SQLHandlerInterface  SQLHandler
 type SQLHandlerInterface interface {
@@ -12,4 +15,6 @@ type SQLHandlerInterface interface {
 	AdminMemberGetAll(params domain.Pager) ([]*domain.Member, int64, error)
 	Save(value any) error
 	Delete(value any, where ...any) error
+	Where(query any, args ...any) db.SQLHandler
+	Joins(query string, args ...any) db.SQLHandler
 }

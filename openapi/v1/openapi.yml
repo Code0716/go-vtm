@@ -727,13 +727,6 @@ components:
         - created_at
         - updated_at
   responses:
-    ErrorResponse:
-      description: エラーレスポンス
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-
     InternalServerError:
       description: 予期していないエラー
       content:
