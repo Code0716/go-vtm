@@ -18,64 +18,64 @@ func (h SQLHandler) Create(value any) error {
 	return h.Conn.Create(value).Error
 }
 
-// Find gorm find
+// Find db find
 // TODO:TODO
 func (h SQLHandler) Find(value any, where ...any) error {
 	return h.Conn.Find(value, where...).Error
 
 }
 
-// First gorm find
+// First db find
 func (h SQLHandler) First(value any, where ...any) error {
 	return h.Conn.First(value, where...).Error
 
 }
 
-// Save is gorm save
+// Save is db save
 func (h *SQLHandler) Save(value any) error {
 	return h.Conn.Save(value).Error
 }
 
-// Update is gorm Update
+// Update is db Update
 // TODO:TODO
 func (h *SQLHandler) Update(column string, value any) error {
 	return h.Conn.Update(column, value).Error
 
 }
 
-// Scan is gorm Scan
+// Scan is db Scan
 // TODO 実装未
 func (h *SQLHandler) Scan(value any) error {
 	return h.Conn.Scan(value).Error
 
 }
 
-// Exec is gorm Exec
+// Exec is db Exec
 // TODO 実装未
 func (h *SQLHandler) Exec(sql string, value ...any) error {
 	err := h.Conn.Exec(sql, value).Error
 	return err
 }
 
-// Delete is gorm delete
+// Delete is db delete
 func (h *SQLHandler) Delete(value any, where ...any) error {
 	return h.Conn.Delete(value, where...).Error
 
 }
 
-// Raw is gorm Raw
+// Raw is db Raw
 // TODO 実装未
 func (h *SQLHandler) Raw(sql string, values ...any) SQLHandler {
 	return SQLHandler{h.Conn.Raw(sql, values...)}
 }
 
-// Where gorm Where
+// Where db Where
 // TODO
 func (h *SQLHandler) Where(query any, args ...any) SQLHandler {
 	return SQLHandler{h.Conn.Where(query, args...)}
 }
 
-// Where gorm Where
+// Joins DB Joins
 // TODO
 func (h *SQLHandler) Joins(query string, args ...any) SQLHandler {
 	return SQLHandler{h.Conn.Joins(query, args...)}
