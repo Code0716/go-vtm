@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 )
 
 var iss = "vtm"

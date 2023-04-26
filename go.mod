@@ -9,6 +9,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/google/go-cmp v0.5.9
 	github.com/joho/godotenv v1.5.1
+	github.com/labstack/echo-jwt v0.0.0-20221127215225-c84d41a71003
 	github.com/labstack/echo/v4 v4.10.2
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/crypto v0.7.0
@@ -21,6 +22,7 @@ require (
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/invopop/yaml v0.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

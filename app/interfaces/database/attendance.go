@@ -20,7 +20,7 @@ func NewAttendance(sqlHandler SQLHandlerInterface) *AttendanceRepository {
 }
 
 // Timestamp to attendance table
-func (r *AttendanceRepository) Timestamp(ctx context.Context, attendance domain.Attendance) error {
+func (r *AttendanceRepository) Timestamp(_ context.Context, attendance domain.Attendance) error {
 	err := r.SQLHandler.Create(&attendance)
 	if err != nil {
 		log.Print(err)

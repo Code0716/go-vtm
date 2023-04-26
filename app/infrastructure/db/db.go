@@ -17,23 +17,18 @@ import (
 )
 
 // NewDBConn initializes DB connection.
-func NewDBConn(env util.Environment) (conn *sql.DB, close func() error, err error) {
+func NewDBConn(env util.Environment) (conn *sql.DB, err error) {
 	dsn, err := BuildMySQLConnectionString(env)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	sqlDB, err := sql.Open("mysql", dsn)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	close = func() error {
-		if err := sqlDB.Close(); err != nil {
-			return err
-		}
-		return err
-	}
-	return sqlDB, close, nil
+
+	return sqlDB, nil
 
 }
 

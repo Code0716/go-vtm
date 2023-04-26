@@ -9,7 +9,7 @@ import (
 )
 
 // GetHealthz returns the health check result.
-func GetHealthz(reg registry.Getter) echo.HandlerFunc {
+func GetHealthz(_ registry.Getter) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		return ctx.JSON(http.StatusOK, domain.CommonSuccessResponse{Message: "OK"})
 	}

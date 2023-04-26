@@ -28,7 +28,7 @@ func main() {
 func start() int {
 	env := util.Env()
 
-	dbConn, close, err := db.NewDBConn(env)
+	dbConn, err := db.NewDBConn(env)
 	if err != nil {
 		log.Fatalf("DB initialization error: %s", err)
 		return 1
@@ -40,7 +40,7 @@ func start() int {
 	}
 
 	defer func() {
-		if err := close(); err != nil {
+		if err := dbConn.Close(); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -62,6 +62,7 @@ func start() int {
 	// v1
 	router := e.Group("/api/v1")
 
+	// TODO:別のContainerかなにかにする。
 	// router.Use(middleware.JWTWithConfig(
 	// 	middleware.JWTConfig{
 	// 		SigningKey:  []byte(env.Signingkey),

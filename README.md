@@ -20,3 +20,7 @@ Golang,Echo,Gorm
 `make up`で server 起動
 
 test は db が立ち上がっている状態で、`make test`コマンドを実行。
+
+## login
+
+-- POST:/login を叩いて jwt を取得してください。
