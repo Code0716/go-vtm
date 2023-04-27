@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS `vtm_db`.`attendance`(
   `status` enum('BEGIN_WORK','BEGIN_REST','END_WORK','END_REST') NOT NULL COMMENT 'status',
   `deleted_at` datetime DEFAULT NULL COMMENT 'deleted_date',
   PRIMARY KEY(`id`),
-  INDEX attend_id_index (`date`,`member_id`)
+  INDEX attend_id_index (`date`,`member_id`),
+  FOREIGN KEY (member_id) REFERENCES members(member_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;

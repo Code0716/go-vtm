@@ -39,7 +39,12 @@ func (r *MembersRepository) UpdateMember(_ context.Context, member domain.Member
 // IsMemberExist check member name
 func (r *MembersRepository) IsMemberExist(_ context.Context, name, phone string) (bool, error) {
 	var member domain.Member
-	isExist, err := r.SQLHandler.IsExist(member.TableName(), "name = ? OR phone_number = ?", name, phone)
+	isExist, err := r.SQLHandler.IsExist(
+		member.TableName(),
+		"name = ? OR phone_number = ?",
+		name,
+		phone,
+	)
 	if err != nil {
 		return isExist, err
 	}
