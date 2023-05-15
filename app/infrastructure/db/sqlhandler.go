@@ -19,21 +19,59 @@ func (h SQLHandler) Create(value any) error {
 }
 
 // Find db find
-// TODO:TODO
-func (h SQLHandler) Find(value any, where ...any) error {
-	return h.Conn.Find(value, where...).Error
+func (h SQLHandler) Find(value any, where ...any) SQLHandler {
+	return SQLHandler{h.Conn.Find(value, where...)}
 
 }
 
 // First db find
-func (h SQLHandler) First(value any, where ...any) error {
-	return h.Conn.First(value, where...).Error
+func (h SQLHandler) First(value any, where ...any) SQLHandler {
+	return SQLHandler{h.Conn.First(value, where...)}
+}
 
+// Where db Where
+func (h *SQLHandler) Where(query any, args ...any) SQLHandler {
+	return SQLHandler{h.Conn.Where(query, args...)}
+}
+
+// Joins DB Joins
+func (h *SQLHandler) Joins(query string, args ...any) SQLHandler {
+	return SQLHandler{h.Conn.Joins(query, args...)}
+}
+
+// Group DB Group
+func (h *SQLHandler) Group(name string) SQLHandler {
+	return SQLHandler{h.Conn.Group(name)}
+}
+
+// Having DB Having
+func (h *SQLHandler) Having(query any, args ...any) SQLHandler {
+	return SQLHandler{h.Conn.Having(query, args...)}
+}
+
+// Preload DB Preload
+func (h *SQLHandler) Preload(query string, args ...any) SQLHandler {
+	return SQLHandler{h.Conn.Preload(query, args...)}
+}
+
+// Table DB Table
+func (h *SQLHandler) Table(name string, args ...any) SQLHandler {
+	return SQLHandler{h.Conn.Table(name, args...)}
 }
 
 // Save is db save
-func (h *SQLHandler) Save(value any) error {
-	return h.Conn.Save(value).Error
+func (h *SQLHandler) Save(value any) SQLHandler {
+	return SQLHandler{h.Conn.Save(value)}
+}
+
+// Pluck is db Pluck
+func (h *SQLHandler) Pluck(column string, dest any) SQLHandler {
+	return SQLHandler{h.Conn.Pluck(column, dest)}
+}
+
+// Error is db Error
+func (h *SQLHandler) Error() error {
+	return h.Conn.Error
 }
 
 // Update is db Update
@@ -67,18 +105,6 @@ func (h *SQLHandler) Delete(value any, where ...any) error {
 // TODO 実装未
 func (h *SQLHandler) Raw(sql string, values ...any) SQLHandler {
 	return SQLHandler{h.Conn.Raw(sql, values...)}
-}
-
-// Where db Where
-// TODO
-func (h *SQLHandler) Where(query any, args ...any) SQLHandler {
-	return SQLHandler{h.Conn.Where(query, args...)}
-}
-
-// Joins DB Joins
-// TODO
-func (h *SQLHandler) Joins(query string, args ...any) SQLHandler {
-	return SQLHandler{h.Conn.Joins(query, args...)}
 }
 
 // TODO:下記も抽象化したい

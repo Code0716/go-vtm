@@ -2,13 +2,14 @@ package database_test
 
 import (
 	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/infrastructure/db"
 	"github.com/Code0716/go-vtm/app/interfaces/database"
 )
 
 type mockAdminRepo struct {
 	database.SQLHandlerInterface
-	FakeCreateAdmin       func(newAdmin any) error
-	FakeFirst             func(value any, where ...any) error
+	FakeCreateAdmin       func(newAdmin any) db.SQLHandler
+	FakeFirst             func(value any, where ...any) db.SQLHandler
 	FakeGetAdminByEmail   func(*domain.AdminUser, string) error
 	FakeIsAdminExist      func(tableName string, query any, args ...any) (bool, error)
 	FakeCreateMember      func(newMember domain.Member) error
@@ -16,11 +17,11 @@ type mockAdminRepo struct {
 }
 
 func (m mockAdminRepo) Create(adminU any) error {
-	err := m.FakeCreateAdmin(&adminU)
+	err := m.FakeCreateAdmin(&adminU).Conn.Error
 	return err
 }
 func (m mockAdminRepo) First(value any, where ...any) error {
-	err := m.FakeFirst(value, where...)
+	err := m.FakeFirst(value, where...).Conn.Error
 	return err
 }
 func (m mockAdminRepo) GetAdminBFyEmail(adminU *domain.AdminUser, mail string) error {

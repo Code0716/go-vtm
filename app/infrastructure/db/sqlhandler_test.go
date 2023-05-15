@@ -366,7 +366,7 @@ func TestSQLHandler_First(t *testing.T) {
 			d := db.SQLHandler(*testDB)
 			var admin *domain.AdminUser
 
-			err := d.First(&admin, domain.AdminUser{MailAddress: tt.args.mail})
+			err := d.First(&admin, domain.AdminUser{MailAddress: tt.args.mail}).Conn.Error
 
 			if (err != nil) != tt.wantErr {
 				t.Fatal(err)

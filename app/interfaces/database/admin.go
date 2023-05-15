@@ -23,7 +23,7 @@ func NewAdmin(sqlHandler SQLHandlerInterface) *AdminRepository {
 // GetAdminByEmail get admin user by mail address
 func (r *AdminRepository) GetAdminByEmail(_ context.Context, mail string) (*domain.AdminUser, error) {
 	var adminUser domain.AdminUser
-	err := r.SQLHandler.First(&adminUser, domain.AdminUser{MailAddress: mail})
+	err := r.SQLHandler.First(&adminUser, domain.AdminUser{MailAddress: mail}).Conn.Error
 
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func (r *AdminRepository) GetAdminByEmail(_ context.Context, mail string) (*doma
 // GetAdminByUUID get admin user by  uuid
 func (r *AdminRepository) GetAdminByUUID(_ context.Context, uuid string) (*domain.AdminUser, error) {
 	var adminUser domain.AdminUser
-	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: uuid})
+	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: uuid}).Conn.Error
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (r *AdminRepository) GetAllAdminUser(_ context.Context, params domain.Pager
 
 // PutAdminUser put admin user
 func (r *AdminRepository) PutAdminUser(_ context.Context, params domain.AdminUser) (*domain.AdminUser, error) {
-	err := r.SQLHandler.Save(&params)
+	err := r.SQLHandler.Save(&params).Conn.Error
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (r *AdminRepository) IsAdminExist(_ context.Context, mail string) (bool, er
 // DeleteAdminUser delete admin user
 func (r *AdminRepository) DeleteAdminUser(_ context.Context, uuid string) (*domain.AdminUser, error) {
 	var adminUser domain.AdminUser
-	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: uuid})
+	err := r.SQLHandler.First(&adminUser, domain.AdminUser{AdminId: uuid}).Conn.Error
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func (r *AdminRepository) DeleteAdminUser(_ context.Context, uuid string) (*doma
 	currentTime := time.Now()
 	adminUser.DeletedAt = &currentTime
 	adminUser.Status = domain.StatusCodeOther.GetWorkStatus()
-	err = r.SQLHandler.Save(&adminUser)
+	err = r.SQLHandler.Save(&adminUser).Conn.Error
 	if err != nil {
 		return nil, err
 	}

@@ -29,7 +29,7 @@ func (r *MembersRepository) AdminRegistMember(_ context.Context, member domain.M
 
 // UpdateMember update member
 func (r *MembersRepository) UpdateMember(_ context.Context, member domain.Member) (*domain.Member, error) {
-	err := r.SQLHandler.Save(&member)
+	err := r.SQLHandler.Save(&member).Conn.Error
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (r *MembersRepository) AdminMemberGetAll(_ context.Context, params domain.P
 // GetMemberByUUID  get member by uuid
 func (r *MembersRepository) GetMemberByUUID(_ context.Context, uuid string) (*domain.Member, error) {
 	var member domain.Member
-	err := r.SQLHandler.First(&member, domain.Member{MemberId: uuid})
+	err := r.SQLHandler.First(&member, domain.Member{MemberId: uuid}).Conn.Error
 	if err != nil {
 		return nil, err
 	}
