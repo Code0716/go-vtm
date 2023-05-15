@@ -7,7 +7,7 @@ import (
 
 // SQLHandlerInterface  SQLHandler
 type SQLHandlerInterface interface {
-	Create(value any) error
+	Create(value any) db.SQLHandler
 	Find(value any, where ...any) db.SQLHandler
 	First(value any, where ...any) db.SQLHandler
 	IsExist(tableName string, query any, args ...any) (bool, error)

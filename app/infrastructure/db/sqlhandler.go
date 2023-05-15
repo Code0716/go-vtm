@@ -14,8 +14,14 @@ type SQLHandler struct {
 // *gorm.DBで返してやればrepositoryで細かく記述できるが、、、。
 
 // Create retuern error
-func (h SQLHandler) Create(value any) error {
-	return h.Conn.Create(value).Error
+func (h SQLHandler) Create(value any) SQLHandler {
+	return SQLHandler{h.Conn.Create(value)}
+}
+
+// Update is db Update
+func (h *SQLHandler) Update(column string, value any) SQLHandler {
+	return SQLHandler{h.Conn.Update(column, value)}
+
 }
 
 // Find db find
@@ -27,6 +33,12 @@ func (h SQLHandler) Find(value any, where ...any) SQLHandler {
 // First db find
 func (h SQLHandler) First(value any, where ...any) SQLHandler {
 	return SQLHandler{h.Conn.First(value, where...)}
+}
+
+// Scan is db Scan
+func (h *SQLHandler) Scan(value any) SQLHandler {
+	return SQLHandler{h.Conn.Scan(value)}
+
 }
 
 // Where db Where
@@ -72,20 +84,6 @@ func (h *SQLHandler) Pluck(column string, dest any) SQLHandler {
 // Error is db Error
 func (h *SQLHandler) Error() error {
 	return h.Conn.Error
-}
-
-// Update is db Update
-// TODO:TODO
-func (h *SQLHandler) Update(column string, value any) error {
-	return h.Conn.Update(column, value).Error
-
-}
-
-// Scan is db Scan
-// TODO 実装未
-func (h *SQLHandler) Scan(value any) error {
-	return h.Conn.Scan(value).Error
-
 }
 
 // Exec is db Exec

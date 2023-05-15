@@ -20,7 +20,7 @@ func NewMembers(sqlHandler SQLHandlerInterface) *MembersRepository {
 
 // AdminRegistMember regist member to members db
 func (r *MembersRepository) AdminRegistMember(_ context.Context, member domain.Member) error {
-	err := r.SQLHandler.Create(&member)
+	err := r.SQLHandler.Create(&member).Conn.Error
 	if err != nil {
 		return err
 	}

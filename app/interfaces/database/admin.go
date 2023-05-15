@@ -44,7 +44,7 @@ func (r *AdminRepository) GetAdminByUUID(_ context.Context, uuid string) (*domai
 
 // RegistAdmin retuern error
 func (r *AdminRepository) RegistAdmin(_ context.Context, adminUser domain.AdminUser) error {
-	err := r.SQLHandler.Create(&adminUser)
+	err := r.SQLHandler.Create(&adminUser).Conn.Error
 	if err != nil {
 		return err
 	}

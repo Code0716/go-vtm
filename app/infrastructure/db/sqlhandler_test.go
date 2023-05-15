@@ -67,7 +67,7 @@ func TestSQLHandler_CreateAdmin(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := db.SQLHandler(*testDB)
-			err := d.Create(tt.args)
+			err := d.Create(tt.args).Conn.Error
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SQLHandler.CreateAdmin error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -131,7 +131,7 @@ func TestSQLHandler_CreateMember(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := db.SQLHandler(*testDB)
-			err := d.Create(tt.args)
+			err := d.Create(tt.args).Conn.Error
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SQLHandler.CreateMember error = %v, wantErr %v", err, tt.wantErr)
 			}
