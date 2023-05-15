@@ -88,19 +88,16 @@ func (h *SQLHandler) Error() error {
 
 // Exec is db Exec
 // TODO 実装未
-func (h *SQLHandler) Exec(sql string, value ...any) error {
-	err := h.Conn.Exec(sql, value).Error
-	return err
+func (h *SQLHandler) Exec(sql string, value ...any) SQLHandler {
+	return SQLHandler{h.Conn.Exec(sql, value)}
 }
 
 // Delete is db delete
-func (h *SQLHandler) Delete(value any, where ...any) error {
-	return h.Conn.Delete(value, where...).Error
-
+func (h *SQLHandler) Delete(value any, where ...any) SQLHandler {
+	return SQLHandler{h.Conn.Delete(value, where...)}
 }
 
 // Raw is db Raw
-// TODO 実装未
 func (h *SQLHandler) Raw(sql string, values ...any) SQLHandler {
 	return SQLHandler{h.Conn.Raw(sql, values...)}
 }

@@ -447,7 +447,7 @@ func TestSQLHandler_Delete(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			d := db.SQLHandler(*testDB)
-			err := d.Delete(tt.args.value, tt.args.where)
+			err := d.Delete(tt.args.value, tt.args.where).Conn.Error
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SQLHandler.Delete() error = %v, wantErr %v", err, tt.wantErr)
 			}

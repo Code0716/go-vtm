@@ -14,7 +14,7 @@ type SQLHandlerInterface interface {
 	GetAllAdminUsers(params domain.Pager) ([]*domain.AdminUser, int64, error)
 	AdminMemberGetAll(params domain.Pager) ([]*domain.Member, int64, error)
 	Save(value any) db.SQLHandler
-	Delete(value any, where ...any) error
+	Delete(value any, where ...any) db.SQLHandler
 	Where(query any, args ...any) db.SQLHandler
 	Joins(query string, args ...any) db.SQLHandler
 	Group(name string) db.SQLHandler
