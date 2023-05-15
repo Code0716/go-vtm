@@ -10,10 +10,7 @@ type SQLHandler struct {
 	Conn *gorm.DB
 }
 
-// errorを返すのでいいのか。
-// *gorm.DBで返してやればrepositoryで細かく記述できるが、、、。
-
-// Create retuern error
+// Create db create
 func (h SQLHandler) Create(value any) SQLHandler {
 	return SQLHandler{h.Conn.Create(value)}
 }
@@ -21,7 +18,6 @@ func (h SQLHandler) Create(value any) SQLHandler {
 // Update is db Update
 func (h *SQLHandler) Update(column string, value any) SQLHandler {
 	return SQLHandler{h.Conn.Update(column, value)}
-
 }
 
 // Find db find
@@ -104,7 +100,9 @@ func (h *SQLHandler) Raw(sql string, values ...any) SQLHandler {
 
 // TODO:下記も抽象化したい
 
-// admin
+// admin 下記はなくす予定。
+// interface層で抽象化したものを使う。
+// トランザクション系は後ほど。
 
 // IsExist check data exests
 func (h SQLHandler) IsExist(tableName string, query any, args ...any) (bool, error) {
