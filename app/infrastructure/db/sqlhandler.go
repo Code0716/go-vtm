@@ -20,6 +20,11 @@ func (h *SQLHandler) Update(column string, value any) SQLHandler {
 	return SQLHandler{h.Conn.Update(column, value)}
 }
 
+// Delete is db delete
+func (h *SQLHandler) Delete(value any, where ...any) SQLHandler {
+	return SQLHandler{h.Conn.Delete(value, where...)}
+}
+
 // Find db find
 func (h SQLHandler) Find(value any, where ...any) SQLHandler {
 	return SQLHandler{h.Conn.Find(value, where...)}
@@ -88,19 +93,12 @@ func (h *SQLHandler) Exec(sql string, value ...any) SQLHandler {
 	return SQLHandler{h.Conn.Exec(sql, value)}
 }
 
-// Delete is db delete
-func (h *SQLHandler) Delete(value any, where ...any) SQLHandler {
-	return SQLHandler{h.Conn.Delete(value, where...)}
-}
-
 // Raw is db Raw
 func (h *SQLHandler) Raw(sql string, values ...any) SQLHandler {
 	return SQLHandler{h.Conn.Raw(sql, values...)}
 }
 
-// TODO:下記も抽象化したい
-
-// admin 下記はなくす予定。
+// TODO: admin 下記はなくす予定。
 // interface層で抽象化したものを使う。
 // トランザクション系は後ほど。
 
