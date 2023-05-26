@@ -1,26 +1,26 @@
 package registry
 
-import (
-	"github.com/Code0716/go-vtm/app/usecase/interactors"
-	"github.com/Code0716/go-vtm/app/usecase/repositories"
-)
+// import (
+// 	"github.com/Code0716/go-vtm/app/usecase/interactors"
+// 	"github.com/Code0716/go-vtm/app/usecase/repositories"
+// )
 
-// Getter gets registered instances.
-type Getter interface {
-	RepositoryGetter
-	InteractorGetter
-}
+// // Getter gets registered instances.
+// type Getter interface {
+// 	RepositoryGetter
+// 	InteractorGetter
+// }
 
-// RepositoryGetter gets registered database instances.
-type RepositoryGetter interface {
-	AdminRepository() repositories.AdminRepository
-	MembersRepository() repositories.MembersRepository
-	AttendanceRepository() repositories.AttendanceRepository
-}
+// // RepositoryGetter gets registered database instances.
+// type RepositoryGetter interface {
+// 	AdminRepository() repositories.AdminRepository
+// 	UsersRepository() repositories.UsersRepository
+// 	AttendanceRepository() repositories.AttendanceRepository
+// }
 
-// InteractorGetter gets registered interactor instances.
-type InteractorGetter interface {
-	AdminInteractor() *interactors.AdminInteractor
-	MembersInteractor() *interactors.MembersInteractor
-	AttendanceInteractor() *interactors.AttendanceInteractor
-}
+// // InteractorGetter gets registered interactor instances.
+// type InteractorGetter interface {
+// 	AdminInteractor() *interactors.AdminInteractor
+// 	UsersInteractor() *interactors.UsersInteractor
+// 	AttendanceInteractor() *interactors.AttendanceInteractor
+// }

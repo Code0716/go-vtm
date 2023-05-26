@@ -12,14 +12,19 @@ install-dev-tools:
 	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install github.com/cosmtrek/air@latest
+	go install github.com/99designs/gqlgen@latest
 
 	
 deps:
 	go mod download
 	go mod tidy
 
-gen: gen-oapi
+gen: gqlgen
 	go generate ./...
+
+gqlgen:
+	gqlgen generate
+
 
 gen-oapi:
 	mkdir -p ./app/gen/api

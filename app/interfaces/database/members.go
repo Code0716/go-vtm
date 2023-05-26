@@ -1,74 +1,74 @@
 package database
 
-import (
-	"context"
+// import (
+// 	"context"
 
-	"github.com/Code0716/go-vtm/app/domain"
-)
+// 	"github.com/Code0716/go-vtm/app/domain"
+// )
 
-// MembersRepository is member database.
-type MembersRepository struct {
-	SQLHandler SQLHandlerInterface
-}
+// // UsersRepository is user database.
+// type UsersRepository struct {
+// 	SQLHandler SQLHandlerInterface
+// }
 
-// NewMembers initializes members database.
-func NewMembers(sqlHandler SQLHandlerInterface) *MembersRepository {
-	return &MembersRepository{
-		sqlHandler,
-	}
-}
+// // NewUsers initializes users database.
+// func NewUsers(sqlHandler SQLHandlerInterface) *UsersRepository {
+// 	return &UsersRepository{
+// 		sqlHandler,
+// 	}
+// }
 
-// AdminRegistMember regist member to members db
-func (r *MembersRepository) AdminRegistMember(_ context.Context, member domain.Member) error {
-	err := r.SQLHandler.Create(&member).Conn.Error
-	if err != nil {
-		return err
-	}
-	return nil
-}
+// // AdminRegistUser regist user to users db
+// func (r *UsersRepository) AdminRegistUser(_ context.Context, user domain.User) error {
+// 	err := r.SQLHandler.Create(&user).Conn.Error
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return nil
+// }
 
-// UpdateMember update member
-func (r *MembersRepository) UpdateMember(_ context.Context, member domain.Member) (*domain.Member, error) {
-	err := r.SQLHandler.Save(&member).Conn.Error
-	if err != nil {
-		return nil, err
-	}
-	return &member, nil
-}
+// // UpdateUser update user
+// func (r *UsersRepository) UpdateUser(_ context.Context, user domain.User) (*domain.User, error) {
+// 	err := r.SQLHandler.Save(&user).Conn.Error
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &user, nil
+// }
 
-// IsMemberExist check member name
-func (r *MembersRepository) IsMemberExist(_ context.Context, name, phone string) (bool, error) {
-	var member domain.Member
-	isExist, err := r.SQLHandler.IsExist(
-		member.TableName(),
-		"name = ? OR phone_number = ?",
-		name,
-		phone,
-	)
-	if err != nil {
-		return isExist, err
-	}
-	return isExist, nil
-}
+// // IsUserExist check user name
+// func (r *UsersRepository) IsUserExist(_ context.Context, name, phone string) (bool, error) {
+// 	var user domain.User
+// 	isExist, err := r.SQLHandler.IsExist(
+// 		user.TableName(),
+// 		"name = ? OR phone_number = ?",
+// 		name,
+// 		phone,
+// 	)
+// 	if err != nil {
+// 		return isExist, err
+// 	}
+// 	return isExist, nil
+// }
 
-// AdminMemberGetAll return members found by params
-func (r *MembersRepository) AdminMemberGetAll(_ context.Context, params domain.Pager) ([]*domain.Member, int64, error) {
+// // AdminUserGetAll return users found by params
+// func (r *UsersRepository) AdminUserGetAll(_ context.Context, params domain.Pager) ([]*domain.User, int64, error) {
 
-	members, count, err := r.SQLHandler.AdminMemberGetAll(params)
+// 	users, count, err := r.SQLHandler.AdminUserGetAll(params)
 
-	if err != nil {
-		return nil, 0, err
-	}
+// 	if err != nil {
+// 		return nil, 0, err
+// 	}
 
-	return members, count, nil
-}
+// 	return users, count, nil
+// }
 
-// GetMemberByUUID  get member by uuid
-func (r *MembersRepository) GetMemberByUUID(_ context.Context, uuid string) (*domain.Member, error) {
-	var member domain.Member
-	err := r.SQLHandler.First(&member, domain.Member{MemberId: uuid}).Conn.Error
-	if err != nil {
-		return nil, err
-	}
-	return &member, nil
-}
+// // GetUserByUUID  get user by uuid
+// func (r *UsersRepository) GetUserByUUID(_ context.Context, uuid string) (*domain.User, error) {
+// 	var user domain.User
+// 	err := r.SQLHandler.First(&user, domain.User{UserId: uuid}).Conn.Error
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return &user, nil
+// }

@@ -1,7 +1,6 @@
 package db
 
 import (
-	"github.com/Code0716/go-vtm/app/domain"
 	"gorm.io/gorm"
 )
 
@@ -98,71 +97,71 @@ func (h *SQLHandler) Raw(sql string, values ...any) SQLHandler {
 	return SQLHandler{h.Conn.Raw(sql, values...)}
 }
 
-// TODO: admin 下記はなくす予定。
-// interface層で抽象化したものを使う。
-// トランザクション系は後ほど。
+// // TODO: admin 下記はなくす予定。
+// // interface層で抽象化したものを使う。
+// // トランザクション系は後ほど。
 
-// IsExist check data exests
-func (h SQLHandler) IsExist(tableName string, query any, args ...any) (bool, error) {
-	var count int64
+// // IsExist check data exests
+// func (h SQLHandler) IsExist(tableName string, query any, args ...any) (bool, error) {
+// 	var count int64
 
-	err := h.Conn.Table(tableName).
-		Where(query, args...).
-		Count(&count).Error
-	if err != nil {
-		return false, domain.WrapInternalError(err)
-	}
+// 	err := h.Conn.Table(tableName).
+// 		Where(query, args...).
+// 		Count(&count).Error
+// 	if err != nil {
+// 		return false, domain.WrapInternalError(err)
+// 	}
 
-	if count > 0 {
-		return true, nil
-	}
-	return false, nil
-}
+// 	if count > 0 {
+// 		return true, nil
+// 	}
+// 	return false, nil
+// }
 
-// GetAllAdminUsers return members found by params
-func (h SQLHandler) GetAllAdminUsers(params domain.Pager) ([]*domain.AdminUser, int64, error) {
-	query := h.Conn
-	if params.Status != "" {
-		query = query.Where("status = ?", params.Status)
-	}
+// // GetAllAdminUsers return users found by params
+// func (h SQLHandler) GetAllAdminUsers(params domain.Pager) ([]*domain.AdminUser, int64, error) {
+// 	query := h.Conn
+// 	if params.Status != "" {
+// 		query = query.Where("status = ?", params.Status)
+// 	}
 
-	var count int64
-	adminUsers := make([]*domain.AdminUser, 0)
-	err := query.
-		Limit(params.Limit).
-		Offset(params.Offset).
-		Find(&adminUsers).
-		Count(&count).
-		Error
-	if err != nil {
-		return nil, 0, domain.WrapInternalError(err)
-	}
+// 	var count int64
+// 	adminUsers := make([]*domain.AdminUser, 0)
+// 	err := query.
+// 		Limit(params.Limit).
+// 		Offset(params.Offset).
+// 		Find(&adminUsers).
+// 		Count(&count).
+// 		Error
+// 	if err != nil {
+// 		return nil, 0, domain.WrapInternalError(err)
+// 	}
 
-	return adminUsers, count, nil
-}
+// 	return adminUsers, count, nil
+// }
 
-// Members
+// // Users
 
-// AdminMemberGetAll return members found by params
-func (h SQLHandler) AdminMemberGetAll(params domain.Pager) ([]*domain.Member, int64, error) {
-	query := h.Conn
+// // AdminUserGetAll return users found by params
+// func (h SQLHandler) AdminUserGetAll(params domain.Pager) ([]*domain.User, int64, error) {
+// 	query := h.Conn
 
-	if params.Status != "" {
-		query = query.Where("status = ?", params.Status)
-	}
+// 	if params.Status != "" {
+// 		query = query.Where("status = ?", params.Status)
+// 	}
 
-	members := make([]*domain.Member, 0)
-	var count int64
+// 	users := make([]*domain.User, 0)
+// 	var count int64
 
-	err := query.
-		Limit(params.Limit).
-		Offset(params.Offset).
-		Find(&members).
-		Count(&count).
-		Error
-	if err != nil {
-		return nil, 0, domain.WrapInternalError(err)
-	}
+// 	err := query.
+// 		Limit(params.Limit).
+// 		Offset(params.Offset).
+// 		Find(&users).
+// 		Count(&count).
+// 		Error
+// 	if err != nil {
+// 		return nil, 0, domain.WrapInternalError(err)
+// 	}
 
-	return members, count, nil
-}
+// 	return users, count, nil
+// }

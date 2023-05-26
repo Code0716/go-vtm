@@ -1,0 +1,196 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+# enum ##############################################
+enum UserStatus {
+  init
+  active
+  other
+}
+
+enum UserRole {
+  admin
+  manager
+  accountant
+  common
+}
+
+enum EmploymentStatus {
+  annual
+  monthly
+  hourly
+  day
+  other
+}
+
+# type ##############################################
+# 住所録
+type Address {
+  id: ID!
+  postCode: String!
+  address: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+# 店舗/所属
+type Department {
+  id: ID!
+  name: String!
+  addressId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+# user
+type User {
+  id: ID!
+  userId: String!
+  name: String!
+  password: String!
+  mailAddress: String
+  phoneNumber: String
+  status: UserStatus!
+  role: UserRole
+  employmentStatus: EmploymentStatus!
+  unitPrice: Int!
+  departmentId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+# Attendance
+type Attendance {
+  id: ID!
+  userId: String!
+  startTime: DateTime!
+  endTime: DateTime
+  breakTime: Time
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+# Invoice
+type Invoice {
+  id: ID!
+  userId: String!
+  authorizerId: String!
+  billingDate: DateTime!
+  billingAmount: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+}
+
+# input ##############################################
+# user
+input UserInput {
+  id: ID!
+  userId: String!
+  name: String!
+  password: String!
+  mailAddress: String
+  phoneNumber: String
+  status: UserStatus!
+  role: UserRole
+  employmentStatus: EmploymentStatus!
+  unitPrice: Int!
+}
+
+# address
+input AddressInput {
+  id: ID!
+  postCode: String!
+  address: String!
+}
+
+# Department
+input DepartmentInput {
+  id: ID!
+  name: String!
+  addressId: String!
+}
+
+# AttendanceInput
+input AttendanceInput {
+  id: ID!
+  userId: String!
+  startTime: DateTime
+  endTime: DateTime
+  breakTime: Time
+}
+
+input ListAttendanceInput {
+  userId: String
+  LimitOffset: LimitOffset
+}
+
+# InvoiceInput
+input InvoiceInput {
+  id: ID!
+  userId: String!
+  authorizerId: String!
+  billingDate: DateTime!
+  billingAmount: Int
+}
+
+input ListInvoiceInput {
+  userId: String!
+  LimitOffset: LimitOffset
+}
+
+input LimitOffset {
+  limit: Int
+  offset: Int
+}
+
+# Mutation/Query ##############################################
+type Mutation {
+  # user
+  createUser(input: UserInput!): User!
+  updateUser(input: UserInput!): User!
+  deleteUser(id: ID!): User!
+  # Address
+  createAddress(input: AddressInput!): Address!
+  updateAddress(input: AddressInput!): Address!
+  deleteAddress(id: ID!): Address!
+  # Department
+  createDepartment(input: DepartmentInput!): Department!
+  updateDepartment(input: DepartmentInput!): Department!
+  deleteDepartment(id: ID!): Department!
+  # Attendance
+  createAttendance(input: AttendanceInput!): Attendance!
+  updateAttendance(input: AttendanceInput!): Attendance!
+  deleteAttendance(id: ID!): Attendance!
+  # Invoice
+  createInvoice(input: InvoiceInput!): Invoice!
+  updateInvoice(input: InvoiceInput!): Invoice!
+  deleteInvoice(id: ID!): Invoice!
+}
+
+type Query {
+  # user
+  getUser(id: ID!): User!
+  listUsers(input: LimitOffset): [User]!
+  # Address
+  getAddress(id: ID!): Address!
+  listAddress(input: LimitOffset): [Address]!
+  # Department
+  getDepartment(id: ID!): Department!
+  listDepartment(input: LimitOffset): [Department]!
+  # Attendance
+  getAttendance(id: ID!): Attendance!
+  listAttendance(input: ListAttendanceInput): [Attendance]!
+  # Invoice
+  getInvoice(userId: ID!): Invoice!
+  listInvoice(input: ListInvoiceInput): [Invoice]!
+}
+
+scalar Time
+scalar Date
+scalar DateTime

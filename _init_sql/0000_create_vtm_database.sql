@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `vtm_db`.`users`(
   `phone_number` VARCHAR(255) DEFAULT NULL COMMENT '電話番号',
   `status` enum('init', 'active', 'other') NOT NULL DEFAULT 'init' COMMENT 'status',
   `role` enum('admin','manager','accountant','common') NOT NULL COMMENT 'userのrole admin:管理者 manager:店長,accountant:経理,一般:common',
-  `employment_status` enum('hourly', 'monthly', 'day', 'other') NOT NULL DEFAULT 'hourly' COMMENT '雇用形態 時給:hourly, 月給:monthly, 日払い（spot）:day, その他(経営者など):other',
+  `employment_status` enum('annual', 'monthly', 'hourly', 'day', 'other') NOT NULL DEFAULT 'hourly' COMMENT '雇用形態 年俸:annual, 月給:monthly, 日払い（spot）:day, 時給:hourly, その他(経営者など):other',
   `unit_price` SMALLINT UNSIGNED DEFAULT NULL COMMENT '月給/単価',
   `department_id` char(36) NOT NULL DEFAULT '' COMMENT '所属部署/所属店舗のID(UUID)',
   `created_at` datetime NOT NULL NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'created_date',
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS  `vtm_db`.`attendances` (
   `user_id` char(36) DEFAULT NULL COMMENT 'user ID(UUID)',
   `start_time` datetime NOT NULL NULL DEFAULT CURRENT_TIMESTAMP COMMENT '勤務開始日時',
   `end_time` datetime DEFAULT NULL COMMENT '勤務終了日時',
-  `break_time` datetime DEFAULT NULL COMMENT '休憩時間',
+  `break_time` time DEFAULT NULL COMMENT '休憩時間',
   `created_at` datetime NOT NULL NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'created_date',
   `updated_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'updated_date',
   `deleted_at` datetime DEFAULT NULL COMMENT 'deleted_date',
@@ -64,9 +64,9 @@ CREATE TABLE IF NOT EXISTS  `vtm_db`.`attendances` (
 -- invoice
 CREATE TABLE IF NOT EXISTS  `vtm_db`.`invoice` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id',
-  `billing_date` datetime NOT NULL COMMENT '請求日付',
   `user_id` char(36) DEFAULT NULL COMMENT 'user ID(UUID)',
   `authorizer_id` char(36) NOT NULL COMMENT '承認者 ID(UUID)',
+  `billing_date` datetime NOT NULL COMMENT '請求日付',
   `billing_amount`int(11) unsigned DEFAULT NULL COMMENT '請求額',
   `created_at` datetime NOT NULL NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'created_date',
   `updated_at` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT 'updated_date',
