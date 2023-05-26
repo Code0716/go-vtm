@@ -8,16 +8,19 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/graph/model"
 )
 
 // CreateUser is the resolver for the createUser field.
-func (r *mutationResolver) CreateUser(ctx context.Context, input model.UserInput) (*model.User, error) {
-	panic(fmt.Errorf("not implemented: CreateUser - createUser"))
+func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
+	fmt.Println("ここやで！！！！！！！")
+	r.Reg.UserRepository().CreateUser(ctx, domain.User{})
+	return nil, nil
 }
 
 // UpdateUser is the resolver for the updateUser field.
-func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UserInput) (*model.User, error) {
+func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUserInput) (*model.User, error) {
 	panic(fmt.Errorf("not implemented: UpdateUser - updateUser"))
 }
 
@@ -124,6 +127,16 @@ func (r *queryResolver) GetAttendance(ctx context.Context, id string) (*model.At
 // ListAttendance is the resolver for the listAttendance field.
 func (r *queryResolver) ListAttendance(ctx context.Context, input *model.ListAttendanceInput) ([]*model.Attendance, error) {
 	panic(fmt.Errorf("not implemented: ListAttendance - listAttendance"))
+}
+
+// GetInvoice is the resolver for the getInvoice field.
+func (r *queryResolver) GetInvoice(ctx context.Context, userID string) (*model.Invoice, error) {
+	panic(fmt.Errorf("not implemented: GetInvoice - getInvoice"))
+}
+
+// ListInvoice is the resolver for the listInvoice field.
+func (r *queryResolver) ListInvoice(ctx context.Context, input *model.ListInvoiceInput) ([]*model.Invoice, error) {
+	panic(fmt.Errorf("not implemented: ListInvoice - listInvoice"))
 }
 
 // Mutation returns MutationResolver implementation.

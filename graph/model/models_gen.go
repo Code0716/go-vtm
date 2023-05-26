@@ -43,6 +43,17 @@ type AttendanceInput struct {
 	BreakTime *time.Time `json:"breakTime,omitempty"`
 }
 
+type CreateUserInput struct {
+	Name             string            `json:"name"`
+	Password         *string           `json:"password,omitempty"`
+	MailAddress      *string           `json:"mailAddress,omitempty"`
+	PhoneNumber      *string           `json:"phoneNumber,omitempty"`
+	Status           *UserStatus       `json:"status,omitempty"`
+	Role             *UserRole         `json:"role,omitempty"`
+	EmploymentStatus *EmploymentStatus `json:"employmentStatus,omitempty"`
+	UnitPrice        *int              `json:"unitPrice,omitempty"`
+}
+
 type Department struct {
 	ID        string  `json:"id"`
 	Name      string  `json:"name"`
@@ -87,6 +98,23 @@ type ListAttendanceInput struct {
 	LimitOffset *LimitOffset `json:"LimitOffset,omitempty"`
 }
 
+type ListInvoiceInput struct {
+	UserID      string       `json:"userId"`
+	LimitOffset *LimitOffset `json:"LimitOffset,omitempty"`
+}
+
+type UpdateUserInput struct {
+	UserID           string            `json:"userId"`
+	Name             *string           `json:"name,omitempty"`
+	Password         *string           `json:"password,omitempty"`
+	MailAddress      *string           `json:"mailAddress,omitempty"`
+	PhoneNumber      *string           `json:"phoneNumber,omitempty"`
+	Status           *UserStatus       `json:"status,omitempty"`
+	Role             *UserRole         `json:"role,omitempty"`
+	EmploymentStatus *EmploymentStatus `json:"employmentStatus,omitempty"`
+	UnitPrice        *int              `json:"unitPrice,omitempty"`
+}
+
 type User struct {
 	ID               string           `json:"id"`
 	UserID           string           `json:"userId"`
@@ -95,26 +123,13 @@ type User struct {
 	MailAddress      *string          `json:"mailAddress,omitempty"`
 	PhoneNumber      *string          `json:"phoneNumber,omitempty"`
 	Status           UserStatus       `json:"status"`
-	Role             *UserRole        `json:"role,omitempty"`
+	Role             UserRole         `json:"role"`
 	EmploymentStatus EmploymentStatus `json:"employmentStatus"`
 	UnitPrice        int              `json:"unitPrice"`
 	DepartmentID     string           `json:"departmentId"`
 	CreatedAt        string           `json:"createdAt"`
 	UpdatedAt        string           `json:"updatedAt"`
 	DeletedAt        *string          `json:"deletedAt,omitempty"`
-}
-
-type UserInput struct {
-	ID               string           `json:"id"`
-	UserID           string           `json:"userId"`
-	Name             string           `json:"name"`
-	Password         string           `json:"password"`
-	MailAddress      *string          `json:"mailAddress,omitempty"`
-	PhoneNumber      *string          `json:"phoneNumber,omitempty"`
-	Status           UserStatus       `json:"status"`
-	Role             *UserRole        `json:"role,omitempty"`
-	EmploymentStatus EmploymentStatus `json:"employmentStatus"`
-	UnitPrice        int              `json:"unitPrice"`
 }
 
 type EmploymentStatus string

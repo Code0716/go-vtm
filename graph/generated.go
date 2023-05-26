@@ -91,7 +91,7 @@ type ComplexityRoot struct {
 		CreateAttendance func(childComplexity int, input model.AttendanceInput) int
 		CreateDepartment func(childComplexity int, input model.DepartmentInput) int
 		CreateInvoice    func(childComplexity int, input model.InvoiceInput) int
-		CreateUser       func(childComplexity int, input model.UserInput) int
+		CreateUser       func(childComplexity int, input model.CreateUserInput) int
 		DeleteAddress    func(childComplexity int, id string) int
 		DeleteAttendance func(childComplexity int, id string) int
 		DeleteDepartment func(childComplexity int, id string) int
@@ -101,17 +101,19 @@ type ComplexityRoot struct {
 		UpdateAttendance func(childComplexity int, input model.AttendanceInput) int
 		UpdateDepartment func(childComplexity int, input model.DepartmentInput) int
 		UpdateInvoice    func(childComplexity int, input model.InvoiceInput) int
-		UpdateUser       func(childComplexity int, input model.UserInput) int
+		UpdateUser       func(childComplexity int, input model.UpdateUserInput) int
 	}
 
 	Query struct {
 		GetAddress     func(childComplexity int, id string) int
 		GetAttendance  func(childComplexity int, id string) int
 		GetDepartment  func(childComplexity int, id string) int
+		GetInvoice     func(childComplexity int, userID string) int
 		GetUser        func(childComplexity int, id string) int
 		ListAddress    func(childComplexity int, input *model.LimitOffset) int
 		ListAttendance func(childComplexity int, input *model.ListAttendanceInput) int
 		ListDepartment func(childComplexity int, input *model.LimitOffset) int
+		ListInvoice    func(childComplexity int, input *model.ListInvoiceInput) int
 		ListUsers      func(childComplexity int, input *model.LimitOffset) int
 	}
 
@@ -134,8 +136,8 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateUser(ctx context.Context, input model.UserInput) (*model.User, error)
-	UpdateUser(ctx context.Context, input model.UserInput) (*model.User, error)
+	CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error)
+	UpdateUser(ctx context.Context, input model.UpdateUserInput) (*model.User, error)
 	DeleteUser(ctx context.Context, id string) (*model.User, error)
 	CreateAddress(ctx context.Context, input model.AddressInput) (*model.Address, error)
 	UpdateAddress(ctx context.Context, input model.AddressInput) (*model.Address, error)
@@ -159,6 +161,8 @@ type QueryResolver interface {
 	ListDepartment(ctx context.Context, input *model.LimitOffset) ([]*model.Department, error)
 	GetAttendance(ctx context.Context, id string) (*model.Attendance, error)
 	ListAttendance(ctx context.Context, input *model.ListAttendanceInput) ([]*model.Attendance, error)
+	GetInvoice(ctx context.Context, userID string) (*model.Invoice, error)
+	ListInvoice(ctx context.Context, input *model.ListInvoiceInput) ([]*model.Invoice, error)
 }
 
 type executableSchema struct {
@@ -430,7 +434,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.UserInput)), true
+		return e.complexity.Mutation.CreateUser(childComplexity, args["input"].(model.CreateUserInput)), true
 
 	case "Mutation.deleteAddress":
 		if e.complexity.Mutation.DeleteAddress == nil {
@@ -550,7 +554,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateUser(childComplexity, args["input"].(model.UserInput)), true
+		return e.complexity.Mutation.UpdateUser(childComplexity, args["input"].(model.UpdateUserInput)), true
 
 	case "Query.getAddress":
 		if e.complexity.Query.GetAddress == nil {
@@ -587,6 +591,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetDepartment(childComplexity, args["id"].(string)), true
+
+	case "Query.getInvoice":
+		if e.complexity.Query.GetInvoice == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getInvoice_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetInvoice(childComplexity, args["userId"].(string)), true
 
 	case "Query.getUser":
 		if e.complexity.Query.GetUser == nil {
@@ -635,6 +651,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.ListDepartment(childComplexity, args["input"].(*model.LimitOffset)), true
+
+	case "Query.listInvoice":
+		if e.complexity.Query.ListInvoice == nil {
+			break
+		}
+
+		args, err := ec.field_Query_listInvoice_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.ListInvoice(childComplexity, args["input"].(*model.ListInvoiceInput)), true
 
 	case "Query.listUsers":
 		if e.complexity.Query.ListUsers == nil {
@@ -756,11 +784,13 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputAddressInput,
 		ec.unmarshalInputAttendanceInput,
+		ec.unmarshalInputCreateUserInput,
 		ec.unmarshalInputDepartmentInput,
 		ec.unmarshalInputInvoiceInput,
 		ec.unmarshalInputLimitOffset,
 		ec.unmarshalInputListAttendanceInput,
-		ec.unmarshalInputUserInput,
+		ec.unmarshalInputListInvoiceInput,
+		ec.unmarshalInputUpdateUserInput,
 	)
 	first := true
 
@@ -903,10 +933,10 @@ func (ec *executionContext) field_Mutation_createInvoice_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_createUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UserInput
+	var arg0 model.CreateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐCreateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1053,10 +1083,10 @@ func (ec *executionContext) field_Mutation_updateInvoice_args(ctx context.Contex
 func (ec *executionContext) field_Mutation_updateUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.UserInput
+	var arg0 model.UpdateUserInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUpdateUserInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1125,6 +1155,21 @@ func (ec *executionContext) field_Query_getDepartment_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_getInvoice_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["userId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["userId"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_getUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1177,6 +1222,21 @@ func (ec *executionContext) field_Query_listDepartment_args(ctx context.Context,
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalOLimitOffset2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐLimitOffset(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_listInvoice_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.ListInvoiceInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOListInvoiceInput2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐListInvoiceInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2463,7 +2523,7 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateUser(rctx, fc.Args["input"].(model.UserInput))
+		return ec.resolvers.Mutation().CreateUser(rctx, fc.Args["input"].(model.CreateUserInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2548,7 +2608,7 @@ func (ec *executionContext) _Mutation_updateUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["input"].(model.UserInput))
+		return ec.resolvers.Mutation().UpdateUser(rctx, fc.Args["input"].(model.UpdateUserInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4148,6 +4208,152 @@ func (ec *executionContext) fieldContext_Query_listAttendance(ctx context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_getInvoice(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_getInvoice(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetInvoice(rctx, fc.Args["userId"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Invoice)
+	fc.Result = res
+	return ec.marshalNInvoice2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐInvoice(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_getInvoice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Invoice_id(ctx, field)
+			case "userId":
+				return ec.fieldContext_Invoice_userId(ctx, field)
+			case "authorizerId":
+				return ec.fieldContext_Invoice_authorizerId(ctx, field)
+			case "billingDate":
+				return ec.fieldContext_Invoice_billingDate(ctx, field)
+			case "billingAmount":
+				return ec.fieldContext_Invoice_billingAmount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Invoice_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Invoice_updatedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_Invoice_deletedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Invoice", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_getInvoice_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_listInvoice(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_listInvoice(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().ListInvoice(rctx, fc.Args["input"].(*model.ListInvoiceInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Invoice)
+	fc.Result = res
+	return ec.marshalNInvoice2ᚕᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐInvoice(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_listInvoice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Invoice_id(ctx, field)
+			case "userId":
+				return ec.fieldContext_Invoice_userId(ctx, field)
+			case "authorizerId":
+				return ec.fieldContext_Invoice_authorizerId(ctx, field)
+			case "billingDate":
+				return ec.fieldContext_Invoice_billingDate(ctx, field)
+			case "billingAmount":
+				return ec.fieldContext_Invoice_billingAmount(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Invoice_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Invoice_updatedAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_Invoice_deletedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Invoice", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_listInvoice_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -4600,11 +4806,14 @@ func (ec *executionContext) _User_role(ctx context.Context, field graphql.Collec
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.UserRole)
+	res := resTmp.(model.UserRole)
 	fc.Result = res
-	return ec.marshalOUserRole2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserRole(ctx, field.Selections, res)
+	return ec.marshalNUserRole2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserRole(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_role(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6766,6 +6975,98 @@ func (ec *executionContext) unmarshalInputAttendanceInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, obj interface{}) (model.CreateUserInput, error) {
+	var it model.CreateUserInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "password", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "password":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Password = data
+		case "mailAddress":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mailAddress"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.MailAddress = data
+		case "phoneNumber":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("phoneNumber"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.PhoneNumber = data
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			data, err := ec.unmarshalOUserStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Status = data
+		case "role":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
+			data, err := ec.unmarshalOUserRole2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserRole(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Role = data
+		case "employmentStatus":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("employmentStatus"))
+			data, err := ec.unmarshalOEmploymentStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐEmploymentStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.EmploymentStatus = data
+		case "unitPrice":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unitPrice"))
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UnitPrice = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputDepartmentInput(ctx context.Context, obj interface{}) (model.DepartmentInput, error) {
 	var it model.DepartmentInput
 	asMap := map[string]interface{}{}
@@ -6954,29 +7255,58 @@ func (ec *executionContext) unmarshalInputListAttendanceInput(ctx context.Contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj interface{}) (model.UserInput, error) {
-	var it model.UserInput
+func (ec *executionContext) unmarshalInputListInvoiceInput(ctx context.Context, obj interface{}) (model.ListInvoiceInput, error) {
+	var it model.ListInvoiceInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"id", "userId", "name", "password", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
+	fieldsInOrder := [...]string{"userId", "LimitOffset"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "id":
+		case "userId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			data, err := ec.unmarshalNID2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.ID = data
+			it.UserID = data
+		case "LimitOffset":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("LimitOffset"))
+			data, err := ec.unmarshalOLimitOffset2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐLimitOffset(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.LimitOffset = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, obj interface{}) (model.UpdateUserInput, error) {
+	var it model.UpdateUserInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"userId", "name", "password", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
 		case "userId":
 			var err error
 
@@ -6990,7 +7320,7 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6999,7 +7329,7 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-			data, err := ec.unmarshalNString2string(ctx, v)
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7026,7 +7356,7 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-			data, err := ec.unmarshalNUserStatus2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserStatus(ctx, v)
+			data, err := ec.unmarshalOUserStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7044,7 +7374,7 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("employmentStatus"))
-			data, err := ec.unmarshalNEmploymentStatus2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐEmploymentStatus(ctx, v)
+			data, err := ec.unmarshalOEmploymentStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐEmploymentStatus(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7053,7 +7383,7 @@ func (ec *executionContext) unmarshalInputUserInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("unitPrice"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
+			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -7699,6 +8029,52 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "getInvoice":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getInvoice(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "listInvoice":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_listInvoice(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "__type":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -7779,6 +8155,9 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._User_role(ctx, field, obj)
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "employmentStatus":
 
 			out.Values[i] = ec._User_employmentStatus(ctx, field, obj)
@@ -8276,6 +8655,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNCreateUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐCreateUserInput(ctx context.Context, v interface{}) (model.CreateUserInput, error) {
+	res, err := ec.unmarshalInputCreateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNDateTime2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -8392,6 +8776,44 @@ func (ec *executionContext) marshalNInvoice2githubᚗcomᚋCode0716ᚋgoᚑvtm�
 	return ec._Invoice(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNInvoice2ᚕᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐInvoice(ctx context.Context, sel ast.SelectionSet, v []*model.Invoice) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOInvoice2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐInvoice(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) marshalNInvoice2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐInvoice(ctx context.Context, sel ast.SelectionSet, v *model.Invoice) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -8420,6 +8842,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUpdateUserInput(ctx context.Context, v interface{}) (model.UpdateUserInput, error) {
+	res, err := ec.unmarshalInputUpdateUserInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model.User) graphql.Marshaler {
@@ -8474,9 +8901,14 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtm�
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNUserInput2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserInput(ctx context.Context, v interface{}) (model.UserInput, error) {
-	res, err := ec.unmarshalInputUserInput(ctx, v)
+func (ec *executionContext) unmarshalNUserRole2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserRole(ctx context.Context, v interface{}) (model.UserRole, error) {
+	var res model.UserRole
+	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUserRole2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserRole(ctx context.Context, sel ast.SelectionSet, v model.UserRole) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNUserStatus2githubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserStatus(ctx context.Context, v interface{}) (model.UserStatus, error) {
@@ -8805,6 +9237,22 @@ func (ec *executionContext) marshalODepartment2ᚖgithubᚗcomᚋCode0716ᚋgo�
 	return ec._Department(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOEmploymentStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐEmploymentStatus(ctx context.Context, v interface{}) (*model.EmploymentStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.EmploymentStatus)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOEmploymentStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐEmploymentStatus(ctx context.Context, sel ast.SelectionSet, v *model.EmploymentStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -8821,6 +9269,13 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
+func (ec *executionContext) marshalOInvoice2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐInvoice(ctx context.Context, sel ast.SelectionSet, v *model.Invoice) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Invoice(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOLimitOffset2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐLimitOffset(ctx context.Context, v interface{}) (*model.LimitOffset, error) {
 	if v == nil {
 		return nil, nil
@@ -8834,6 +9289,14 @@ func (ec *executionContext) unmarshalOListAttendanceInput2ᚖgithubᚗcomᚋCode
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputListAttendanceInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOListInvoiceInput2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐListInvoiceInput(ctx context.Context, v interface{}) (*model.ListInvoiceInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputListInvoiceInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -8886,6 +9349,22 @@ func (ec *executionContext) unmarshalOUserRole2ᚖgithubᚗcomᚋCode0716ᚋgo�
 }
 
 func (ec *executionContext) marshalOUserRole2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserRole(ctx context.Context, sel ast.SelectionSet, v *model.UserRole) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
+func (ec *executionContext) unmarshalOUserStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserStatus(ctx context.Context, v interface{}) (*model.UserStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.UserStatus)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUserStatus2ᚖgithubᚗcomᚋCode0716ᚋgoᚑvtmᚋgraphᚋmodelᚐUserStatus(ctx context.Context, sel ast.SelectionSet, v *model.UserStatus) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

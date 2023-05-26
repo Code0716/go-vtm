@@ -1,36 +1,30 @@
 package handlers
 
-// import (
-// 	"net/http"
+import (
+	"net/http"
 
-// 	"github.com/Code0716/go-vtm/app/registry"
-// )
+	"github.com/Code0716/go-vtm/app/registry"
+)
 
-// // Handler bands all handler's implementation.
-// type Handler struct {
-// 	usersHandler
-// 	adminHandler
-// 	loginHandler
-// 	attendanceHandler
-// }
+// Handler bands all handler's implementation.
+type Handler struct {
+	userHandler
+}
 
 // New initializes and returns handlers collection.
-// func New(reg registry.Getter) Handler {
-// 	h := Handler{}
-// 	// reg のセットを忘れるとnilアクセスで落ちる
-// 	h.adminHandler.reg = reg
-// 	h.usersHandler.reg = reg
-// 	h.loginHandler.reg = reg
-// 	h.attendanceHandler.reg = reg
+func New(reg registry.Getter) Handler {
+	h := Handler{}
+	// reg のセットを忘れるとnilアクセスで落ちる
+	h.userHandler.reg = reg
 
-// 	return h
-// }
+	return h
+}
 
-// // Context handler context
-// // TODO:これに置き換える
-// type Context interface {
-// 	Param(string) string
-// 	Bind(any) error
-// 	Request() *http.Request
-// 	JSON(int, any) error
-// }
+// Context handler context
+// TODO:これに置き換える
+type Context interface {
+	Param(string) string
+	Bind(any) error
+	Request() *http.Request
+	JSON(int, any) error
+}
