@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS `vtm_db`.`users`(
   `user_id` char(36) NOT NULL DEFAULT '' COMMENT 'user ID(UUID)',
   `name` VARCHAR(255) NOT NULL DEFAULT '名称未設定' COMMENT '名前',
   `birthday` datetime DEFAULT NULL COMMENT '誕生日',
-  `password` VARCHAR(255) DEFAULT NULL COMMENT 'password',
   `mail_address` VARCHAR(255) DEFAULT NULL COMMENT 'メールアドレス',
   `phone_number` VARCHAR(255) DEFAULT NULL COMMENT '電話番号',
   `status` enum('init', 'active', 'other') NOT NULL DEFAULT 'init' COMMENT 'status',

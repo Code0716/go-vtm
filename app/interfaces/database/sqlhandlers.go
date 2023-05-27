@@ -19,6 +19,4 @@ type SQLHandlerInterface interface {
 	Preload(query string, args ...any) db.SQLHandler
 	Pluck(column string, dest any) db.SQLHandler
 	Error() error
-	// TODO:下記は今後なくす予定
-
 }

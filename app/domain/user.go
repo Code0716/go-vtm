@@ -33,7 +33,6 @@ type User struct {
 	ID               string           `json:"id"`
 	UserID           string           `json:"userId"`
 	Name             string           `json:"name"`
-	Password         string           `json:"password"`
 	MailAddress      *string          `json:"mailAddress,omitempty"`
 	PhoneNumber      *string          `json:"phoneNumber,omitempty"`
 	Status           UserStatus       `json:"status"`

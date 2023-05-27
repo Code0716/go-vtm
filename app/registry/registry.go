@@ -3,6 +3,7 @@ package registry
 
 import (
 	"github.com/Code0716/go-vtm/app/interfaces/database"
+	"github.com/Code0716/go-vtm/app/usecase/interactors"
 	"github.com/Code0716/go-vtm/app/usecase/repositories"
 )
 
@@ -25,4 +26,9 @@ func New(db database.SQLHandlerInterface) *Registry {
 // UsersRepository returns users database.
 func (r *Registry) UserRepository() repositories.UserRepository {
 	return database.NewUser(r.db)
+}
+
+// UserInteractor returns User interactor.
+func (r *Registry) UserInteractor() *interactors.UserInteractor {
+	return interactors.NewUser(r.UserRepository())
 }

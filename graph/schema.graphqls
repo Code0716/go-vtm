@@ -50,7 +50,6 @@ type User {
   id: ID!
   userId: String!
   name: String!
-  password: String!
   mailAddress: String
   phoneNumber: String
   status: UserStatus!
@@ -91,7 +90,6 @@ type Invoice {
 # user
 input CreateUserInput {
   name: String!
-  password: String
   mailAddress: String
   phoneNumber: String
   status: UserStatus
@@ -103,7 +101,6 @@ input CreateUserInput {
 input UpdateUserInput {
   userId: String!
   name: String
-  password: String
   mailAddress: String
   phoneNumber: String
   status: UserStatus

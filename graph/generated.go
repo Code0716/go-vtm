@@ -125,7 +125,6 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		MailAddress      func(childComplexity int) int
 		Name             func(childComplexity int) int
-		Password         func(childComplexity int) int
 		PhoneNumber      func(childComplexity int) int
 		Role             func(childComplexity int) int
 		Status           func(childComplexity int) int
@@ -724,13 +723,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Name(childComplexity), true
-
-	case "User.password":
-		if e.complexity.User.Password == nil {
-			break
-		}
-
-		return e.complexity.User.Password(childComplexity), true
 
 	case "User.phoneNumber":
 		if e.complexity.User.PhoneNumber == nil {
@@ -2554,8 +2546,6 @@ func (ec *executionContext) fieldContext_Mutation_createUser(ctx context.Context
 				return ec.fieldContext_User_userId(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
 			case "mailAddress":
 				return ec.fieldContext_User_mailAddress(ctx, field)
 			case "phoneNumber":
@@ -2639,8 +2629,6 @@ func (ec *executionContext) fieldContext_Mutation_updateUser(ctx context.Context
 				return ec.fieldContext_User_userId(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
 			case "mailAddress":
 				return ec.fieldContext_User_mailAddress(ctx, field)
 			case "phoneNumber":
@@ -2724,8 +2712,6 @@ func (ec *executionContext) fieldContext_Mutation_deleteUser(ctx context.Context
 				return ec.fieldContext_User_userId(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
 			case "mailAddress":
 				return ec.fieldContext_User_mailAddress(ctx, field)
 			case "phoneNumber":
@@ -3661,8 +3647,6 @@ func (ec *executionContext) fieldContext_Query_getUser(ctx context.Context, fiel
 				return ec.fieldContext_User_userId(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
 			case "mailAddress":
 				return ec.fieldContext_User_mailAddress(ctx, field)
 			case "phoneNumber":
@@ -3746,8 +3730,6 @@ func (ec *executionContext) fieldContext_Query_listUsers(ctx context.Context, fi
 				return ec.fieldContext_User_userId(ctx, field)
 			case "name":
 				return ec.fieldContext_User_name(ctx, field)
-			case "password":
-				return ec.fieldContext_User_password(ctx, field)
 			case "mailAddress":
 				return ec.fieldContext_User_mailAddress(ctx, field)
 			case "phoneNumber":
@@ -4603,50 +4585,6 @@ func (ec *executionContext) _User_name(ctx context.Context, field graphql.Collec
 }
 
 func (ec *executionContext) fieldContext_User_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "User",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _User_password(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_User_password(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Password, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_User_password(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "User",
 		Field:      field,
@@ -6982,7 +6920,7 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "password", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
+	fieldsInOrder := [...]string{"name", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -6998,15 +6936,6 @@ func (ec *executionContext) unmarshalInputCreateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Name = data
-		case "password":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Password = data
 		case "mailAddress":
 			var err error
 
@@ -7300,7 +7229,7 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"userId", "name", "password", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
+	fieldsInOrder := [...]string{"userId", "name", "mailAddress", "phoneNumber", "status", "role", "employmentStatus", "unitPrice"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -7325,15 +7254,6 @@ func (ec *executionContext) unmarshalInputUpdateUserInput(ctx context.Context, o
 				return it, err
 			}
 			it.Name = data
-		case "password":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("password"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Password = data
 		case "mailAddress":
 			var err error
 
@@ -8125,13 +8045,6 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		case "name":
 
 			out.Values[i] = ec._User_name(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "password":
-
-			out.Values[i] = ec._User_password(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

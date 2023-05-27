@@ -14,6 +14,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/Code0716/go-vtm/app/infrastructure/db"
+	"github.com/Code0716/go-vtm/app/interfaces/handlers"
 	"github.com/Code0716/go-vtm/app/registry"
 	"github.com/Code0716/go-vtm/app/util"
 	"github.com/Code0716/go-vtm/graph"
@@ -52,9 +53,11 @@ func start() int {
 	e.Use(middleware.LoggerWithConfig(middleware.DefaultLoggerConfig))
 	e.Use(middleware.Recover())
 
+	h := handlers.New(reg)
+
 	graphqlHandler := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
-			graph.Config{Resolvers: &graph.Resolver{Reg: reg}},
+			graph.Config{Resolvers: &graph.Resolver{Reg: &h}},
 		),
 	)
 

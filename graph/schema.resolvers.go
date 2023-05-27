@@ -14,8 +14,7 @@ import (
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
-	fmt.Println("ここやで！！！！！！！")
-	r.Reg.UserRepository().CreateUser(ctx, domain.User{})
+	r.Reg.CreateUser(ctx, domain.User{})
 	return nil, nil
 }
 

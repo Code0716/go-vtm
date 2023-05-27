@@ -3,21 +3,23 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/registry"
-	"github.com/Code0716/go-vtm/app/util"
 )
 
 type userHandler struct {
 	reg registry.Getter
 }
 
-func (h userHandler) GetAdminUser(c context.Context, uuid string) (*domain.User, error) {
-	isUUID := util.IsValidUUID(uuid)
-	if !isUUID {
-		return nil, domain.NewError(domain.ErrorTypeUUIDValidationFailed)
-	}
+func (h userHandler) CreateUser(c context.Context, input domain.User) (*domain.User, error) {
+	fmt.Println("ここやで！！！！！！！")
+
+	// isUUID := util.IsValidUUID(uuid)
+	// if !isUUID {
+	// 	return nil, domain.NewError(domain.ErrorTypeUUIDValidationFailed)
+	// }
 
 	userInteractor := h.reg.UserInteractor()
 	var user domain.User
