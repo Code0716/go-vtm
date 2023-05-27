@@ -1,14 +1,21 @@
+// Package domain as Attendance
 package domain
 
-import "github.com/Code0716/go-vtm/app/gen/api"
+import "time"
 
-// Attendance defines model for Attendance
-type Attendance api.Attendance
-
-// TimestampJSONBody model
-type TimestampJSONBody api.TimestampJSONBody
+// Attendance model
+type Attendance struct {
+	ID        string     `json:"id"`
+	UserID    string     `json:"userId"`
+	StartTime string     `json:"startTime"`
+	EndTime   *string    `json:"endTime,omitempty"`
+	BreakTime *time.Time `json:"breakTime,omitempty"`
+	CreatedAt time.Time  `json:"createdAt"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"deletedAt,omitempty"`
+}
 
 // TableName GORMにテーブル名を教える
 func (i Attendance) TableName() string {
-	return "attendance"
+	return "attendances"
 }

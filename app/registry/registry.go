@@ -23,32 +23,12 @@ func New(db database.SQLHandlerInterface) *Registry {
 	以下に具体的な依存性を解決する初期化処理を書く
 */
 
-// AdminRepository returns Admin database.
-func (r *Registry) AdminRepository() repositories.AdminRepository {
-	return database.NewAdmin(r.db)
+// UserRepository returns users database.
+func (r *Registry) UserRepository() repositories.UserRepository {
+	return database.NewUser(r.db)
 }
 
-// AdminInteractor returns Admin interactor.
-func (r *Registry) AdminInteractor() *interactors.AdminInteractor {
-	return interactors.NewAdmin(r.AdminRepository())
-}
-
-// MembersRepository returns members database.
-func (r *Registry) MembersRepository() repositories.MembersRepository {
-	return database.NewMembers(r.db)
-}
-
-// MembersInteractor returns members interactor.
-func (r *Registry) MembersInteractor() *interactors.MembersInteractor {
-	return interactors.NewMembers(r.MembersRepository())
-}
-
-// AttendanceRepository returns attendance database.
-func (r *Registry) AttendanceRepository() repositories.AttendanceRepository {
-	return database.NewAttendance(r.db)
-}
-
-// AttendanceInteractor returns attendance interactor.
-func (r *Registry) AttendanceInteractor() *interactors.AttendanceInteractor {
-	return interactors.NewAttendance(r.AttendanceRepository())
+// UserInteractor returns User interactor.
+func (r *Registry) UserInteractor() *interactors.UserInteractor {
+	return interactors.NewUser(r.UserRepository())
 }

@@ -1,4 +1,4 @@
-//go:generate stringer -type=ErrorType -linecomment -output error_string.gen.go
+// go:generate stringer -type=ErrorType -linecomment -output error_string.gen.go
 
 package domain
 

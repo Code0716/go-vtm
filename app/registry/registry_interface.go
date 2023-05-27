@@ -13,14 +13,10 @@ type Getter interface {
 
 // RepositoryGetter gets registered database instances.
 type RepositoryGetter interface {
-	AdminRepository() repositories.AdminRepository
-	MembersRepository() repositories.MembersRepository
-	AttendanceRepository() repositories.AttendanceRepository
+	UserRepository() repositories.UserRepository
 }
 
 // InteractorGetter gets registered interactor instances.
 type InteractorGetter interface {
-	AdminInteractor() *interactors.AdminInteractor
-	MembersInteractor() *interactors.MembersInteractor
-	AttendanceInteractor() *interactors.AttendanceInteractor
+	UserInteractor() *interactors.UserInteractor
 }

@@ -8,20 +8,14 @@ import (
 
 // Handler bands all handler's implementation.
 type Handler struct {
-	membersHandler
-	adminHandler
-	loginHandler
-	attendanceHandler
+	userHandler
 }
 
 // New initializes and returns handlers collection.
 func New(reg registry.Getter) Handler {
 	h := Handler{}
 	// reg のセットを忘れるとnilアクセスで落ちる
-	h.adminHandler.reg = reg
-	h.membersHandler.reg = reg
-	h.loginHandler.reg = reg
-	h.attendanceHandler.reg = reg
+	h.userHandler.reg = reg
 
 	return h
 }

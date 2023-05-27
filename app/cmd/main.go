@@ -11,11 +11,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Code0716/go-vtm/app/gen/api"
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/Code0716/go-vtm/app/infrastructure/db"
 	"github.com/Code0716/go-vtm/app/interfaces/handlers"
 	"github.com/Code0716/go-vtm/app/registry"
 	"github.com/Code0716/go-vtm/app/util"
+	"github.com/Code0716/go-vtm/graph"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -45,22 +47,31 @@ func start() int {
 		}
 	}()
 
-	reg := registry.New(db)
-
 	e := echo.New()
 	e.Use(middleware.LoggerWithConfig(middleware.DefaultLoggerConfig))
 	e.Use(middleware.Recover())
 
-	// helth check
-	e.GET("/healthz", handlers.GetHealthz(reg))
+	reg := registry.New(db)
+	h := handlers.New(reg)
 
-	newHandlers := handlers.New(reg)
+	graphqlHandler := handler.NewDefaultServer(
+		graph.NewExecutableSchema(
+			graph.Config{Resolvers: &graph.Resolver{Reg: &h}},
+		),
+	)
 
-	e.POST("/admin/regist", newHandlers.RegistAdmin)
-	e.POST("/login", newHandlers.Login)
+	apiV1 := e.Group("/api/v1")
 
-	// v1
-	router := e.Group("/api/v1")
+	apiV1.POST("/graphql", func(c echo.Context) error {
+		graphqlHandler.ServeHTTP(c.Response(), c.Request())
+		return nil
+	})
+
+	playgroundHandler := playground.Handler("GraphQL", "/query")
+	e.GET("/playground", func(c echo.Context) error {
+		playgroundHandler.ServeHTTP(c.Response(), c.Request())
+		return nil
+	})
 
 	// TODO:別のContainerかなにかにする。
 	// router.Use(middleware.JWTWithConfig(
@@ -70,8 +81,6 @@ func start() int {
 	// 		Claims:      &domain.JwtCustomClaims{},
 	// 	},
 	// ))
-
-	api.RegisterHandlersWithBaseURL(router, newHandlers, "")
 
 	if env.EnvCode == "local" {
 		for _, r := range e.Routes() {
