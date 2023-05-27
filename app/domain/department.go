@@ -2,6 +2,7 @@ package domain
 
 import "time"
 
+// Department struct
 type Department struct {
 	ID        string     `json:"id"`
 	Name      string     `json:"name"`

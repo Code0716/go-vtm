@@ -2,6 +2,7 @@ package domain
 
 import "time"
 
+// Invoice is model
 type Invoice struct {
 	ID            string     `json:"id"`
 	UserID        string     `json:"userId"`

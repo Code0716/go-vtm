@@ -2,6 +2,7 @@ package domain
 
 import "time"
 
+// Attendance struct
 type Attendance struct {
 	ID        string     `json:"id"`
 	UserID    string     `json:"userId"`

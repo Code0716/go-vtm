@@ -1,4 +1,4 @@
-// // Package handlers hanelers package
+// Package handlers hanelers package
 package handlers
 
 import (
@@ -13,8 +13,9 @@ type userHandler struct {
 	reg registry.Getter
 }
 
+// CreateUser　handler
 func (h userHandler) CreateUser(c context.Context, input domain.User) (*domain.User, error) {
-	fmt.Println("ここやで！！！！！！！")
+	fmt.Printf("ここやで！！！！！！！: %+v\n", input)
 
 	// isUUID := util.IsValidUUID(uuid)
 	// if !isUUID {

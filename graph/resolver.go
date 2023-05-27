@@ -6,6 +6,7 @@ import "github.com/Code0716/go-vtm/app/interfaces/handlers"
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
+// Resolver struct
 type Resolver struct {
 	Reg *handlers.Handler
 }

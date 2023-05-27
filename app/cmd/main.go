@@ -47,12 +47,11 @@ func start() int {
 		}
 	}()
 
-	reg := registry.New(db)
-
 	e := echo.New()
 	e.Use(middleware.LoggerWithConfig(middleware.DefaultLoggerConfig))
 	e.Use(middleware.Recover())
 
+	reg := registry.New(db)
 	h := handlers.New(reg)
 
 	graphqlHandler := handler.NewDefaultServer(

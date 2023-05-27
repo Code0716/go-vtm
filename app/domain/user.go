@@ -2,33 +2,49 @@ package domain
 
 import "time"
 
+// UserStatus enum
 type UserStatus string
 
 const (
-	UserStatusInit   UserStatus = "init"
+	// UserStatusInit constant
+	UserStatusInit UserStatus = "init"
+	// UserStatusActive constant
 	UserStatusActive UserStatus = "active"
-	UserStatusOther  UserStatus = "other"
+	// UserStatusOther constant
+	UserStatusOther UserStatus = "other"
 )
 
+// UserRole type
 type UserRole string
 
 const (
-	UserRoleAdmin      UserRole = "admin"
-	UserRoleManager    UserRole = "manager"
+	// UserRoleAdmin constant
+	UserRoleAdmin UserRole = "admin"
+	// UserRoleManager constant
+	UserRoleManager UserRole = "manager"
+	// UserRoleAccountant constant
 	UserRoleAccountant UserRole = "accountant"
-	UserRoleCommon     UserRole = "common"
+	// UserRoleCommon constant
+	UserRoleCommon UserRole = "common"
 )
 
+// EmploymentStatus type
 type EmploymentStatus string
 
 const (
-	EmploymentStatusAnnual  EmploymentStatus = "annual"
+	// EmploymentStatusAnnual constant
+	EmploymentStatusAnnual EmploymentStatus = "annual"
+	// EmploymentStatusMonthly constant
 	EmploymentStatusMonthly EmploymentStatus = "monthly"
-	EmploymentStatusHourly  EmploymentStatus = "hourly"
-	EmploymentStatusDay     EmploymentStatus = "day"
-	EmploymentStatusOther   EmploymentStatus = "other"
+	// EmploymentStatusHourly constant
+	EmploymentStatusHourly EmploymentStatus = "hourly"
+	// EmploymentStatusDay constant
+	EmploymentStatusDay EmploymentStatus = "day"
+	// EmploymentStatusOther constant
+	EmploymentStatusOther EmploymentStatus = "other"
 )
 
+// User is user model
 type User struct {
 	ID               string           `json:"id"`
 	UserID           string           `json:"userId"`

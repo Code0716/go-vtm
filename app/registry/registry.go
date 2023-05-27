@@ -1,4 +1,4 @@
-// // Package registry registry package
+// Package registry registry package
 package registry
 
 import (
@@ -23,7 +23,7 @@ func New(db database.SQLHandlerInterface) *Registry {
 	以下に具体的な依存性を解決する初期化処理を書く
 */
 
-// UsersRepository returns users database.
+// UserRepository returns users database.
 func (r *Registry) UserRepository() repositories.UserRepository {
 	return database.NewUser(r.db)
 }

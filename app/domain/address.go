@@ -1,7 +1,9 @@
+// package address  domain
 package domain
 
 import "time"
 
+// Address model
 type Address struct {
 	ID        string     `json:"id"`
 	PostCode  string     `json:"postCode"`
