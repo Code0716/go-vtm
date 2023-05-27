@@ -1,3 +1,4 @@
+// Package graph graphql resolver
 package graph
 
 import "github.com/Code0716/go-vtm/app/interfaces/handlers"

@@ -1,4 +1,4 @@
-// package address  domain
+// Package domain as address
 package domain
 
 import "time"

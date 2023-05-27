@@ -1,4 +1,4 @@
-// package database interface
+// Package database interface
 package database
 
 // import (

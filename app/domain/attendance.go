@@ -1,8 +1,9 @@
+// Package domain as Attendance
 package domain
 
 import "time"
 
-// Attendance struct
+// Attendance model
 type Attendance struct {
 	ID        string     `json:"id"`
 	UserID    string     `json:"userId"`

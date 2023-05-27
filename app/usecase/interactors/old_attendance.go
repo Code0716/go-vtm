@@ -1,3 +1,4 @@
+// Package interactors as attendnce
 package interactors
 
 // import (
