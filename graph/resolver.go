@@ -9,5 +9,5 @@ import "github.com/Code0716/go-vtm/app/interfaces/handlers"
 
 // Resolver struct
 type Resolver struct {
-	Reg *handlers.Handler
+	Handler *handlers.Handler
 }

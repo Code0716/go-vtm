@@ -20,3 +20,9 @@ func TimeFromStr(s string) time.Time {
 	jst := utc.In(jstLoc)
 	return jst
 }
+
+// TimeToString time to string
+func TimeToString(t time.Time) string {
+	s := t.Format("2006-01-02 15:04:05")
+	return s
+}

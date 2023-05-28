@@ -56,7 +56,7 @@ func start() int {
 
 	graphqlHandler := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
-			graph.Config{Resolvers: &graph.Resolver{Reg: &h}},
+			graph.Config{Resolvers: &graph.Resolver{Handler: &h}},
 		),
 	)
 

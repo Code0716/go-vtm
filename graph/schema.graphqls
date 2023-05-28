@@ -37,7 +37,7 @@ type Address {
 
 # 店舗/所属
 type Department {
-  id: ID!
+  id: ID
   name: String!
   addressId: String!
   createdAt: DateTime!
@@ -55,8 +55,8 @@ type User {
   status: UserStatus!
   role: UserRole!
   employmentStatus: EmploymentStatus!
-  unitPrice: Int!
-  departmentId: String!
+  unitPrice: Int
+  departmentId: String
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
@@ -68,7 +68,7 @@ type Attendance {
   userId: String!
   startTime: DateTime!
   endTime: DateTime
-  breakTime: Time
+  breakTime: String
   createdAt: DateTime!
   updatedAt: DateTime!
   deletedAt: DateTime
@@ -96,6 +96,7 @@ input CreateUserInput {
   role: UserRole
   employmentStatus: EmploymentStatus
   unitPrice: Int
+  departmentId: String
 }
 
 input UpdateUserInput {
@@ -107,6 +108,7 @@ input UpdateUserInput {
   role: UserRole
   employmentStatus: EmploymentStatus
   unitPrice: Int
+  departmentId: String!
 }
 
 # address
