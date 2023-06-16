@@ -34,14 +34,14 @@ jobs:
       - name: run test
         run: go test -race -v ./...
         env:
-          MYSQL_HOST: ${{ env.MYSQL_HOST }}
-          MYSQL_DBNAME: ${{ env.MYSQL_DBNAME }}
+          MYSQL_HOST: ${{ vars.MYSQL_HOST }}
+          MYSQL_DBNAME: ${{ vars.MYSQL_DBNAME }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_PORT: ${{ env.MYSQL_PORT }}
-          MYSQL_DIALECT: ${{ env.MYSQL_DIALECT }}
-          MYSQL_CHARSET: ${{ env.MYSQL_CHARSET }}
-          MYSQL_TIMEZONE: ${{ env.MYSQL_TIMEZONE }}
+          MYSQL_PORT: ${{ vars.MYSQL_PORT }}
+          MYSQL_DIALECT: ${{ vars.MYSQL_DIALECT }}
+          MYSQL_CHARSET: ${{ vars.MYSQL_CHARSET }}
+          MYSQL_TIMEZONE: ${{ vars.MYSQL_TIMEZONE }}
       - name: run lint
         run: make lint
