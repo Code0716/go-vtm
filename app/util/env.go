@@ -23,6 +23,7 @@ type Environment struct {
 	DBName          string
 	DBUser          string
 	DBPassword      string
+	DBAdminUser     string
 	DBAdminPassword string
 	DBCharset       string
 	DBTimezone      string
@@ -72,6 +73,7 @@ func loadEnv() Environment {
 	e.DBPort = os.Getenv("MYSQL_PORT")
 	e.DBName = os.Getenv("MYSQL_DBNAME")
 	e.DBUser = os.Getenv("MYSQL_USER")
+	e.DBAdminUser = os.Getenv("MYSQL_ROOT_USER")
 	e.DBPassword = os.Getenv("MYSQL_PASSWORD")
 	e.DBAdminPassword = os.Getenv("MYSQL_ROOT_PASSWORD")
 	e.DBCharset = os.Getenv("MYSQL_CHARSET")
