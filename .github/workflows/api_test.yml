@@ -15,6 +15,9 @@ jobs:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_PORT: 3306
+          MYSQL_DIALECT: 'mysql'
+          MYSQL_CHARSET: 'utf8mb4'
           MYSQL_TIMEZONE: Asia/Tokyo
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
     steps:
