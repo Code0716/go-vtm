@@ -20,15 +20,15 @@ func NewUser(sqlHandler SQLHandlerInterface) *UserRepository {
 }
 
 // CreateUser  create user
-func (r *UserRepository) CreateUser(_ context.Context, user domain.User) (*domain.User, error) {
-	err := r.SQLHandler.Create(user).Conn.Error
+func (r *UserRepository) CreateUser(c context.Context, user domain.User) (*domain.User, error) {
+	err := r.SQLHandler.Create(c, user).Conn.Error
 	if err != nil {
 		log.Print(err)
 		return nil, err
 	}
 
 	var newUser domain.User
-	err = r.SQLHandler.First(&newUser).Conn.Where("user_id =?", user.UserID).Error
+	err = r.SQLHandler.First(c, &newUser).Conn.Where("user_id =?", user.UserID).Error
 	if err != nil {
 		log.Print(err)
 		return nil, err

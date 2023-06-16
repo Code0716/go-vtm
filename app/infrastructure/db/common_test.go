@@ -67,7 +67,7 @@ func getTestDB(t *testing.T, seeds []any) (db *database.SQLHandler, close func()
 		}
 	})
 
-	file0, err := os.ReadFile("../../../_init_sql/000_create_vtm_database.sql")
+	file0, err := os.ReadFile("../../../_init_sql/0000_create_vtm_database.sql")
 	if err != nil {
 		return nil, nil, err
 	}

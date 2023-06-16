@@ -1,25 +1,41 @@
 package database_test
 
-// import (
-// 	"github.com/Code0716/go-vtm/app/domain"
-// 	"github.com/Code0716/go-vtm/app/infrastructure/db"
-// 	"github.com/Code0716/go-vtm/app/interfaces/database"
-// )
+import (
+	"context"
 
-// type mockAdminRepo struct {
-// 	database.SQLHandlerInterface
-// 	FakeCreateAdmin       func(newAdmin any) db.SQLHandler
-// 	FakeFirst             func(value any, where ...any) db.SQLHandler
-// 	FakeGetAdminByEmail   func(*domain.AdminUser, string) error
-// 	FakeIsAdminExist      func(tableName string, query any, args ...any) (bool, error)
-// 	FakeCreateUser      func(newUser domain.User) error
-// 	FakeAdminUserGetAll func(params domain.Pager)
-// }
+	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/infrastructure/db"
+	"github.com/Code0716/go-vtm/app/interfaces/database"
+)
 
-// func (m mockAdminRepo) Create(adminU any) error {
-// 	err := m.FakeCreateAdmin(&adminU).Conn.Error
-// 	return err
-// }
+type mockUsersRepo struct {
+	database.SQLHandlerInterface
+	FakeCreate func(c context.Context, user any) db.SQLHandler
+	FakeFirst  func(c context.Context, user any) db.SQLHandler
+}
+
+func (m mockUsersRepo) CreateUser(c context.Context, u domain.User) (*domain.User, error) {
+
+	err := m.Create(c, u).Conn.Error
+	if err != nil {
+		return nil, err
+	}
+	var user domain.User
+	err = m.FakeFirst(c, user).Conn.Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (m mockUsersRepo) Create(ctx context.Context, value any) db.SQLHandler {
+	return m.FakeCreate(ctx, value)
+}
+
+func (m mockUsersRepo) First(ctx context.Context, value any, where ...any) db.SQLHandler {
+	return m.FakeFirst(ctx, value)
+}
+
 // func (m mockAdminRepo) First(value any, where ...any) error {
 // 	err := m.FakeFirst(value, where...).Conn.Error
 // 	return err

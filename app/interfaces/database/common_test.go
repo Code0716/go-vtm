@@ -61,7 +61,7 @@ func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err 
 		}
 	})
 
-	file0, err := os.ReadFile("../../../_init_sql/000_create_vtm_database.sql")
+	file0, err := os.ReadFile("../../../_init_sql/0000_create_vtm_database.sql")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -105,7 +105,7 @@ func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err 
 		if d.IsDir() {
 			return nil
 		}
-		if strings.Contains(path, "create_table") && strings.HasSuffix(path, ".sql") {
+		if strings.Contains(path, "create_") && strings.HasSuffix(path, ".sql") {
 			createTableSQLFiles = append(createTableSQLFiles, path)
 		}
 

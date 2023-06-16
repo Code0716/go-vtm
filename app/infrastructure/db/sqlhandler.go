@@ -1,6 +1,8 @@
 package db
 
 import (
+	"context"
+
 	"gorm.io/gorm"
 )
 
@@ -10,7 +12,7 @@ type SQLHandler struct {
 }
 
 // Create db create
-func (h SQLHandler) Create(value any) SQLHandler {
+func (h SQLHandler) Create(_ context.Context, value any) SQLHandler {
 	return SQLHandler{h.Conn.Create(value)}
 }
 
@@ -31,7 +33,7 @@ func (h SQLHandler) Find(value any, where ...any) SQLHandler {
 }
 
 // First db find
-func (h SQLHandler) First(value any, where ...any) SQLHandler {
+func (h SQLHandler) First(_ context.Context, value any, where ...any) SQLHandler {
 	return SQLHandler{h.Conn.First(value, where...)}
 }
 
