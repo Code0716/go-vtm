@@ -26,6 +26,13 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '1.20'
+      - name: setEnv
+        run: |
+          make init-env
+          sed -i '/MYSQL_ROOT_USER/d' .env
+          sed -i '/MYSQL_ROOT_PASSWORD/d' .env
+          echo "MYSQL_ROOT_USER=root" >> .env
+          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ADMIN_PASSWORD }}" >> .env
       - name: setup
         run: |
           make clean
@@ -42,6 +49,6 @@ jobs:
           MYSQL_PORT: $MYSQL_PORT
           MYSQL_DIALECT: $MYSQL_DIALECT
           MYSQL_CHARSET: $MYSQL_CHARSET
-          MYSQL_TIMEZONE: 'Asia/Tokyo'
+          MYSQL_TIMEZONE: $MYSQL_TIMEZONE
       - name: run lint
         run: make lint
