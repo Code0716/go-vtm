@@ -5,8 +5,6 @@ import (
 	"os"
 	"strconv"
 	"sync"
-
-	"github.com/joho/godotenv"
 )
 
 // Environment has application env variables.
@@ -19,14 +17,15 @@ type Environment struct {
 	AppLogLevel string
 	AppDebug    bool
 
-	DBDialect  string
-	DBHost     string
-	DBPort     string
-	DBName     string
-	DBAdmin    string
-	DBPassword string
-	DBCharset  string
-	DBTimezone string
+	DBDialect       string
+	DBHost          string
+	DBPort          string
+	DBName          string
+	DBUser          string
+	DBPassword      string
+	DBAdminPassword string
+	DBCharset       string
+	DBTimezone      string
 
 	Signingkey string
 }
@@ -50,11 +49,6 @@ func Env() Environment {
 }
 
 func loadEnv() Environment {
-	envPath := os.Getenv("GO_ENV")
-	err := godotenv.Load(fmt.Sprintf("%s.env", envPath))
-	if err != nil {
-		panic(err)
-	}
 	var e Environment
 
 	// APP side
@@ -77,8 +71,9 @@ func loadEnv() Environment {
 	e.DBHost = os.Getenv("MYSQL_HOST")
 	e.DBPort = os.Getenv("MYSQL_PORT")
 	e.DBName = os.Getenv("MYSQL_DBNAME")
-	e.DBAdmin = os.Getenv("MYSQL_USER")
+	e.DBUser = os.Getenv("MYSQL_USER")
 	e.DBPassword = os.Getenv("MYSQL_PASSWORD")
+	e.DBAdminPassword = os.Getenv("MYSQL_ROOT_PASSWORD")
 	e.DBCharset = os.Getenv("MYSQL_CHARSET")
 	e.DBTimezone = os.Getenv("MYSQL_TIMEZONE")
 	e.Signingkey = os.Getenv("SIGNINGKEY")

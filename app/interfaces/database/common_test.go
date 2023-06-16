@@ -19,18 +19,19 @@ import (
 var (
 	testCtx context.Context
 )
+var env = util.Env()
+
 var testEnv = util.Environment{
-	DBHost:     "127.0.0.1",
-	DBPort:     "3306",
-	DBName:     "vtm_db",
-	DBAdmin:    "root",
-	DBPassword: "root",
-	DBTimezone: "Asia/Tokyo",
+	DBHost:     env.DBHost,
+	DBPort:     env.DBPort,
+	DBName:     env.DBName,
+	DBUser:     "root",
+	DBPassword: env.DBAdminPassword,
+	DBTimezone: env.DBTimezone,
 }
 
 func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err error) {
 	t.Helper()
-
 	teardownFuncs := []func(){}
 	close = func() {
 		for i := len(teardownFuncs) - 1; i > 0; i-- {

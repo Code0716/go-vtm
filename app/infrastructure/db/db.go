@@ -73,7 +73,7 @@ func BuildMySQLConnectionString(env util.Environment) (string, error) {
 	mysqlCfg.DBName = env.DBName
 	mysqlCfg.Net = "tcp"
 	mysqlCfg.Addr = fmt.Sprintf("%s:%s", env.DBHost, env.DBPort)
-	mysqlCfg.User = env.DBAdmin
+	mysqlCfg.User = env.DBUser
 	mysqlCfg.Passwd = env.DBPassword
 	mysqlCfg.ParseTime = true
 	loc, err := time.LoadLocation(env.DBTimezone)

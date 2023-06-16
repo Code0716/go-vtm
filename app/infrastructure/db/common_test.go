@@ -31,7 +31,7 @@ func getTestDB(t *testing.T, seeds []any) (db *database.SQLHandler, close func()
 		DBHost:     os.Getenv("MYSQL_HOST"),
 		DBPort:     os.Getenv("MYSQL_PORT"),
 		DBName:     os.Getenv("MYSQL_DBNAME"),
-		DBAdmin:    os.Getenv("MYSQL_ROOT_USER"),
+		DBUser:     os.Getenv("MYSQL_ROOT_USER"),
 		DBPassword: os.Getenv("MYSQL_ROOT_PASSWORD"),
 		DBCharset:  os.Getenv("MYSQL_CHARSET"),
 		DBTimezone: os.Getenv("MYSQL_TIMEZONE"),
