@@ -26,13 +26,6 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '1.20'
-      - name: setEnv
-        run: |
-          make init-env
-          sed -i '/MYSQL_ROOT_USER/d' .env
-          sed -i '/MYSQL_ROOT_PASSWORD/d' .env
-          echo "MYSQL_ROOT_USER=root" >> .env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ADMIN_PASSWORD }}" >> .env
       - name: setup
         run: |
           make clean
@@ -41,14 +34,14 @@ jobs:
       - name: run test
         run: go test -race -v ./...
         env:
-          MYSQL_HOST: $MYSQL_HOST
-          MYSQL_DBNAME: $MYSQL_DBNAME
+          MYSQL_HOST: ${{ env.MYSQL_HOST }}
+          MYSQL_DBNAME: ${{ env.MYSQL_DBNAME }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          MYSQL_PORT: $MYSQL_PORT
-          MYSQL_DIALECT: $MYSQL_DIALECT
-          MYSQL_CHARSET: $MYSQL_CHARSET
-          MYSQL_TIMEZONE: $MYSQL_TIMEZONE
+          MYSQL_PORT: ${{ env.MYSQL_PORT }}
+          MYSQL_DIALECT: ${{ env.MYSQL_DIALECT }}
+          MYSQL_CHARSET: ${{ env.MYSQL_CHARSET }}
+          MYSQL_TIMEZONE: ${{ env.MYSQL_TIMEZONE }}
       - name: run lint
         run: make lint
