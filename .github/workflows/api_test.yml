@@ -26,8 +26,13 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: '1.20'
-      - name: setEnv
-        run: echo "setEnv"
+      - name: setup
+        run: |
+          make clean
+          make install-build-tools
+          make deps
+      - name: run test
+        run: go test -race -v ./...
         env:
           MYSQL_HOST: $MYSQL_HOST
           MYSQL_DBNAME: $MYSQL_DBNAME
@@ -38,12 +43,5 @@ jobs:
           MYSQL_DIALECT: $MYSQL_DIALECT
           MYSQL_CHARSET: $MYSQL_CHARSET
           MYSQL_TIMEZONE: $MYSQL_TIMEZONE
-      - name: setup
-        run: |
-          make clean
-          make install-tools
-          make deps
-      - name: run test
-        run: go test -race -v ./...
       - name: run lint
         run: make lint
