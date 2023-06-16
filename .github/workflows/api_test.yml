@@ -42,6 +42,6 @@ jobs:
           MYSQL_PORT: $MYSQL_PORT
           MYSQL_DIALECT: $MYSQL_DIALECT
           MYSQL_CHARSET: $MYSQL_CHARSET
-          MYSQL_TIMEZONE: $MYSQL_TIMEZONE
+          MYSQL_TIMEZONE: 'Asia/Tokyo'
       - name: run lint
         run: make lint
