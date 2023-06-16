@@ -66,7 +66,6 @@ linters:
     - exportloopref #checks for pointers to enclosing loop variables
     - unconvert #Remove unnecessary type conversions
     - unparam #Reports unused function parameters
-    - depguard #Go linter that checks if package imports are in a list of acceptable packages
     - goimports # Goimports does everything that gofmt does. Additionally it checks unused import
 
   # 何を無効にしたか明示
@@ -83,6 +82,7 @@ linters:
     - lll # Reports long lines
     - maligned # Tool to detect Go structs that would take less memory if their fields were sorted
     - stylecheck #Stylecheck is a replacement for golint
+    - depguard #Go linter that checks if package imports are in a list of acceptable packages
 
 linters-settings:
   depguard:
