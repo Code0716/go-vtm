@@ -40,5 +40,9 @@ jobs:
           make deps
       - name: run test
         run: go test -race -v ./...
+        env:
+          MYSQL_ROOT_USER: root
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+
       - name: run lint
         run: make lint
