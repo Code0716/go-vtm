@@ -11,7 +11,8 @@ import (
 	"github.com/Code0716/go-vtm/app/util"
 )
 
-func TestUsersInterFace_CreateUser(t *testing.T) {
+// TODO:もう少しうまくできないか。
+func TestUsersInterface_CreateUser(t *testing.T) {
 	t.Parallel()
 	type fakes struct {
 		fakeCreate func(c context.Context, user any) db.SQLHandler
@@ -32,6 +33,20 @@ func TestUsersInterFace_CreateUser(t *testing.T) {
 		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
 	}
 
+	user2 := domain.User{
+		UserID:           "dcacc0ed-9dc7-49e2-84ac-31f6fabaf952",
+		Name:             "hoge",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
+
 	testDB, close, err := getTestDB(t, nil)
 	if err != nil {
 		t.Fatal(err)
@@ -40,12 +55,15 @@ func TestUsersInterFace_CreateUser(t *testing.T) {
 
 	dataBase := db.SQLHandler(*testDB)
 
+	fakeCreateErr := util.LiteralToPtrGenerics[string]("Error 1062 (23000): Duplicate entry '873a2824-8006-4e67-aed7-ec427df5fce8' for key 'user_id'")
+	fakeFirstErr := util.LiteralToPtrGenerics[string]("record not found")
+
 	tests := []struct {
 		name    string
 		fakes   fakes
 		args    domain.User
 		want    *domain.User
-		wantErr bool
+		wantErr *string
 	}{
 		{
 			"success",
@@ -74,7 +92,39 @@ func TestUsersInterFace_CreateUser(t *testing.T) {
 				UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
 				DeletedAt:        nil,
 			},
-			false,
+			nil,
+		},
+		{
+			"error fakeCreate - Duplicate entry",
+			fakes{
+				fakeCreate: func(c context.Context, user any) db.SQLHandler {
+					return dataBase.Create(c, user1)
+
+				},
+				fakeFirst: func(c context.Context, user any) db.SQLHandler {
+					return dataBase.First(c, &user1)
+
+				},
+			},
+			user1,
+			nil,
+			fakeCreateErr,
+		},
+		{
+			"error fakeFirst recode not found",
+			fakes{
+				fakeCreate: func(c context.Context, user any) db.SQLHandler {
+					return dataBase.Create(c, user2)
+
+				},
+				fakeFirst: func(c context.Context, user any) db.SQLHandler {
+					return dataBase.First(c, &domain.User{ID: util.LiteralToPtrGenerics[string]("100")})
+
+				},
+			},
+			user2,
+			nil,
+			fakeFirstErr,
 		},
 	}
 	for _, tt := range tests {
@@ -82,14 +132,16 @@ func TestUsersInterFace_CreateUser(t *testing.T) {
 			userRepo := mockUsersRepo{}
 			userRepo.FakeCreate = tt.fakes.fakeCreate
 			userRepo.FakeFirst = tt.fakes.fakeFirst
+
 			r := database.NewUser(&userRepo)
 			got, err := r.CreateUser(testCtx, tt.args)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Users.GetAll() error = %v, wantErr %v", err, tt.wantErr)
+
+			if err != nil && err.Error() != *tt.wantErr {
+				t.Errorf(" func TestUsersInterface CreateUser() = %v, wantErr %v", err, *tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Users.GetAll() got = %v, want %v", got, tt.want)
+				t.Errorf("func TestUsersInterface CreateUser() = got = %v, want %v", got, tt.want)
 			}
 		})
 	}

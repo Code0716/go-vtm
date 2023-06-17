@@ -15,11 +15,11 @@ type mockUsersRepo struct {
 }
 
 func (m mockUsersRepo) CreateUser(c context.Context, u domain.User) (*domain.User, error) {
-
 	err := m.Create(c, u).Conn.Error
 	if err != nil {
 		return nil, err
 	}
+
 	var user domain.User
 	err = m.FakeFirst(c, user).Conn.Error
 	if err != nil {
