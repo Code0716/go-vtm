@@ -37,6 +37,7 @@ jobs:
           MYSQL_HOST: ${{ vars.MYSQL_HOST }}
           MYSQL_DBNAME: ${{ vars.MYSQL_DBNAME }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+          MYSQL_ROOT_USER: root
           MYSQL_USER: ${{ vars.MYSQL_USER }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_PORT: ${{ vars.MYSQL_PORT }}
