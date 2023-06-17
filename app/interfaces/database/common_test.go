@@ -32,7 +32,7 @@ var testEnv = util.Environment{
 }
 
 func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err error) {
-	fmt.Printf("testEnv: %+v\n", testEnv)
+	fmt.Printf("testEnv: %+v\n", env)
 	t.Helper()
 	teardownFuncs := []func(){}
 	close = func() {
