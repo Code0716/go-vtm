@@ -51,7 +51,7 @@ func (h userHandler) CreateUser(c context.Context, input model.CreateUserInput) 
 
 	createdUser := &model.User{
 		ID:               *newUser.ID,
-		UserID:           *newUser.ID,
+		UserID:           newUser.UserID,
 		Name:             newUser.Name,
 		MailAddress:      newUser.MailAddress,
 		PhoneNumber:      newUser.PhoneNumber,
