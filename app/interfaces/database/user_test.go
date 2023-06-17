@@ -36,8 +36,8 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 
 	user2 := domain.User{
 		UserID:           "dcacc0ed-9dc7-49e2-84ac-31f6fabaf952",
-		Name:             "hoge",
-		MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
+		Name:             "fuga",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test2.com"),
 		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
 		Status:           domain.UserStatusActive,
 		Role:             domain.UserRoleCommon,

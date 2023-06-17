@@ -1,24 +1,20 @@
 package interactors_test
 
-// import (
-// 	"context"
+import (
+	"context"
 
-// 	"github.com/Code0716/go-vtm/app/domain"
-// 	"github.com/Code0716/go-vtm/app/usecase/repositories"
-// )
+	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
+)
 
-// type mockAdminRepo struct {
-// 	repositories.AdminRepository
-// 	FakeRegistAdmin     func(ctx context.Context, params domain.AdminUser) error
-// 	FakeIsAdminExist    func(ctx context.Context, mail string) (bool, error)
-// 	FakeGetAdminByUUID  func(ctx context.Context, uuid string) (*domain.AdminUser, error)
-// 	FakeGetAllAdminUser func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error)
-// 	FakeDeleteAdmin     func(ctx context.Context, uuid string) (*domain.AdminUser, error)
-// }
+type mockUserRepo struct {
+	repositories.UserRepository
+	FakeCreateUser func(ctx context.Context, user domain.User) (*domain.User, error)
+}
 
-// func (m mockAdminRepo) RegistAdmin(ctx context.Context, params domain.AdminUser) error {
-// 	return m.FakeRegistAdmin(ctx, params)
-// }
+func (m mockUserRepo) CreateUser(ctx context.Context, user domain.User) (*domain.User, error) {
+	return m.FakeCreateUser(ctx, user)
+}
 
 // func (m mockAdminRepo) IsAdminExist(ctx context.Context, mail string) (bool, error) {
 // 	return m.FakeIsAdminExist(ctx, mail)
