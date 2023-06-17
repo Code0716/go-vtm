@@ -12,6 +12,7 @@ import (
 )
 
 // TODO:もう少しうまくできないか。
+// errorのtestがリテラルってのもだっさい。
 func TestUsersInterface_CreateUser(t *testing.T) {
 	t.Parallel()
 	type fakes struct {
@@ -111,7 +112,7 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 			fakeCreateErr,
 		},
 		{
-			"error fakeFirst recode not found",
+			"error fakeFirst - recode not found",
 			fakes{
 				fakeCreate: func(c context.Context, user any) db.SQLHandler {
 					return dataBase.Create(c, user2)
