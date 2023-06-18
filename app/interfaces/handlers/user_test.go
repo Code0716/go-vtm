@@ -4,6 +4,7 @@ import (
 	"context"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/interfaces/handlers"
@@ -30,6 +31,22 @@ func Test_handler_CreateUser(t *testing.T) {
 		CreatedAt:        "2023-09-14 00:08:54",
 		UpdatedAt:        "2023-10-19 00:09:32",
 		DeletedAt:        nil,
+	}
+
+	successResponse2 := model.User{
+		ID:               "1",
+		UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
+		Name:             "hoge",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           model.UserStatusActive,
+		Role:             model.UserRoleCommon,
+		EmploymentStatus: model.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        "2023-09-14 00:08:54",
+		UpdatedAt:        "2023-10-19 00:09:32",
+		DeletedAt:        util.LiteralToPtrGenerics[string]("2023-10-19 00:09:32"),
 	}
 
 	type args struct {
@@ -77,37 +94,55 @@ func Test_handler_CreateUser(t *testing.T) {
 			&successResponse,
 			false,
 		},
+		{
+			"success - deleted user",
+			args{model.CreateUserInput{
+				Name:         "hoge",
+				MailAddress:  util.LiteralToPtrGenerics[string]("test@test.com"),
+				PhoneNumber:  util.LiteralToPtrGenerics[string]("09000000000"),
+				UnitPrice:    util.LiteralToPtrGenerics[int](1200),
+				DepartmentID: nil,
+			}},
+			fakes{
+				fakeCreateUser: func(ctx context.Context, user domain.User) (*domain.User, error) {
+					return &domain.User{
+						ID:               util.LiteralToPtrGenerics[string]("1"),
+						UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
+						Name:             "hoge",
+						MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
+						PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+						Status:           domain.UserStatusActive,
+						Role:             domain.UserRoleCommon,
+						EmploymentStatus: domain.EmploymentStatusHourly,
+						UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+						DepartmentID:     nil,
+						CreatedAt:        util.TimeFromStr("2023-09-14 00:08:54"),
+						UpdatedAt:        util.TimeFromStr("2023-10-19 00:09:32"),
+						DeletedAt:        util.LiteralToPtrGenerics[time.Time](util.TimeFromStr("2023-10-19 00:09:32")),
+					}, nil
+				},
+			},
+			&successResponse2,
+			false,
+		},
 
-		// {
-		// 	"",
-		// 	args{model.CreateUserInput{
-		// 		Name:         "hoge",
-		// 		MailAddress:  util.LiteralToPtrGenerics[string]("test@test.com"),
-		// 		PhoneNumber:  util.LiteralToPtrGenerics[string]("09000000000"),
-		// 		UnitPrice:    util.LiteralToPtrGenerics[int](1200),
-		// 		DepartmentID: nil,
-		// 	}},
-		// 	fakes{
-		// 		fakeCreateUser: func(ctx context.Context, user domain.User) (*domain.User, error) {
-		// 			return &domain.User{
-		// 				ID:               util.LiteralToPtrGenerics[string]("1"),
-		// 				UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
-		// 				Name:             "hoge",
-		// 				MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
-		// 				PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
-		// 				Status:           domain.UserStatusActive,
-		// 				Role:             domain.UserRoleCommon,
-		// 				EmploymentStatus: domain.EmploymentStatusHourly,
-		// 				UnitPrice:        util.LiteralToPtrGenerics[int](1200),
-		// 				DepartmentID:     nil,
-		// 				CreatedAt:        util.TimeFromStr("2023-09-14 00:08:54"),
-		// 				UpdatedAt:        util.TimeFromStr("2023-10-19 00:09:32"),
-		// 			}, nil
-		// 		},
-		// 	},
-		// 	&successResponse,
-		// 	false,
-		// },
+		{
+			"failed - internal server error",
+			args{model.CreateUserInput{
+				Name:         "hoge",
+				MailAddress:  util.LiteralToPtrGenerics[string]("test@test.com"),
+				PhoneNumber:  util.LiteralToPtrGenerics[string]("09000000000"),
+				UnitPrice:    util.LiteralToPtrGenerics[int](1200),
+				DepartmentID: nil,
+			}},
+			fakes{
+				fakeCreateUser: func(ctx context.Context, user domain.User) (*domain.User, error) {
+					return nil, domain.NewError(domain.ErrorTypeInternalError)
+				},
+			},
+			nil,
+			true,
+		},
 	}
 
 	for _, tt := range tests {
