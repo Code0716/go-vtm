@@ -13,7 +13,8 @@ install-dev-tools:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install github.com/cosmtrek/air@latest
 	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
-	go install github.com/99designs/gqlgen@latest
+	# go install github.com/99designs/gqlgen@latest
+	go install github.com/99designs/gqlgen@v0.17.31
 
 	
 deps:

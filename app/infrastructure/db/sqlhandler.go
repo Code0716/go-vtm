@@ -27,7 +27,7 @@ func (h *SQLHandler) Delete(value any, where ...any) SQLHandler {
 }
 
 // Find db find
-func (h SQLHandler) Find(value any, where ...any) SQLHandler {
+func (h SQLHandler) Find(_ context.Context, value any, where ...any) SQLHandler {
 	return SQLHandler{h.Conn.Find(value, where...)}
 
 }
