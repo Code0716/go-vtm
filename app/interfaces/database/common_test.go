@@ -19,18 +19,20 @@ import (
 var (
 	testCtx context.Context
 )
+
+var env = util.Env()
+
 var testEnv = util.Environment{
-	DBHost:     "127.0.0.1",
-	DBPort:     "3306",
-	DBName:     "vtm_db",
-	DBAdmin:    "root",
-	DBPassword: "root",
-	DBTimezone: "Asia/Tokyo",
+	DBHost:     env.DBHost,
+	DBPort:     env.DBPort,
+	DBName:     env.DBName,
+	DBUser:     env.DBAdminUser,
+	DBPassword: env.DBAdminPassword,
+	DBTimezone: env.DBTimezone,
 }
 
 func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err error) {
 	t.Helper()
-
 	teardownFuncs := []func(){}
 	close = func() {
 		for i := len(teardownFuncs) - 1; i > 0; i-- {
@@ -61,7 +63,7 @@ func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err 
 		}
 	})
 
-	file0, err := os.ReadFile("../../../_init_sql/000_create_vtm_database.sql")
+	file0, err := os.ReadFile("../../../_init_sql/0000_create_vtm_database.sql")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -105,7 +107,7 @@ func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err 
 		if d.IsDir() {
 			return nil
 		}
-		if strings.Contains(path, "create_table") && strings.HasSuffix(path, ".sql") {
+		if strings.Contains(path, "create_") && strings.HasSuffix(path, ".sql") {
 			createTableSQLFiles = append(createTableSQLFiles, path)
 		}
 

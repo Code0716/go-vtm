@@ -46,7 +46,7 @@ const (
 
 // User is user model
 type User struct {
-	ID               string           `json:"id"`
+	ID               *string          `json:"id"`
 	UserID           string           `json:"userId"`
 	Name             string           `json:"name"`
 	MailAddress      *string          `json:"mailAddress,omitempty"`
@@ -54,8 +54,8 @@ type User struct {
 	Status           UserStatus       `json:"status"`
 	Role             UserRole         `json:"role,omitempty"`
 	EmploymentStatus EmploymentStatus `json:"employmentStatus"`
-	UnitPrice        int              `json:"unitPrice"`
-	DepartmentID     string           `json:"departmentId"`
+	UnitPrice        *int             `json:"unitPrice"`
+	DepartmentID     *string          `json:"departmentId"`
 	CreatedAt        time.Time        `json:"createdAt"`
 	UpdatedAt        time.Time        `json:"updatedAt"`
 	DeletedAt        *time.Time       `json:"deletedAt,omitempty"`

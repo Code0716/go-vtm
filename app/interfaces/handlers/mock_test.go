@@ -1,28 +1,27 @@
 package handlers_test
 
-// import (
-// 	"context"
+import (
+	"context"
 
-// 	"github.com/Code0716/go-vtm/app/domain"
-// 	"github.com/Code0716/go-vtm/app/registry"
-// 	"github.com/Code0716/go-vtm/app/usecase/interactors"
-// 	"github.com/Code0716/go-vtm/app/usecase/repositories"
-// )
+	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/registry"
+	"github.com/Code0716/go-vtm/app/usecase/interactors"
+	"github.com/Code0716/go-vtm/app/usecase/repositories"
+)
 
-// type registryMock struct {
-// 	registry.InteractorGetter
-// 	registry.RepositoryGetter
-// 	mockUserRepo
-// 	mockAdminRepo
-// }
+type registryMock struct {
+	registry.InteractorGetter
+	registry.RepositoryGetter
+	mockUserRepo
+}
 
-// func (rm registryMock) AdminInteractor() *interactors.AdminInteractor {
-// 	return interactors.NewAdmin(rm.AdminRepository())
-// }
+func (rm registryMock) UserInteractor() *interactors.UserInteractor {
+	return interactors.NewUser(rm.UserRepository())
+}
 
-// func (rm registryMock) AdminRepository() repositories.AdminRepository {
-// 	return rm.mockAdminRepo
-// }
+func (rm registryMock) UserRepository() repositories.UserRepository {
+	return rm.mockUserRepo
+}
 
 // func (rm registryMock) UsersInteractor() *interactors.UsersInteractor {
 // 	return interactors.NewUsers(rm.UsersRepository())
@@ -32,18 +31,14 @@ package handlers_test
 // 	return rm.mockUserRepo
 // }
 
-// type mockAdminRepo struct {
-// 	repositories.AdminRepository
-// 	FakeRegistAdmin     func(ctx context.Context, params domain.AdminUser) error
-// 	FakeIsAdminExist    func(ctx context.Context, mail string) (bool, error)
-// 	FakeGetAdminByUUID  func(ctx context.Context, uuid string) (*domain.AdminUser, error)
-// 	FakeGetAllAdminUser func(ctx context.Context, params domain.Pager) ([]*domain.AdminUser, int64, error)
-// 	FakeDeleteAdminUser func(ctx context.Context, uuid string) (*domain.AdminUser, error)
-// }
+type mockUserRepo struct {
+	repositories.UserRepository
+	FakeCreateUser func(ctx context.Context, user domain.User) (*domain.User, error)
+}
 
-// func (m mockAdminRepo) RegistAdmin(ctx context.Context, params domain.AdminUser) error {
-// 	return m.FakeRegistAdmin(ctx, params)
-// }
+func (m mockUserRepo) CreateUser(ctx context.Context, user domain.User) (*domain.User, error) {
+	return m.FakeCreateUser(ctx, user)
+}
 
 // func (m mockAdminRepo) IsAdminExist(ctx context.Context, mail string) (bool, error) {
 // 	return m.FakeIsAdminExist(ctx, mail)
@@ -62,9 +57,7 @@ package handlers_test
 // }
 
 // type mockUserRepo struct {
-// 	repositories.UsersRepository
-// 	FakeGetAll          func(ctx context.Context, params domain.Pager) ([]*domain.User, int64, error)
-// 	FakeGetUserByUUID func(ctx context.Context, uuid string) (*domain.User, error)
+// 	repositories.UserRepository
 // }
 
 // func (m mockUserRepo) AdminUserGetAll(ctx context.Context, params domain.Pager) ([]*domain.User, int64, error) {

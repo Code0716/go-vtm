@@ -25,14 +25,14 @@ type AddressInput struct {
 }
 
 type Attendance struct {
-	ID        string     `json:"id"`
-	UserID    string     `json:"userId"`
-	StartTime string     `json:"startTime"`
-	EndTime   *string    `json:"endTime,omitempty"`
-	BreakTime *time.Time `json:"breakTime,omitempty"`
-	CreatedAt string     `json:"createdAt"`
-	UpdatedAt string     `json:"updatedAt"`
-	DeletedAt *string    `json:"deletedAt,omitempty"`
+	ID        string  `json:"id"`
+	UserID    string  `json:"userId"`
+	StartTime string  `json:"startTime"`
+	EndTime   *string `json:"endTime,omitempty"`
+	BreakTime *string `json:"breakTime,omitempty"`
+	CreatedAt string  `json:"createdAt"`
+	UpdatedAt string  `json:"updatedAt"`
+	DeletedAt *string `json:"deletedAt,omitempty"`
 }
 
 type AttendanceInput struct {
@@ -51,10 +51,11 @@ type CreateUserInput struct {
 	Role             *UserRole         `json:"role,omitempty"`
 	EmploymentStatus *EmploymentStatus `json:"employmentStatus,omitempty"`
 	UnitPrice        *int              `json:"unitPrice,omitempty"`
+	DepartmentID     *string           `json:"departmentId,omitempty"`
 }
 
 type Department struct {
-	ID        string  `json:"id"`
+	ID        *string `json:"id,omitempty"`
 	Name      string  `json:"name"`
 	AddressID string  `json:"addressId"`
 	CreatedAt string  `json:"createdAt"`
@@ -111,6 +112,7 @@ type UpdateUserInput struct {
 	Role             *UserRole         `json:"role,omitempty"`
 	EmploymentStatus *EmploymentStatus `json:"employmentStatus,omitempty"`
 	UnitPrice        *int              `json:"unitPrice,omitempty"`
+	DepartmentID     string            `json:"departmentId"`
 }
 
 type User struct {
@@ -122,8 +124,8 @@ type User struct {
 	Status           UserStatus       `json:"status"`
 	Role             UserRole         `json:"role"`
 	EmploymentStatus EmploymentStatus `json:"employmentStatus"`
-	UnitPrice        int              `json:"unitPrice"`
-	DepartmentID     string           `json:"departmentId"`
+	UnitPrice        *int             `json:"unitPrice,omitempty"`
+	DepartmentID     *string          `json:"departmentId,omitempty"`
 	CreatedAt        string           `json:"createdAt"`
 	UpdatedAt        string           `json:"updatedAt"`
 	DeletedAt        *string          `json:"deletedAt,omitempty"`

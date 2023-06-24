@@ -11,32 +11,28 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/Code0716/go-vtm/app/infrastructure/db"
 	database "github.com/Code0716/go-vtm/app/infrastructure/db"
 	"github.com/Code0716/go-vtm/app/util"
-	"github.com/joho/godotenv"
 )
 
 var (
 	testCtx context.Context
 )
 
-func getTestDB(t *testing.T, seeds []any) (db *database.SQLHandler, close func(), err error) {
-	t.Helper()
-	envPath := os.Getenv("GO_ENV")
-	err = godotenv.Load(fmt.Sprintf("../../../%s.env", envPath))
-	if err != nil {
-		panic(err)
-	}
-	var testEnv = util.Environment{
-		DBHost:     os.Getenv("MYSQL_HOST"),
-		DBPort:     os.Getenv("MYSQL_PORT"),
-		DBName:     os.Getenv("MYSQL_DBNAME"),
-		DBAdmin:    os.Getenv("MYSQL_ROOT_USER"),
-		DBPassword: os.Getenv("MYSQL_ROOT_PASSWORD"),
-		DBCharset:  os.Getenv("MYSQL_CHARSET"),
-		DBTimezone: os.Getenv("MYSQL_TIMEZONE"),
-	}
+var env = util.Env()
 
+var testEnv = util.Environment{
+	DBHost:     env.DBHost,
+	DBPort:     env.DBPort,
+	DBName:     env.DBName,
+	DBUser:     env.DBAdminUser,
+	DBPassword: env.DBAdminPassword,
+	DBTimezone: env.DBTimezone,
+}
+
+func getTestDB(t *testing.T, seeds []any) (db *db.SQLHandler, close func(), err error) {
+	t.Helper()
 	teardownFuncs := []func(){}
 	close = func() {
 		for i := len(teardownFuncs) - 1; i > 0; i-- {
@@ -67,7 +63,7 @@ func getTestDB(t *testing.T, seeds []any) (db *database.SQLHandler, close func()
 		}
 	})
 
-	file0, err := os.ReadFile("../../../_init_sql/000_create_vtm_database.sql")
+	file0, err := os.ReadFile("../../../_init_sql/0000_create_vtm_database.sql")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -111,7 +107,7 @@ func getTestDB(t *testing.T, seeds []any) (db *database.SQLHandler, close func()
 		if d.IsDir() {
 			return nil
 		}
-		if strings.Contains(path, "create_table") && strings.HasSuffix(path, ".sql") {
+		if strings.Contains(path, "create_") && strings.HasSuffix(path, ".sql") {
 			createTableSQLFiles = append(createTableSQLFiles, path)
 		}
 

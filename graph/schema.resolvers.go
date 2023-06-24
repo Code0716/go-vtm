@@ -8,14 +8,17 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/graph/model"
 )
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.CreateUserInput) (*model.User, error) {
-	r.Reg.CreateUser(ctx, domain.User{})
-	return nil, nil
+	newUser, err := r.Handler.CreateUser(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return newUser, nil
 }
 
 // UpdateUser is the resolver for the updateUser field.

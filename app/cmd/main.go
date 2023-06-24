@@ -56,13 +56,13 @@ func start() int {
 
 	graphqlHandler := handler.NewDefaultServer(
 		graph.NewExecutableSchema(
-			graph.Config{Resolvers: &graph.Resolver{Reg: &h}},
+			graph.Config{Resolvers: &graph.Resolver{Handler: &h}},
 		),
 	)
 
-	apiV1 := e.Group("/api/v1")
+	graphqlV1 := e.Group("/api/v1")
 
-	apiV1.POST("/graphql", func(c echo.Context) error {
+	graphqlV1.POST("/graphql", func(c echo.Context) error {
 		graphqlHandler.ServeHTTP(c.Response(), c.Request())
 		return nil
 	})

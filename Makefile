@@ -5,14 +5,16 @@ init-env:
 install-tools: install-build-tools install-dev-tools
 	
 install-build-tools:
+	go install golang.org/x/tools/cmd/goimports@latest
 	go install golang.org/x/tools/cmd/stringer@latest
 
+
 install-dev-tools:
-	go install golang.org/x/tools/cmd/goimports@latest
-	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 	go install github.com/cosmtrek/air@latest
-	go install github.com/99designs/gqlgen@latest
+	go install github.com/deepmap/oapi-codegen/cmd/oapi-codegen@latest
+	# go install github.com/99designs/gqlgen@latest
+	go install github.com/99designs/gqlgen@v0.17.31
 
 	
 deps:

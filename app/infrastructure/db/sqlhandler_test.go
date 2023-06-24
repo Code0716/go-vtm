@@ -1,302 +1,221 @@
 package db_test
 
-// import (
-// 	"reflect"
-// 	"testing"
+import (
+	"testing"
 
-// 	"github.com/Code0716/go-vtm/app/domain"
-// 	"github.com/Code0716/go-vtm/app/infrastructure/db"
-// 	"github.com/Code0716/go-vtm/app/util"
-// )
+	"github.com/Code0716/go-vtm/app/domain"
+	"github.com/Code0716/go-vtm/app/infrastructure/db"
+	"github.com/Code0716/go-vtm/app/util"
+)
 
-// func TestSQLHandler_CreateAdmin(t *testing.T) {
-// 	t.Parallel()
+func TestSQLHandler_Create(t *testing.T) {
+	t.Parallel()
 
-// 	adminUser := &domain.AdminUser{
-// 		Id:          1,
-// 		AdminId:     "873a2824-8006-4e67-aed7-ec427df5fce8",
-// 		Name:        "hogehoge",
-// 		MailAddress: "test@test.com",
-// 		Password:    "password",
-// 		Permission:  "admin",
-// 		Status:      "init",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	adminUser2 := &domain.AdminUser{
-// 		Id:          1,
-// 		AdminId:     "be458a2c-b6b7-472b-823b-0a3755a6004b",
-// 		Name:        "hogehoge",
-// 		MailAddress: "test@test.com",
-// 		Password:    "password",
-// 		Permission:  "admin",
-// 		Status:      "init",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
+	testDB, close, err := getTestDB(t, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer close()
 
-// 	testDB, close, err := getTestDB(t, nil)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	defer close()
+	user := &domain.User{
+		UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
+		Name:             "hoge",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// 	tests := []struct {
-// 		name    string
-// 		want    []*domain.AdminUser
-// 		args    domain.AdminUser
-// 		wantErr bool
-// 	}{
-// 		{
-// 			"success",
-// 			[]*domain.AdminUser{
-// 				adminUser,
-// 			},
-// 			*adminUser,
-// 			false,
-// 		},
-// 		{
-// 			"failed same id",
-// 			[]*domain.AdminUser{
-// 				adminUser2,
-// 			},
-// 			*adminUser,
-// 			true,
-// 		},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			d := db.SQLHandler(*testDB)
-// 			err := d.Create(tt.args).Conn.Error
-// 			if (err != nil) != tt.wantErr {
-// 				t.Errorf("SQLHandler.CreateAdmin error = %v, wantErr %v", err, tt.wantErr)
-// 			}
-// 		})
-// 	}
-// }
+	tests := []struct {
+		name    string
+		args    *domain.User
+		wantErr bool
+	}{
+		{
+			"success create",
+			user,
+			false,
+		},
+		{
+			"failed create",
+			user,
+			true,
+		},
+	}
 
-// func TestSQLHandler_CreateUser(t *testing.T) {
-// 	t.Parallel()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := db.SQLHandler(*testDB)
+			err := d.Create(testCtx, tt.args).Conn.Error
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SQLHandler.Create error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
 
-// 	User := &domain.User{
-// 		Id:          1,
-// 		UserId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
-// 		Name:        "hogehoge",
-// 		PhoneNumber: "090000000000",
-// 		HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
-// 		Status:      "init",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	User2 := &domain.User{
-// 		Id:          2,
-// 		UserId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
-// 		Name:        "hogehoge",
-// 		PhoneNumber: "090000000000",
-// 		HourlyPrice: util.LiteralToPtrGenerics[int64](1200),
-// 		Status:      "init",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
+func TestSQLHandler_where(t *testing.T) {
+	t.Parallel()
 
-// 	testDB, close, err := getTestDB(t, nil)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	defer close()
+	user1 := domain.User{
+		UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
+		Name:             "hoge",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// 	tests := []struct {
-// 		name    string
-// 		want    []*domain.User
-// 		args    domain.User
-// 		wantErr bool
-// 	}{
-// 		{
-// 			"success",
-// 			[]*domain.User{
-// 				User,
-// 			},
-// 			*User,
-// 			false,
-// 		},
-// 		{
-// 			"failed same user",
-// 			[]*domain.User{
-// 				User2,
-// 			},
-// 			*User,
-// 			true,
-// 		},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			d := db.SQLHandler(*testDB)
-// 			err := d.Create(tt.args).Conn.Error
-// 			if (err != nil) != tt.wantErr {
-// 				t.Errorf("SQLHandler.CreateUser error = %v, wantErr %v", err, tt.wantErr)
-// 			}
-// 		})
-// 	}
-// }
+	user2 := domain.User{
+		UserID:           "dfb759de-1bd9-479e-b99e-9f14e97ebe67",
+		Name:             "fuga",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test2.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// func TestSQLHandler_AdminUserGetAll(t *testing.T) {
-// 	t.Parallel()
+	user3 := domain.User{
+		UserID:           "03da531b-11fd-4430-bf80-c6caf2bca1d8",
+		Name:             "hogefuga",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test3.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-10-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// 	user1 := &domain.User{
-// 		Id:          1,
-// 		UserId:    "873a2824-8006-4e67-aed7-ec427df5fce8",
-// 		Name:        "hoge",
-// 		PhoneNumber: "09000000000",
-// 		Status:      "active",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	user2 := &domain.User{
-// 		Id:          2,
-// 		UserId:    "fuga",
-// 		Name:        "fuga",
-// 		PhoneNumber: "09000000000",
-// 		Status:      "active",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	user3 := &domain.User{
-// 		Id:          3,
-// 		UserId:    "uuuu",
-// 		Name:        "uuuu",
-// 		PhoneNumber: "09000000000",
-// 		Status:      "init",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	user4 := &domain.User{
-// 		Id:          4,
-// 		UserId:    "rrrr",
-// 		Name:        "rrrr",
-// 		PhoneNumber: "09000000000",
-// 		Status:      "init",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	user5 := &domain.User{
-// 		Id:          5,
-// 		UserId:    "kkkk",
-// 		Name:        "kkkk",
-// 		PhoneNumber: "09000000000",
-// 		Status:      "active",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	user6 := &domain.User{
-// 		Id:          6,
-// 		UserId:    "iiii",
-// 		Name:        "iiii",
-// 		PhoneNumber: "09000000000",
-// 		Status:      "other",
-// 		CreatedAt:   util.TimeFromStr("2021-09-14 15:08:54"),
-// 		UpdatedAt:   util.TimeFromStr("2021-10-19 15:09:32"),
-// 	}
-// 	seeds := []any{
-// 		user1,
-// 		user2,
-// 		user3,
-// 		user4,
-// 		user5,
-// 		user6,
-// 	}
-// 	testDB, close, err := getTestDB(t, seeds)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	defer close()
+	user4 := domain.User{
+		UserID:           "6f93ebf2-bfd5-40e8-a907-47d9bd976f06",
+		Name:             "hogehoge",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test4.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-10-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// 	tests := []struct {
-// 		name    string
-// 		args    domain.Pager
-// 		want    []*domain.User
-// 		count   int64
-// 		wantErr bool
-// 	}{
-// 		{
-// 			"success",
-// 			domain.Pager{
-// 				Limit:  50,
-// 				Offset: 0,
-// 				Status: "",
-// 			},
-// 			[]*domain.User{
-// 				user1,
-// 				user2,
-// 				user3,
-// 				user4,
-// 				user5,
-// 				user6,
-// 			},
-// 			6,
-// 			false,
-// 		},
-// 		{
-// 			"offset 3",
-// 			domain.Pager{
-// 				Limit:  50,
-// 				Offset: 3,
-// 				Status: "",
-// 			},
-// 			[]*domain.User{
-// 				user4,
-// 				user5,
-// 				user6,
-// 			},
-// 			6,
-// 			false,
-// 		},
-// 		{
-// 			"MmberStatus int",
-// 			domain.Pager{
-// 				Limit:  50,
-// 				Offset: 0,
-// 				Status: "init",
-// 			},
-// 			[]*domain.User{
-// 				user3,
-// 				user4,
-// 			},
-// 			2,
-// 			false,
-// 		},
-// 		{
-// 			"MmberStatus other",
-// 			domain.Pager{
-// 				Limit:  100,
-// 				Offset: 0,
-// 				Status: "other",
-// 			},
-// 			[]*domain.User{
-// 				user6,
-// 			},
-// 			1,
-// 			false,
-// 		},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			d := db.SQLHandler(*testDB)
+	user5 := domain.User{
+		UserID:           "10141b9f-3f51-4f8e-972b-91da21303435",
+		Name:             "fugafuga",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test5.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-10-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// 			got, gotCount, err := d.AdminUserGetAll(tt.args)
-// 			if (err != nil) != tt.wantErr {
-// 				t.Errorf("SQLHandler.AdminUserGetAll error = %v, wantErr %v", err, tt.wantErr)
-// 				return
-// 			}
-// 			if !reflect.DeepEqual(got, tt.want) {
-// 				t.Errorf("SQLHandler.AdminUserGetAll got = %v, want %v", got, tt.want)
-// 			}
-// 			if gotCount != tt.count {
-// 				t.Errorf("SQLHandler.AdminUserGetAll gotCount = %v, want %v", gotCount, tt.count)
-// 			}
-// 		})
-// 	}
+	user6 := domain.User{
+		UserID:           "12c90c00-f72c-4ac3-b7e2-2a527ee4459d",
+		Name:             "hogehogefugafuga",
+		MailAddress:      util.LiteralToPtrGenerics[string]("test@test6.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		Status:           domain.UserStatusActive,
+		Role:             domain.UserRoleCommon,
+		EmploymentStatus: domain.EmploymentStatusHourly,
+		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		DepartmentID:     nil,
+		CreatedAt:        util.TimeFromStr("2023-10-14 15:08:54"),
+		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
+	}
 
-// }
+	seeds := []any{
+		user1,
+		user2,
+		user3,
+		user4,
+		user5,
+		user6,
+	}
+
+	testDB, close, err := getTestDB(t, seeds)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer close()
+
+	tests := []struct {
+		name    string
+		where   string
+		args    string
+		wantID  string
+		wantErr bool
+	}{
+		{
+			"success user_id",
+			"user_id = ?",
+			user1.UserID,
+			user1.UserID,
+			false,
+		},
+		{
+			"success name",
+			"name = ?",
+			user2.Name,
+			user2.UserID,
+			false,
+		},
+		{
+			"failed not found",
+			"user_id = ?",
+			"hogehoge",
+			user2.UserID,
+			true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d := db.SQLHandler(*testDB)
+			var got []domain.User
+
+			err := d.Where(tt.where, tt.args).Find(testCtx, &got).Conn.Error
+			if err != nil {
+				t.Errorf("SQLHandler.Find error = %v", err)
+				return
+			}
+
+			if (len(got) == 0) != tt.wantErr {
+				t.Error("SQLHandler.Find not found")
+				return
+			}
+
+			for _, v := range got {
+				if v.UserID != tt.wantID {
+					t.Errorf("SQLHandler.Where() got = %v, want %v", v, tt.wantID)
+				}
+			}
+
+		})
+	}
+
+}
 
 // func TestSQLHandler_First(t *testing.T) {
 // 	t.Parallel()

@@ -3,10 +3,12 @@ package handlers
 
 import (
 	"context"
-	"fmt"
+	"time"
 
 	"github.com/Code0716/go-vtm/app/domain"
 	"github.com/Code0716/go-vtm/app/registry"
+	"github.com/Code0716/go-vtm/app/util"
+	"github.com/Code0716/go-vtm/graph/model"
 )
 
 type userHandler struct {
@@ -14,20 +16,58 @@ type userHandler struct {
 }
 
 // CreateUser　handler
-func (h userHandler) CreateUser(c context.Context, input domain.User) (*domain.User, error) {
-	fmt.Printf("ここやで！！！！！！！: %+v\n", input)
+func (h userHandler) CreateUser(c context.Context, input model.CreateUserInput) (*model.User, error) {
 
-	// isUUID := util.IsValidUUID(uuid)
-	// if !isUUID {
-	// 	return nil, domain.NewError(domain.ErrorTypeUUIDValidationFailed)
-	// }
+	user := domain.User{
+		UserID:       util.UUIDGenerator(),
+		Name:         input.Name,
+		MailAddress:  input.MailAddress,
+		PhoneNumber:  input.PhoneNumber,
+		UnitPrice:    input.UnitPrice,
+		DepartmentID: input.DepartmentID,
+	}
+
+	if input.Status == nil {
+		user.Status = domain.UserStatusInit
+	}
+
+	if input.Role == nil {
+		user.Role = domain.UserRoleCommon
+	}
+
+	if input.EmploymentStatus == nil {
+		user.EmploymentStatus = domain.EmploymentStatusHourly
+	}
+
+	currentTime := time.Now()
+	user.CreatedAt = currentTime
+	user.UpdatedAt = currentTime
 
 	userInteractor := h.reg.UserInteractor()
-	var user domain.User
 	newUser, err := userInteractor.CreateUser(c, user)
 	if err != nil {
 		return nil, err
 	}
 
-	return newUser, nil
+	createdUser := &model.User{
+		ID:               *newUser.ID,
+		UserID:           newUser.UserID,
+		Name:             newUser.Name,
+		MailAddress:      newUser.MailAddress,
+		PhoneNumber:      newUser.PhoneNumber,
+		Status:           model.UserStatus(newUser.Status),
+		Role:             model.UserRole(newUser.Role),
+		EmploymentStatus: model.EmploymentStatus(newUser.EmploymentStatus),
+		UnitPrice:        newUser.UnitPrice,
+		DepartmentID:     newUser.DepartmentID,
+		CreatedAt:        util.TimeToString(newUser.CreatedAt),
+		UpdatedAt:        util.TimeToString(newUser.UpdatedAt),
+	}
+
+	if newUser.DeletedAt != nil {
+		s := util.TimeToString(*newUser.DeletedAt)
+		createdUser.DeletedAt = &s
+	}
+
+	return createdUser, nil
 }
