@@ -23,12 +23,12 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 	user1 := domain.User{
 		UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
 		Name:             "hoge",
-		MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
-		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		MailAddress:      util.LiteralToPtrGenerics("test@test.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics("09000000000"),
 		Status:           domain.UserStatusActive,
 		Role:             domain.UserRoleCommon,
 		EmploymentStatus: domain.EmploymentStatusHourly,
-		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		UnitPrice:        util.LiteralToPtrGenerics(1200),
 		DepartmentID:     nil,
 		CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
 		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
@@ -37,12 +37,12 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 	user2 := domain.User{
 		UserID:           "dcacc0ed-9dc7-49e2-84ac-31f6fabaf952",
 		Name:             "fuga",
-		MailAddress:      util.LiteralToPtrGenerics[string]("test@test2.com"),
-		PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+		MailAddress:      util.LiteralToPtrGenerics("test@test2.com"),
+		PhoneNumber:      util.LiteralToPtrGenerics("09000000000"),
 		Status:           domain.UserStatusActive,
 		Role:             domain.UserRoleCommon,
 		EmploymentStatus: domain.EmploymentStatusHourly,
-		UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+		UnitPrice:        util.LiteralToPtrGenerics(1200),
 		DepartmentID:     nil,
 		CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
 		UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
@@ -56,8 +56,8 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 
 	dataBase := db.SQLHandler(*testDB)
 
-	fakeCreateErr := util.LiteralToPtrGenerics[string]("Error 1062 (23000): Duplicate entry '873a2824-8006-4e67-aed7-ec427df5fce8' for key 'user_id'")
-	fakeFirstErr := util.LiteralToPtrGenerics[string]("record not found")
+	fakeCreateErr := util.LiteralToPtrGenerics("Error 1062 (23000): Duplicate entry '873a2824-8006-4e67-aed7-ec427df5fce8' for key 'user_id'")
+	fakeFirstErr := util.LiteralToPtrGenerics("record not found")
 
 	tests := []struct {
 		name    string
@@ -79,15 +79,15 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 			},
 			user1,
 			&domain.User{
-				ID:               util.LiteralToPtrGenerics[string]("1"),
+				ID:               util.LiteralToPtrGenerics("1"),
 				UserID:           "873a2824-8006-4e67-aed7-ec427df5fce8",
 				Name:             "hoge",
-				MailAddress:      util.LiteralToPtrGenerics[string]("test@test.com"),
-				PhoneNumber:      util.LiteralToPtrGenerics[string]("09000000000"),
+				MailAddress:      util.LiteralToPtrGenerics("test@test.com"),
+				PhoneNumber:      util.LiteralToPtrGenerics("09000000000"),
 				Status:           domain.UserStatusActive,
 				Role:             domain.UserRoleCommon,
 				EmploymentStatus: domain.EmploymentStatusHourly,
-				UnitPrice:        util.LiteralToPtrGenerics[int](1200),
+				UnitPrice:        util.LiteralToPtrGenerics(1200),
 				DepartmentID:     nil,
 				CreatedAt:        util.TimeFromStr("2023-09-14 15:08:54"),
 				UpdatedAt:        util.TimeFromStr("2023-10-19 15:09:32"),
@@ -119,7 +119,7 @@ func TestUsersInterface_CreateUser(t *testing.T) {
 
 				},
 				fakeFirst: func(c context.Context, user any) db.SQLHandler {
-					return dataBase.First(c, &domain.User{ID: util.LiteralToPtrGenerics[string]("100")})
+					return dataBase.First(c, &domain.User{ID: util.LiteralToPtrGenerics("100")})
 
 				},
 			},
